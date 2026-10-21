@@ -1,8 +1,8 @@
 :root { --bg: #fff; --text: #111; --muted: #888; --line: #eee; --green: #16a34a;
-        --gray: #d4d4d8; --c1: #bbb; --c2: #ea580c; --c3: #ca8a04; --c4: #0284c7; --c5: #16a34a; }
+        --green2: #15803d; --gray: #d4d4d8; --c1: #bbb; --c2: #ea580c; --c3: #ca8a04; --c4: #0284c7; --c5: #16a34a; }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #000; --text: #eee; --muted: #777; --line: #1c1c1c; --green: #4ade80;
-          --gray: #2e2e2e; --c1: #555; --c2: #fb923c; --c3: #facc15; --c4: #38bdf8; --c5: #4ade80; }
+          --green2: #1f9d55; --gray: #2e2e2e; --c1: #555; --c2: #fb923c; --c3: #facc15; --c4: #38bdf8; --c5: #4ade80; }
 }
 body { margin: 0; background: var(--bg); color: var(--text);
        font: 16px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
@@ -93,3 +93,4 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .lastweek { margin-top: -20px; padding-top: 12px; border-top: 1px solid var(--line); }
 .lastweek small { line-height: 1.6; }
 .lastweek .no { font-size: inherit; }
+.good2 { color: var(--green2); }
