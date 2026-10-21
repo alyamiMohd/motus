@@ -1,6 +1,6 @@
 // Shared by every page: time helpers, standards (goals) and the navbar.
 const TZ = "Asia/Riyadh";
-const DEFAULTS = { steps: 8000, sleep: 7, weight: 0, workouts: 4, days: [1, 2, 3, 5, 6] };  // training days: 0=Sun ... 6=Sat   // weight 0 = any loss counts
+const DEFAULTS = { steps: 8000, sleep: 7, calories: 2000, weight: 0, workouts: 4, days: [1, 2, 3, 5, 6] };  // training days: 0=Sun ... 6=Sat   // weight 0 = any loss counts
 let goals = { ...DEFAULTS, days: [...DEFAULTS.days] };
 try { Object.assign(goals, JSON.parse(localStorage.getItem("stotis-goals") || "{}")); } catch (e) {}
 if (!Array.isArray(goals.days)) goals.days = [...DEFAULTS.days];
@@ -31,6 +31,7 @@ function initNav(active, onChange) {
   <div id="standards">
     <label>Steps per day <input id="s-steps" type="number" inputmode="numeric" min="0" step="500"></label>
     <label>Sleep hours per night <input id="s-sleep" type="number" inputmode="decimal" min="0" max="24" step="0.5"></label>
+    <label>Calories per day, less than <input id="s-calories" type="number" inputmode="numeric" min="0" step="50"></label>
     <label>Weight loss kg per week <input id="s-weight" type="number" inputmode="decimal" min="0" step="0.1"></label>
     <label>Workouts per week <input id="s-workouts" type="number" inputmode="numeric" min="1" max="14" step="1"></label>
     <div class="label2">Training days</div>
@@ -38,7 +39,7 @@ function initNav(active, onChange) {
     <div class="row2"><small>Green when you reach it. Saved on this device.</small><button id="reset">Reset</button></div>
   </div>
 </nav>`);
-  const inputs = { steps: "s-steps", sleep: "s-sleep", weight: "s-weight", workouts: "s-workouts" };
+  const inputs = { steps: "s-steps", sleep: "s-sleep", calories: "s-calories", weight: "s-weight", workouts: "s-workouts" };
   for (const [key, id] of Object.entries(inputs)) {
     const el = document.getElementById(id);
     el.value = goals[key];

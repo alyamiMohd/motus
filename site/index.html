@@ -23,7 +23,7 @@
 const M = [
   { k: "sleep_hours", name: "Sleep", f: v => v.toFixed(1), met: v => v >= goals.sleep },
   { k: "steps", name: "Steps", f: v => Math.round(v).toLocaleString("en-US"), met: v => v >= goals.steps },
-  { k: "calories", name: "Calories", f: v => Math.round(v).toLocaleString("en-US"), met: () => false },
+  { k: "calories", name: "Calories", f: v => Math.round(v).toLocaleString("en-US"), met: v => v <= goals.calories },
   { k: "weight_kg", name: "Weight", f: v => v.toFixed(1), met: () => false },
 ];
 let days = {};
@@ -82,7 +82,7 @@ function lastWeekLine(ws, workouts) {         // last week's averages, each vs t
   return `<div class="wide lastweek"><small>Last week, ${span(from, to)} (vs ${span(pFrom, pTo)}) · ` + [
     part("sleep_hours", f1, "h sleep", "sleep", 1, cur => cur >= goals.sleep),
     part("steps", f0, "steps", "step", 0, cur => cur >= goals.steps),
-    part("calories", f0, "kcal", "calorie", 0, () => false),
+    part("calories", f0, "kcal", "calorie", 0, cur => cur <= goals.calories),
     part("weight_kg", f1, "kg", "weight", 1, (cur, d) => d != null && d < 0 && -d >= goals.weight),
     `<span class="${workouts >= goals.workouts ? "good2" : ""}">${workouts} workout${workouts === 1 ? "" : "s"} (${sign(wd)}${Math.abs(wd)})</span>`,
   ].join(" · ") + "</small></div>";
@@ -101,7 +101,7 @@ function summary() {
     `<div class="wide"><small>Avg since Sunday, ${sundayLong}</small></div>` +
     cell(sl, sl == null ? "" : sl.toFixed(1) + " h", sl != null && sl >= goals.sleep, "Sleep") +
     cell(st, st == null ? "" : Math.round(st).toLocaleString("en-US"), st != null && st >= goals.steps, "Steps") +
-    cell(ca, ca == null ? "" : Math.round(ca).toLocaleString("en-US"), false, "Calories") +
+    cell(ca, ca == null ? "" : Math.round(ca).toLocaleString("en-US"), ca != null && ca <= goals.calories, "Calories") +
     cell(w, wText, loss != null && loss > 0 && loss >= goals.weight,
          w == null ? "Weight per week" : "Weight per week, " + (w < 0 ? "lost" : w > 0 ? "gained" : "no change")) +
     weekStrip(ws, thisWeek, lastWeek) + lastWeekLine(ws, lastWeek);
