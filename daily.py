@@ -87,6 +87,14 @@ def main() -> None:
         WORKOUTS.write_text(json.dumps({"updated": stamp, "exercises": exercises},
                                        separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
 
+    # one-off MyFitnessPal history: only fills days Apple Health has no calories for
+    hist = ROOT / "history" / "mfp-calories.json"
+    if hist.exists():
+        for date, kcal in json.loads(hist.read_text(encoding="utf-8")).get("calories", {}).items():
+            rec = days.setdefault(date, {})
+            if rec.get("calories") is None:
+                rec["calories"] = kcal
+
     # make every record have every field, null when missing
     for date, rec in days.items():
         for f in FIELDS:
