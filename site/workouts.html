@@ -14,7 +14,6 @@
 
   <h2>Overall rating, last 4 weeks</h2>
   <div class="score sm" id="score"></div>
-  <ul class="parts" id="parts"></ul>
 
   <h2>Workouts per week, last 12 weeks</h2>
   <div class="chart" id="weeks"></div>
@@ -83,12 +82,6 @@ function renderScore(stats) {
   const r = rating(stats);
   const el = document.getElementById("score");
   el.innerHTML = `<b class="${r.total >= 7 ? "good" : ""}">${r.total.toFixed(1)}</b><span> / 10</span>`;
-  const progressText = r.progress == null
-    ? `<span class="no">no data</span>`
-    : r.progress.toFixed(1);
-  document.getElementById("parts").innerHTML =
-    `<li><span>Progress<small>${r.nScored} exercises, estimated 1RM now vs 4 weeks ago · 70%</small></span><span>${progressText}</span></li>` +
-    `<li><span>Consistency<small>${r.perWeek.toFixed(1)} workouts a week, goal ${goals.workouts} · ${r.progress == null ? "100" : "30"}%</small></span><span>${r.consistency.toFixed(1)}</span></li>`;
 }
 
 function renderWeeks() {
@@ -101,11 +94,11 @@ function renderWeeks() {
   const bars = weeks.map((w, i) => {
     if (!w.c) return "";
     const h = w.c / hi * (H - 4), cur = i === N - 1;
-    return `<rect x="${i * step + 2}" y="${H - 2 - h}" width="${step - 4}" height="${h}" fill="var(--c${Math.min(w.c, 5)})"` +
+    return `<rect x="${i * step + 2}" y="${H - 2 - h}" width="${step - 4}" height="${h}" fill="${w.c >= goals.workouts ? "var(--green)" : "var(--text)"}"` +
            `${cur ? ' opacity=".5"' : ""}><title>Week of ${label(w.s)}: ${w.c}</title></rect>`;
   }).join("");
-  const legend = [["1", "0–1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5+"]]
-    .map(([k, t]) => `<span><i style="background:var(--c${k})"></i>${t}</span>`).join("");
+  const legend = `<span><i style="background:var(--green)"></i>${goals.workouts}+ workouts</span>` +
+                 `<span><i style="background:var(--text)"></i>below ${goals.workouts}</span>`;
   document.getElementById("weeks").innerHTML =
     `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${bars}</svg>` +
     `<div class="legend">${legend}<small>fainter = this week</small></div>`;

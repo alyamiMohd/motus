@@ -1,10 +1,17 @@
 // Shared by every page: time helpers, standards (goals) and the navbar.
 const TZ = "Asia/Riyadh";
-const DEFAULTS = { steps: 8000, sleep: 7, calories: 2000, weight: 0, workouts: 4, days: [1, 2, 3, 5, 6] };  // training days: 0=Sun ... 6=Sat   // weight 0 = any loss counts
+const DEFAULTS = { steps: 8000, sleep: 7, calories: 1500, weight: 0, workouts: 4, days: [1, 2, 3, 5, 6] };  // training days: 0=Sun ... 6=Sat   // weight 0 = any loss counts
 let goals = { ...DEFAULTS, days: [...DEFAULTS.days] };
 try { Object.assign(goals, JSON.parse(localStorage.getItem("stotis-goals") || "{}")); } catch (e) {}
 if (!Array.isArray(goals.days)) goals.days = [...DEFAULTS.days];
 const saveGoals = () => { try { localStorage.setItem("stotis-goals", JSON.stringify(goals)); } catch (e) {} };
+try {   // one-time: devices that saved the old 2000 default move to 1500
+  if (!localStorage.getItem("stotis-cal1500")) {
+    if (goals.calories === 2000) goals.calories = 1500;
+    localStorage.setItem("stotis-cal1500", "1");
+    saveGoals();
+  }
+} catch (e) {}
 
 const today = new Date().toLocaleDateString("en-CA", { timeZone: TZ });
 const add = (iso, n) => { const d = new Date(iso + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
