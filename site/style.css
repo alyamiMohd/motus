@@ -68,16 +68,17 @@ details[open] { margin-bottom: 8px; }
 details > .recent { padding-left: 12px; font-size: 13px; }
 .recent .r.good { color: var(--green); }
 
-/* week strip */
-.week { display: flex; justify-content: space-between; margin-bottom: 8px; }
-.wd { text-align: center; }
-.wd small { display: block; margin-bottom: 4px; }
-.dot { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+/* week strip: 7 equal columns so it never overflows or squashes on a phone */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0; margin-bottom: 8px; }
+.wd { text-align: center; min-width: 0; }
+.wd small { display: block; margin-bottom: 4px; line-height: 1; }
+.dot { box-sizing: border-box; width: min(38px, 100%); aspect-ratio: 1 / 1; margin: 0 auto; border-radius: 50%;
+       display: flex; align-items: center; justify-content: center; line-height: 1;
        font-size: 14px; font-variant-numeric: tabular-nums; color: var(--text); }
 .dot.today { box-shadow: inset 0 0 0 1px var(--muted); }
 .dot.future { color: var(--muted); }
-.dot.on { background: var(--text); color: var(--bg); box-shadow: none; }
-.dot.on.met { background: var(--green); }
+.dot.on { background: var(--green); color: var(--bg); box-shadow: none; }
 .legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 8px; font-size: 12px; color: var(--muted); }
 .legend span { display: inline-flex; align-items: center; gap: 5px; }
 .legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
