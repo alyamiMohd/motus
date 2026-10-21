@@ -1,8 +1,8 @@
 :root { --bg: #fff; --text: #111; --muted: #888; --line: #eee; --green: #16a34a;
-        --c1: #bbb; --c2: #ea580c; --c3: #ca8a04; --c4: #0284c7; --c5: #16a34a; }
+        --gray: #d4d4d8; --c1: #bbb; --c2: #ea580c; --c3: #ca8a04; --c4: #0284c7; --c5: #16a34a; }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #000; --text: #eee; --muted: #777; --line: #1c1c1c; --green: #4ade80;
-          --c1: #555; --c2: #fb923c; --c3: #facc15; --c4: #38bdf8; --c5: #4ade80; }
+          --gray: #2e2e2e; --c1: #555; --c2: #fb923c; --c3: #facc15; --c4: #38bdf8; --c5: #4ade80; }
 }
 body { margin: 0; background: var(--bg); color: var(--text);
        font: 16px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
@@ -78,8 +78,15 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
        font-size: 14px; font-variant-numeric: tabular-nums; color: var(--text); }
 .dot.today { box-shadow: inset 0 0 0 1px var(--muted); }
 .dot.future { color: var(--muted); }
+.dot.plan { background: var(--gray); color: var(--text); }
+.dot.future.plan { color: var(--muted); }
 .dot.on { background: var(--green); color: var(--bg); box-shadow: none; }
 .legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 8px; font-size: 12px; color: var(--muted); }
 .legend span { display: inline-flex; align-items: center; gap: 5px; }
 .legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .legend small { margin-left: auto; }
+.label2 { font-size: 14px; padding: 10px 0 6px; }
+.chips { display: flex; gap: 6px; }
+.chips button { flex: 1; font: inherit; font-size: 13px; padding: 7px 0; border-radius: 50%; border: 0; cursor: pointer;
+                background: var(--line); color: var(--muted); aspect-ratio: 1 / 1; max-width: 38px; }
+.chips button[aria-pressed="true"] { background: var(--gray); color: var(--text); }

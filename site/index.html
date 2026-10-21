@@ -54,7 +54,8 @@ function workoutsBetween(from, to) {           // number of workouts, inclusive 
 function weekStrip(ws, thisWeek, lastWeek) {   // Sunday -> Saturday circles, filled on workout days
   const dots = Array.from({ length: 7 }, (_, i) => {
     const d = add(ws, i), done = ((days[d] || {}).workout_count || 0) > 0;
-    const cls = ["dot", done ? "on" : "", d === today ? "today" : "", d > today ? "future" : ""].join(" ");
+    const planned = goals.days.includes(new Date(d + "T00:00:00Z").getUTCDay());
+    const cls = ["dot", done ? "on" : planned ? "plan" : "", d === today ? "today" : "", d > today ? "future" : ""].join(" ");
     const letter = new Date(d + "T00:00:00Z").toLocaleDateString("en-US", { weekday: "narrow", timeZone: "UTC" });
     return `<div class="wd"><small>${letter}</small><div class="${cls}">${+d.slice(8)}</div></div>`;
   }).join("");

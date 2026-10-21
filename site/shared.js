@@ -1,8 +1,9 @@
 // Shared by every page: time helpers, standards (goals) and the navbar.
 const TZ = "Asia/Riyadh";
-const DEFAULTS = { steps: 8000, sleep: 7, weight: 0, workouts: 4 };   // weight 0 = any loss counts
-let goals = { ...DEFAULTS };
+const DEFAULTS = { steps: 8000, sleep: 7, weight: 0, workouts: 4, days: [1, 2, 3, 5, 6] };  // training days: 0=Sun ... 6=Sat   // weight 0 = any loss counts
+let goals = { ...DEFAULTS, days: [...DEFAULTS.days] };
 try { Object.assign(goals, JSON.parse(localStorage.getItem("stotis-goals") || "{}")); } catch (e) {}
+if (!Array.isArray(goals.days)) goals.days = [...DEFAULTS.days];
 const saveGoals = () => { try { localStorage.setItem("stotis-goals", JSON.stringify(goals)); } catch (e) {} };
 
 const today = new Date().toLocaleDateString("en-CA", { timeZone: TZ });
@@ -32,6 +33,8 @@ function initNav(active, onChange) {
     <label>Sleep hours per night <input id="s-sleep" type="number" inputmode="decimal" min="0" max="24" step="0.5"></label>
     <label>Weight loss kg per week <input id="s-weight" type="number" inputmode="decimal" min="0" step="0.1"></label>
     <label>Workouts per week <input id="s-workouts" type="number" inputmode="numeric" min="1" max="14" step="1"></label>
+    <div class="label2">Training days</div>
+    <div class="chips" id="s-days"></div>
     <div class="row2"><small>Green when you reach it. Saved on this device.</small><button id="reset">Reset</button></div>
   </div>
 </nav>`);
@@ -45,8 +48,21 @@ function initNav(active, onChange) {
       saveGoals(); onChange();
     });
   }
+  const chips = document.getElementById("s-days");
+  const drawChips = () => {
+    chips.innerHTML = "SMTWTFS".split("").map((l, i) =>
+      `<button type="button" data-d="${i}" aria-pressed="${goals.days.includes(i)}">${l}</button>`).join("");
+  };
+  drawChips();
+  chips.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    const d = +b.dataset.d;
+    goals.days = goals.days.includes(d) ? goals.days.filter(x => x !== d) : [...goals.days, d].sort();
+    saveGoals(); drawChips(); onChange();
+  });
   document.getElementById("reset").addEventListener("click", () => {
-    goals = { ...DEFAULTS };
+    goals = { ...DEFAULTS, days: [...DEFAULTS.days] };
+    drawChips();
     for (const [key, id] of Object.entries(inputs)) document.getElementById(id).value = goals[key];
     saveGoals(); onChange();
   });
