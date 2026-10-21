@@ -68,7 +68,11 @@ function lastWeekLine(ws, workouts) {         // previous Sunday -> Saturday, on
   const sl = avgRange("sleep_hours", from, to), st = avgRange("steps", from, to), ca = avgRange("calories", from, to);
   const part = (v, f, unit, noun, met) => v == null ? `<span class="no">no ${noun} data</span>`
     : met ? `<span class="good2">${f(v)} ${unit}</span>` : f(v) + " " + unit;
-  return `<div class="wide lastweek"><small>Last week · ` + [
+  const dm = (iso, month) => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB",
+    month ? { day: "numeric", month: "short", timeZone: "UTC" } : { day: "numeric", timeZone: "UTC" });
+  const sameMonth = from.slice(5, 7) === to.slice(5, 7);
+  const span = dm(from, !sameMonth) + "–" + dm(to, true);   // e.g. 11–17 Oct
+  return `<div class="wide lastweek"><small>Last week, ${span} · ` + [
     part(sl, v => v.toFixed(1), "h sleep", "sleep", sl != null && sl >= goals.sleep),
     part(st, v => Math.round(v).toLocaleString("en-US"), "steps", "step", st != null && st >= goals.steps),
     part(ca, v => Math.round(v).toLocaleString("en-US"), "kcal", "calorie"),
@@ -84,9 +88,9 @@ function summary() {
   const loss = w == null ? null : -w;
   const wText = w == null ? "" : (w > 0 ? "+" : w < 0 ? "−" : "") + Math.abs(w).toFixed(1) + " kg";
   const thisWeek = workoutsBetween(ws, today), lastWeek = workoutsBetween(add(ws, -7), add(ws, -1));
-  const todayLong = new Date(today + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+  const sundayLong = new Date(ws + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
   document.getElementById("top").innerHTML =
-    `<div class="wide"><small>Avg since Sunday, to ${todayLong}</small></div>` +
+    `<div class="wide"><small>Avg since Sunday, ${sundayLong}</small></div>` +
     cell(sl, sl == null ? "" : sl.toFixed(1) + " h", sl != null && sl >= goals.sleep, "Sleep") +
     cell(st, st == null ? "" : Math.round(st).toLocaleString("en-US"), st != null && st >= goals.steps, "Steps") +
     cell(ca, ca == null ? "" : Math.round(ca).toLocaleString("en-US"), false, "Calories") +
