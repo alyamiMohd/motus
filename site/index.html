@@ -63,29 +63,28 @@ function weekStrip(ws, thisWeek, lastWeek) {   // Sunday -> Saturday circles, fi
          `<small>Workouts this week, ${thisWeek} of ${goals.workouts} · last week ${lastWeek}</small></div>`;
 }
 
-function lastWeekLine(ws, workouts) {         // previous Sunday -> Saturday, one line
-  const from = add(ws, -7), to = add(ws, -1);
-  const sl = avgRange("sleep_hours", from, to), st = avgRange("steps", from, to), ca = avgRange("calories", from, to);
-  // weight over the week: last reading in the week vs the last one before it (else the week's first)
-  const reads = Object.keys(days).filter(d => days[d].weight_kg != null).sort();
-  const inWeek = reads.filter(d => d >= from && d <= to);
-  const before = reads.filter(d => d < from).pop();
-  const base = before || (inWeek.length > 1 ? inWeek[0] : null);
-  const delta = inWeek.length && base ? days[inWeek[inWeek.length - 1]].weight_kg - days[base].weight_kg : null;
-  const weightPart = delta == null ? '<span class="no">no weight data</span>'
-    : `<span class="${delta < 0 && -delta >= goals.weight ? "good2" : ""}">${Math.abs(delta) < 0.05 ? "no weight change" : Math.abs(delta).toFixed(1) + " kg " + (delta < 0 ? "lost" : "gained")}</span>`;
-  const part = (v, f, unit, noun, met) => v == null ? `<span class="no">no ${noun} data</span>`
-    : met ? `<span class="good2">${f(v)} ${unit}</span>` : f(v) + " " + unit;
+function lastWeekLine(ws, workouts) {         // last week's averages, each vs the week before it
+  const from = add(ws, -7), to = add(ws, -1), pFrom = add(from, -7), pTo = add(from, -1);
   const dm = (iso, month) => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB",
     month ? { day: "numeric", month: "short", timeZone: "UTC" } : { day: "numeric", timeZone: "UTC" });
-  const sameMonth = from.slice(5, 7) === to.slice(5, 7);
-  const span = dm(from, !sameMonth) + "–" + dm(to, true);   // e.g. 11–17 Oct
-  return `<div class="wide lastweek"><small>Last week, ${span} · ` + [
-    part(sl, v => v.toFixed(1), "h sleep", "sleep", sl != null && sl >= goals.sleep),
-    part(st, v => Math.round(v).toLocaleString("en-US"), "steps", "step", st != null && st >= goals.steps),
-    part(ca, v => Math.round(v).toLocaleString("en-US"), "kcal", "calorie"),
-    weightPart,
-    `<span class="${workouts >= goals.workouts ? "good2" : ""}">${workouts} workout${workouts === 1 ? "" : "s"}</span>`,
+  const span = (a, b) => (a.slice(5, 7) === b.slice(5, 7) ? dm(a) : dm(a, true)) + "–" + dm(b, true);   // 11–17 Oct
+  const sign = d => (d > 0 ? "+" : d < 0 ? "−" : "±");
+  // value + (change vs previous week's average); green when it meets the standard
+  const part = (k, fmt, unit, noun, dec, good) => {
+    const cur = avgRange(k, from, to), prev = avgRange(k, pFrom, pTo);
+    if (cur == null) return `<span class="no">no ${noun} data</span>`;
+    const d = prev == null ? null : cur - prev;
+    const dTxt = d == null ? "" : ` (${sign(+d.toFixed(dec))}${fmt(Math.abs(d))})`;
+    return `<span class="${good(cur, d) ? "good2" : ""}">${fmt(cur)} ${unit}${dTxt}</span>`;
+  };
+  const f1 = v => v.toFixed(1), f0 = v => Math.round(v).toLocaleString("en-US");
+  const wPrev = workoutsBetween(pFrom, pTo), wd = workouts - wPrev;
+  return `<div class="wide lastweek"><small>Last week, ${span(from, to)} (vs ${span(pFrom, pTo)}) · ` + [
+    part("sleep_hours", f1, "h sleep", "sleep", 1, cur => cur >= goals.sleep),
+    part("steps", f0, "steps", "step", 0, cur => cur >= goals.steps),
+    part("calories", f0, "kcal", "calorie", 0, () => false),
+    part("weight_kg", f1, "kg", "weight", 1, (cur, d) => d != null && d < 0 && -d >= goals.weight),
+    `<span class="${workouts >= goals.workouts ? "good2" : ""}">${workouts} workout${workouts === 1 ? "" : "s"} (${sign(wd)}${Math.abs(wd)})</span>`,
   ].join(" · ") + "</small></div>";
 }
 
