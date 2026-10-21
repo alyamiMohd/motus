@@ -65,3 +65,14 @@ details summary::-webkit-details-marker { display: none; }
 details[open] { margin-bottom: 8px; }
 details > .recent { padding-left: 12px; font-size: 13px; }
 .recent .r.good { color: var(--green); }
+
+/* week strip */
+.week { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.wd { text-align: center; }
+.wd small { display: block; margin-bottom: 4px; }
+.dot { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+       font-size: 14px; font-variant-numeric: tabular-nums; color: var(--text); }
+.dot.today { box-shadow: inset 0 0 0 1px var(--muted); }
+.dot.future { color: var(--muted); }
+.dot.on { background: var(--text); color: var(--bg); box-shadow: none; }
+.dot.on.met { background: var(--green); }
