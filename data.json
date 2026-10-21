@@ -1,0 +1,495 @@
+{
+ "updated": "2026-10-21T14:49:04+03:00",
+ "days": {
+  "2026-09-07": {
+   "workout_count": 1,
+   "workout_minutes": 95,
+   "workout_volume_kg": 3380,
+   "workout_titles": [
+    "Push"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-09-08": {
+   "workout_count": 1,
+   "workout_minutes": 58,
+   "workout_volume_kg": 3376,
+   "workout_titles": [
+    "Pull"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-09-09": {
+   "workout_count": 1,
+   "workout_minutes": 24,
+   "workout_volume_kg": 8444,
+   "workout_titles": [
+    "Legs - 19 MINS😱🥵🐳"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-09-11": {
+   "workout_count": 1,
+   "workout_minutes": 47,
+   "workout_volume_kg": 2126,
+   "workout_titles": [
+    "Push 🔥"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-09-12": {
+   "workout_count": 1,
+   "workout_minutes": 58,
+   "workout_volume_kg": 3520,
+   "workout_titles": [
+    "Pull"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-09-14": {
+   "workout_count": 1,
+   "workout_minutes": 95,
+   "workout_volume_kg": 3759,
+   "workout_titles": [
+    "Push"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-09-15": {
+   "workout_count": 1,
+   "workout_minutes": 98,
+   "workout_volume_kg": 3854,
+   "workout_titles": [
+    "Pull - 15min Cardio"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-09-16": {
+   "workout_count": 1,
+   "workout_minutes": 14,
+   "workout_volume_kg": 4138,
+   "workout_titles": [
+    "❌❌Lower❌❌ A - Work❌"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-09-18": {
+   "workout_count": 1,
+   "workout_minutes": 62,
+   "workout_volume_kg": 3238,
+   "workout_titles": [
+    "Upper"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-09-21": {
+   "steps": 5727,
+   "sleep_hours": 5.4,
+   "active_kcal": 154,
+   "workout_count": 1,
+   "workout_minutes": 82,
+   "workout_volume_kg": 1848,
+   "workout_titles": [
+    "Push - 🤒"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-09-22": {
+   "steps": 5553,
+   "active_kcal": 158,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-09-23": {
+   "steps": 2786,
+   "sleep_hours": 9.75,
+   "active_kcal": 77,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-09-24": {
+   "steps": 11188,
+   "sleep_hours": 14.5,
+   "active_kcal": 382,
+   "workout_count": 1,
+   "workout_minutes": 72,
+   "workout_volume_kg": 4956,
+   "workout_titles": [
+    "Upper - 🤒"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-09-25": {
+   "steps": 6531,
+   "sleep_hours": 3.43,
+   "active_kcal": 206,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-09-26": {
+   "steps": 1236,
+   "sleep_hours": 15.6,
+   "active_kcal": 31,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-09-27": {
+   "steps": 9097,
+   "active_kcal": 273,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-09-28": {
+   "steps": 11107,
+   "sleep_hours": 12.92,
+   "active_kcal": 367,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-09-29": {
+   "steps": 4332,
+   "sleep_hours": 9.8,
+   "active_kcal": 163,
+   "workout_count": 1,
+   "workout_minutes": 61,
+   "workout_volume_kg": 3566,
+   "workout_titles": [
+    "Push - 😍🥰🔥"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-09-30": {
+   "steps": 9704,
+   "sleep_hours": 7.42,
+   "active_kcal": 366,
+   "workout_count": 1,
+   "workout_minutes": 88,
+   "workout_volume_kg": 2312,
+   "workout_titles": [
+    "Pull + cardio (9 on speed 11- rest incline3)"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-01": {
+   "steps": 4304,
+   "sleep_hours": 7.8,
+   "active_kcal": 183,
+   "workout_count": 1,
+   "workout_minutes": 71,
+   "workout_volume_kg": 7906,
+   "workout_titles": [
+    "Legs - 20mins Cardio incline"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-02": {
+   "steps": 5347,
+   "active_kcal": 164,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-10-03": {
+   "steps": 2052,
+   "sleep_hours": 7.65,
+   "active_kcal": 69,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-10-04": {
+   "steps": 6447,
+   "active_kcal": 201,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-10-05": {
+   "steps": 6725,
+   "sleep_hours": 8.62,
+   "active_kcal": 321,
+   "workout_count": 1,
+   "workout_minutes": 124,
+   "workout_volume_kg": 2384,
+   "workout_titles": [
+    "Push❌ - 60min incline"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-06": {
+   "steps": 6105,
+   "sleep_hours": 6.4,
+   "active_kcal": 214,
+   "workout_count": 1,
+   "workout_minutes": 55,
+   "workout_volume_kg": 3097,
+   "workout_titles": [
+    "Pull❌"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-07": {
+   "steps": 5950,
+   "sleep_hours": 8.77,
+   "active_kcal": 189,
+   "workout_count": 1,
+   "workout_minutes": 33,
+   "workout_volume_kg": 200,
+   "workout_titles": [
+    "❌ - cardio"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-08": {
+   "steps": 4918,
+   "sleep_hours": 5.68,
+   "active_kcal": 137,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-10-09": {
+   "steps": 11649,
+   "active_kcal": 565,
+   "workout_count": 1,
+   "workout_minutes": 46,
+   "workout_volume_kg": 3126,
+   "workout_titles": [
+    "Push"
+   ],
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-10": {
+   "steps": 6579,
+   "sleep_hours": 12.5,
+   "active_kcal": 223,
+   "workout_count": 1,
+   "workout_minutes": 52,
+   "workout_volume_kg": 4270,
+   "workout_titles": [
+    "Pull"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-11": {
+   "steps": 9810,
+   "sleep_hours": 4.52,
+   "active_kcal": 313,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-10-12": {
+   "steps": 10530,
+   "sleep_hours": 7.13,
+   "active_kcal": 306,
+   "workout_count": 1,
+   "workout_minutes": 91,
+   "workout_volume_kg": 2500,
+   "workout_titles": [
+    "Push 🛏️❌ - cardio"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-13": {
+   "steps": 4652,
+   "sleep_hours": 7.42,
+   "active_kcal": 174,
+   "workout_count": 1,
+   "workout_minutes": 47,
+   "workout_volume_kg": 6200,
+   "workout_titles": [
+    "⛑️Pull - 15 mins cardio"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-14": {
+   "steps": 8176,
+   "sleep_hours": 8.83,
+   "active_kcal": 241,
+   "workout_count": 1,
+   "workout_minutes": 46,
+   "workout_volume_kg": 10741,
+   "workout_titles": [
+    "Legs - intentional low RPE 7-8"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-15": {
+   "steps": 5197,
+   "sleep_hours": 6.85,
+   "active_kcal": 151,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-10-16": {
+   "steps": 6969,
+   "sleep_hours": 13.3,
+   "active_kcal": 217,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-10-17": {
+   "steps": 15021,
+   "sleep_hours": 6.93,
+   "active_kcal": 531,
+   "workout_count": 1,
+   "workout_minutes": 65,
+   "workout_volume_kg": 4623,
+   "workout_titles": [
+    "Push"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-18": {
+   "steps": 6055,
+   "sleep_hours": 5.95,
+   "active_kcal": 184,
+   "calories": null,
+   "weight_kg": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-10-19": {
+   "steps": 11876,
+   "sleep_hours": 5.07,
+   "active_kcal": 249,
+   "workout_count": 1,
+   "workout_minutes": 78,
+   "workout_volume_kg": 7682,
+   "workout_titles": [
+    "☀️Legs + 20mins Cardio"
+   ],
+   "calories": null,
+   "weight_kg": null
+  },
+  "2026-10-20": {
+   "steps": 9912,
+   "workout_count": 1,
+   "workout_minutes": 68,
+   "workout_volume_kg": 1712,
+   "workout_titles": [
+    "Push"
+   ],
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-10-21": {
+   "steps": 4634,
+   "weight_kg": 64.7,
+   "sleep_hours": null,
+   "calories": null,
+   "active_kcal": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  }
+ }
+}

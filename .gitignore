@@ -17,3 +17,6 @@ venv/
 # local scratch
 scratch/
 *.csv
+
+# copied into site/ at deploy time
+site/data.json
