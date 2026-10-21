@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "0 3 * * *"        # 03:00 UTC = 06:00 Riyadh
   push:
-    paths: ["inbox/**", "site/**"]   # new iPhone export or site change -> rebuild
+    paths: ["inbox/**", "site/**", "history/**", "*.py"]   # new export, site or script change -> rebuild
   workflow_dispatch:
 
 permissions:
