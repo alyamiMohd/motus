@@ -20,3 +20,4 @@ scratch/
 
 # copied into site/ at deploy time
 site/data.json
+site/workouts.json

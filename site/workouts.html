@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Stotis · Workouts</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="score" id="score"></div>
+  <ul class="parts" id="parts"></ul>
+
+  <h2>Workouts per week, last 12 weeks</h2>
+  <div class="chart" id="weeks"></div>
+
+  <h2>Exercises, estimated 1RM (last 4 weeks vs the 4 before)</h2>
+  <div id="exercises"></div>
+
+  <h2>Recent workouts</h2>
+  <div id="recent"></div>
+
+  <p class="muted" id="updated" style="font-size:12px;margin-top:32px"></p>
+</main>
+
+<script src="shared.js"></script>
+<script>
+let days = {}, exercises = {}, showAll = false;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
+const inWin = (d, from, to) => d > from && d <= to;           // (from, to]
+
+function workoutsBetween(from, to) {
+  let n = 0;
+  for (let d = from; d <= to; d = add(d, 1)) n += (days[d] || {}).workout_count || 0;
+  return n;
+}
+
+// Per exercise: mean of per-session best e1RM, last 28 days vs the 28 before.
+function exerciseStats() {
+  const r28 = add(today, -28), r56 = add(today, -56);
+  const out = [];
+  for (const [title, rows] of Object.entries(exercises)) {
+    const recent = rows.filter(r => inWin(r[0], r28, today));
+    const prior = rows.filter(r => inWin(r[0], r56, r28));
+    if (!recent.length && !prior.length) continue;
+    const cur = recent.length ? Math.max(...recent.map(r => r[1])) : rows[rows.length - 1][1];
+    const pct = recent.length && prior.length ? mean(recent.map(r => r[1])) / mean(prior.map(r => r[1])) - 1 : null;
+    out.push({ title, rows, n: recent.length + prior.length, cur, pct,
+               scored: recent.length >= 2 && prior.length >= 2 });
+  }
+  return out.sort((a, b) => b.n - a.n || a.title.localeCompare(b.title));
+}
+
+function rating(stats) {
+  const scored = stats.filter(s => s.scored);
+  const progress = scored.length
+    ? scored.reduce((t, s) => t + s.n * clamp(5 + s.pct * 100, 0, 10), 0) / scored.reduce((t, s) => t + s.n, 0)
+    : null;
+  const perWeek = workoutsBetween(add(today, -27), today) / 4;
+  const consistency = clamp(perWeek / goals.workouts * 10, 0, 10);
+  const total = progress == null ? consistency : 0.7 * progress + 0.3 * consistency;
+  return { progress, consistency, total, perWeek, nScored: scored.length };
+}
+
+function spark(rows, good) {
+  const pts = rows.slice(-24).map(r => r[1]);
+  if (pts.length < 2) return "";
+  const W = 300, H = 28, lo = Math.min(...pts), hi = Math.max(...pts), p = (hi - lo) || 1;
+  const y = v => H - 3 - (v - lo) / p * (H - 6), x = i => i / (pts.length - 1) * W;
+  const d = pts.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1)).join(" ");
+  const color = good ? "var(--green)" : "currentColor";
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="color:${color}">` +
+         `<path d="${d}" fill="none" stroke="${color}" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>`;
+}
+
+function renderScore(stats) {
+  const r = rating(stats);
+  const el = document.getElementById("score");
+  el.innerHTML = `<b class="${r.total >= 7 ? "good" : ""}">${r.total.toFixed(1)}</b><span> / 10</span>`;
+  const progressText = r.progress == null
+    ? `<span class="no">no data</span>`
+    : r.progress.toFixed(1);
+  document.getElementById("parts").innerHTML =
+    `<li><span>Progress<small>${r.nScored} exercises, estimated 1RM now vs 4 weeks ago · 70%</small></span><span>${progressText}</span></li>` +
+    `<li><span>Consistency<small>${r.perWeek.toFixed(1)} workouts a week, goal ${goals.workouts} · ${r.progress == null ? "100" : "30"}%</small></span><span>${r.consistency.toFixed(1)}</span></li>`;
+}
+
+function renderWeeks() {
+  const start = weekStart(today), N = 12, W = 300, H = 48;
+  const counts = Array.from({ length: N }, (_, i) => {
+    const s = add(start, -7 * (N - 1 - i));
+    return workoutsBetween(s, add(s, 6));
+  });
+  const hi = Math.max(goals.workouts, ...counts) * 1.1, s = W / N;
+  const bars = counts.map((c, i) => c === 0 ? "" :
+    `<rect x="${i * s + 2}" y="${H - 2 - c / hi * (H - 4)}" width="${s - 4}" height="${c / hi * (H - 4)}" fill="${c >= goals.workouts ? "var(--green)" : "currentColor"}"/>`).join("");
+  document.getElementById("weeks").innerHTML =
+    `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${bars}</svg>` +
+    `<small>${counts.join(" · ")}</small>`;
+}
+
+function renderExercises(stats) {
+  const list = stats.filter(s => s.n >= 2);
+  const shown = showAll ? list : list.slice(0, 10);
+  const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  let html = shown.map(s => {
+    const good = s.pct != null && s.pct > 0;
+    const change = s.pct == null ? `<span class="no">new</span>`
+      : `<span class="${good ? "good" : "muted"}">${s.pct > 0 ? "+" : s.pct < 0 ? "−" : ""}${Math.abs(s.pct * 100).toFixed(1)}%</span>`;
+    return `<div class="ex"><div class="head"><span class="name">${esc(s.title)}</span>` +
+           `<span>${Math.round(s.cur)} kg &nbsp;${change}</span></div>${spark(s.rows, good)}</div>`;
+  }).join("");
+  if (list.length > 10) html += `<button class="more" id="more">${showAll ? "Show fewer" : "Show all " + list.length}</button>`;
+  document.getElementById("exercises").innerHTML = html || '<span class="no">no data</span>';
+  const more = document.getElementById("more");
+  if (more) more.onclick = () => { showAll = !showAll; renderExercises(stats); };
+}
+
+function renderRecent() {
+  const dates = Object.keys(days).filter(d => days[d].workout_count).sort().slice(-7).reverse();
+  const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  document.getElementById("recent").innerHTML = dates.map(d => {
+    const r = days[d];
+    return `<div class="recent"><span class="t">${label(d)} · ${esc((r.workout_titles || []).join(", "))}</span>` +
+           `<span class="r">${r.workout_minutes} min · ${(r.workout_volume_kg / 1000).toFixed(1)} t</span></div>`;
+  }).join("") || '<span class="no">no data</span>';
+}
+
+function render() {
+  const stats = exerciseStats();
+  renderScore(stats); renderWeeks(); renderExercises(stats); renderRecent();
+}
+
+initNav("workouts", render);
+Promise.all([loadJSON("data.json"), loadJSON("workouts.json")]).then(([data, wk]) => {
+  if (!data || !wk) {
+    document.getElementById("updated").textContent = "Could not load data (open the site through a web server, not as a file).";
+  }
+  days = (data && data.days) || {};
+  exercises = (wk && wk.exercises) || {};
+  render();
+  if (wk && wk.updated) document.getElementById("updated").textContent = "Updated " +
+    new Date(wk.updated).toLocaleString("en-US", { timeZone: TZ, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+});
+</script>
+</body>
+</html>

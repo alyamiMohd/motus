@@ -41,6 +41,36 @@ def per_day(workouts: list[dict]) -> dict[str, dict]:
     return {k: {**v, "volume_kg": round(v["volume_kg"])} for k, v in days.items()}
 
 
+def exercise_history(workouts: list[dict]) -> dict[str, list]:
+    """Per exercise, per day: [date, best e1RM (Epley, reps<=12), weight, reps, volume_kg].
+
+    Warm-ups and unweighted sets are ignored. Sorted oldest first.
+    """
+    out: dict[str, dict[str, list]] = defaultdict(dict)
+    for w in workouts:
+        date = datetime.fromisoformat(w["start_time"]).astimezone(TZ).date().isoformat()
+        for ex in w.get("exercises", []):
+            best, volume = None, 0.0
+            for s in ex.get("sets", []):
+                wt, reps = s.get("weight_kg"), s.get("reps")
+                if s.get("type") == "warmup" or not wt or not reps:
+                    continue
+                volume += wt * reps
+                if reps <= 12:
+                    e1rm = wt * (1 + reps / 30)
+                    if best is None or e1rm > best[0]:
+                        best = (e1rm, wt, reps)
+            if best is None:
+                continue
+            prev = out[ex["title"]].get(date)
+            if prev:  # same exercise twice in one day: keep best, add volume
+                if best[0] <= prev[1]:
+                    best = (prev[1], prev[2], prev[3])
+                volume += prev[4]
+            out[ex["title"]][date] = [date, round(best[0], 1), best[1], best[2], round(volume)]
+    return {t: [days[d] for d in sorted(days)] for t, days in out.items()}
+
+
 if __name__ == "__main__":
     import sys
     sys.stdout.reconfigure(encoding="utf-8")

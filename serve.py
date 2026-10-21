@@ -16,8 +16,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
     def translate_path(self, path):
-        if path.split("?")[0] == "/data.json":
-            return str(ROOT / "data.json")
+        name = path.split("?")[0]
+        if name in ("/data.json", "/workouts.json"):
+            return str(ROOT / name.lstrip("/"))
         return super().translate_path(path)
 
 

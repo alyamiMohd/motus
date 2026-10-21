@@ -13,6 +13,7 @@ from common import TZ, load_env
 ROOT = Path(__file__).parent
 INBOX = ROOT / "inbox"
 DATA = ROOT / "data.json"
+WORKOUTS = ROOT / "workouts.json"
 
 FIELDS = ("steps", "sleep_hours", "calories", "weight_kg", "active_kcal",
           "workout_count", "workout_minutes", "workout_volume_kg", "workout_titles")
@@ -54,20 +55,22 @@ def load_health() -> dict[str, dict]:
     return merged
 
 
-def load_hevy() -> dict[str, dict]:
+def load_hevy() -> tuple[dict[str, dict], dict | None]:
+    """Returns (per-day workout summary, per-exercise history). Full history every run."""
     import os
     if not os.environ.get("HEVY_API_KEY"):
         print("WARN: HEVY_API_KEY not set, skipping Hevy", file=sys.stderr)
-        return {}
+        return {}, None
     try:
-        from fetch_hevy import fetch_workouts, per_day
-        ws = fetch_workouts(datetime.now(TZ) - timedelta(days=45))
-        return {d: {"workout_count": i["workouts"], "workout_minutes": i["minutes"],
+        from fetch_hevy import exercise_history, fetch_workouts, per_day
+        ws = fetch_workouts(datetime(2000, 1, 1, tzinfo=TZ))
+        days = {d: {"workout_count": i["workouts"], "workout_minutes": i["minutes"],
                     "workout_volume_kg": i["volume_kg"], "workout_titles": i["titles"]}
                 for d, i in per_day(ws).items()}
+        return days, exercise_history(ws)
     except Exception as e:  # a source failing must never break the daily run
         print(f"WARN: Hevy fetch failed: {e}", file=sys.stderr)
-        return {}
+        return {}, None
 
 
 def main() -> None:
@@ -75,9 +78,14 @@ def main() -> None:
     existing = json.loads(DATA.read_text(encoding="utf-8")) if DATA.exists() else {"days": {}}
     days = existing["days"]
 
-    for source in (load_health(), load_hevy()):
+    hevy_days, exercises = load_hevy()
+    for source in (load_health(), hevy_days):
         for date, vals in source.items():
             days.setdefault(date, {}).update(vals)  # only non-null values reach here
+    if exercises is not None:  # keep the previous file if Hevy failed
+        stamp = datetime.now(TZ).isoformat(timespec="seconds")
+        WORKOUTS.write_text(json.dumps({"updated": stamp, "exercises": exercises},
+                                       separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
 
     # make every record have every field, null when missing
     for date, rec in days.items():

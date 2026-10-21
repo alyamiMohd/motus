@@ -37,7 +37,7 @@ jobs:
         run: |
           git config user.name "stotis-bot"
           git config user.email "stotis-bot@users.noreply.github.com"
-          git add data.json
+          git add data.json workouts.json
           if ! git diff --cached --quiet; then
             git commit -m "Update data.json"
             git pull --rebase
@@ -45,7 +45,7 @@ jobs:
           fi
 
       - name: Assemble site
-        run: cp data.json site/data.json
+        run: cp data.json workouts.json site/
 
       - uses: actions/configure-pages@v5
 
