@@ -62,28 +62,25 @@ function weekStrip(ws) {   // Sunday -> Saturday circles, filled on workout days
   return `<div class="wide"><div class="week">${dots}</div></div>`;
 }
 
-function lastWeekLine(ws, workouts) {         // last week's averages, each vs the week before it
+function lastWeekLine(ws, workouts) {         // last week's averages; steps and weight also show the change vs the week before
   const from = add(ws, -7), to = add(ws, -1), pFrom = add(from, -7), pTo = add(from, -1);
-  const dm = (iso, month) => new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB",
-    month ? { day: "numeric", month: "short", timeZone: "UTC" } : { day: "numeric", timeZone: "UTC" });
-  const span = (a, b) => (a.slice(5, 7) === b.slice(5, 7) ? dm(a) : dm(a, true)) + "–" + dm(b, true);   // 11–17 Oct
   const sign = d => (d > 0 ? "+" : d < 0 ? "−" : "±");
-  // value + (change vs previous week's average); green when it meets the standard
-  const part = (k, fmt, unit, noun, dec, good) => {
-    const cur = avgRange(k, from, to), prev = avgRange(k, pFrom, pTo);
+  // value (+ change vs previous week's average when compare is set); green when it meets the standard
+  const part = (k, fmt, unit, noun, dec, good, compare, changeUnit) => {
+    const cur = avgRange(k, from, to);
     if (cur == null) return `<span class="no">no ${noun} data</span>`;
+    const prev = compare ? avgRange(k, pFrom, pTo) : null;
     const d = prev == null ? null : cur - prev;
-    const dTxt = d == null ? "" : ` (${sign(+d.toFixed(dec))}${fmt(Math.abs(d))})`;
+    const dTxt = d == null ? "" : ` (${sign(+d.toFixed(dec))}${fmt(Math.abs(d))}${changeUnit || ""})`;
     return `<span class="${good(cur, d) ? "good2" : ""}">${fmt(cur)} ${unit}${dTxt}</span>`;
   };
   const f1 = v => v.toFixed(1), f0 = v => Math.round(v).toLocaleString("en-US");
-  const wPrev = workoutsBetween(pFrom, pTo), wd = workouts - wPrev;
-  return `<div class="wide lastweek"><small>Last week, ${span(from, to)} (vs ${span(pFrom, pTo)}) <span class="sep">|</span> ` + [
-    part("sleep_hours", f1, "h sleep", "sleep", 1, cur => cur >= goals.sleep),
-    part("steps", f0, "steps", "step", 0, cur => cur >= goals.steps),
-    part("calories", f0, "kcal", "calorie", 0, cur => cur <= goals.calories),
-    part("weight_kg", f1, "kg", "weight", 1, (cur, d) => d != null && d < 0 && -d >= goals.weight),
-    `<span class="${workouts >= goals.workouts ? "good2" : ""}">${workouts} workout${workouts === 1 ? "" : "s"} (${sign(wd)}${Math.abs(wd)})</span>`,
+  return `<div class="wide lastweek"><small>Last Week: ` + [
+    part("sleep_hours", f1, "h sleep", "sleep", 1, cur => cur >= goals.sleep, false),
+    part("steps", f0, "steps", "step", 0, cur => cur >= goals.steps, true),
+    part("calories", f0, "kcal", "calorie", 0, cur => cur <= goals.calories, false),
+    part("weight_kg", f1, "kg", "weight", 1, (cur, d) => d != null && d < 0 && -d >= goals.weight, true, " kg"),
+    `<span class="${workouts >= goals.workouts ? "good2" : ""}">${workouts} workout${workouts === 1 ? "" : "s"}</span>`,
   ].join(' <span class="sep">|</span> ') + "</small></div>";
 }
 
