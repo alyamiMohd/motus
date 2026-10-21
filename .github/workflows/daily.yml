@@ -1,0 +1,64 @@
+name: Daily update
+
+on:
+  schedule:
+    - cron: "0 3 * * *"        # 03:00 UTC = 06:00 Riyadh
+  push:
+    paths: ["inbox/**"]        # new iPhone export -> rebuild right away
+  workflow_dispatch:
+
+permissions:
+  contents: write              # commit data.json
+  pages: write
+  id-token: write
+
+concurrency:
+  group: daily
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - name: Build data.json
+        env:
+          HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
+        run: python daily.py
+
+      - name: Commit data.json
+        run: |
+          git config user.name "stotis-bot"
+          git config user.email "stotis-bot@users.noreply.github.com"
+          git add data.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update data.json"
+            git pull --rebase
+            git push
+          fi
+
+      - name: Assemble site
+        run: cp data.json site/data.json
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -123,7 +123,11 @@ function chart(days, m) {
   return div;
 }
 
-fetch("data.json", { cache: "no-store" }).then(r => r.json()).catch(() => ({ days: {} })).then(data => {
+fetch("data.json", { cache: "no-store" }).then(r => { if (!r.ok) throw 0; return r.json(); }).catch(() => null).then(data => {
+  if (!data) {
+    document.getElementById("updated").textContent = "Could not load data.json (open the site through a web server, not as a file).";
+    data = { days: {} };
+  }
   const days = data.days || {};
   summary(days); table(days);
   M.forEach(m => document.getElementById("charts").append(chart(days, m)));
