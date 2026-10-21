@@ -28,7 +28,7 @@ function initNav(active, onChange) {
   document.body.insertAdjacentHTML("afterbegin", `
 <nav>
   <div class="bar">
-    <a href="./"><b>Stotis</b></a>
+    <a href="./"><b>Motus</b></a>
     <span class="links">
       <a href="./" class="${active === "home" ? "on" : ""}">Dashboard</a>
       <a href="workouts.html" class="${active === "workouts" ? "on" : ""}">Workouts</a>
