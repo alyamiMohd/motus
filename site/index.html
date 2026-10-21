@@ -12,7 +12,22 @@
   }
   body { margin: 0; background: var(--bg); color: var(--text);
          font: 16px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width: 480px; margin: 0 auto; padding: 24px 16px 48px; }
+  main, nav > div { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+  main { padding-bottom: 48px; }
+  nav { border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+  .bar { display: flex; justify-content: space-between; align-items: center; height: 48px; }
+  nav b { font-weight: 600; letter-spacing: -.01em; }
+  nav button { font: inherit; font-size: 14px; color: var(--muted); background: none; border: 0; padding: 8px 0 8px 16px; cursor: pointer; }
+  nav button[aria-expanded="true"] { color: var(--text); }
+  #standards { display: none; border-top: 1px solid var(--line); padding-top: 16px; padding-bottom: 16px; font-size: 14px; }
+  #standards.open { display: block; }
+  #standards label { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+  #standards input { width: 90px; font: inherit; text-align: right; color: var(--text); background: none;
+                     border: 0; border-bottom: 1px solid var(--line); padding: 4px 0; border-radius: 0; }
+  #standards input:focus { outline: 0; border-color: var(--text); }
+  #standards small { color: var(--muted); font-size: 12px; }
+  #standards .row2 { display: flex; justify-content: space-between; margin-top: 8px; }
+  #reset { font: inherit; font-size: 12px; color: var(--muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
   .muted, .no { color: var(--muted); }
   .good { color: var(--green); }
   .top { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 16px; margin-bottom: 40px; }
@@ -30,6 +45,18 @@
 </style>
 </head>
 <body>
+<nav>
+  <div class="bar">
+    <b>Stotis</b>
+    <button id="toggle" aria-expanded="false" aria-controls="standards">Standards</button>
+  </div>
+  <div id="standards">
+    <label>Steps per day <input id="s-steps" type="number" inputmode="numeric" min="0" step="500"></label>
+    <label>Sleep hours per night <input id="s-sleep" type="number" inputmode="decimal" min="0" max="24" step="0.5"></label>
+    <label>Weight loss kg per week <input id="s-weight" type="number" inputmode="decimal" min="0" step="0.1"></label>
+    <div class="row2"><small>Green when you reach it. Saved on this device.</small><button id="reset">Reset</button></div>
+  </div>
+</nav>
 <main>
   <div class="top" id="top"></div>
   <table>
@@ -41,64 +68,69 @@
 </main>
 
 <script>
-const TZ = "Asia/Riyadh", GOAL_STEPS = 8000;
+const TZ = "Asia/Riyadh";
+const DEFAULTS = { steps: 8000, sleep: 7, weight: 0 };   // weight 0 = any loss counts
+let goals = { ...DEFAULTS };
+try { Object.assign(goals, JSON.parse(localStorage.getItem("stotis-goals") || "{}")); } catch (e) {}
+const saveGoals = () => { try { localStorage.setItem("stotis-goals", JSON.stringify(goals)); } catch (e) {} };
+
 const M = [
-  { k: "sleep_hours", name: "Sleep", unit: "h", f: v => v.toFixed(1) },
-  { k: "steps", name: "Steps", unit: "", f: v => Math.round(v).toLocaleString("en-US") },
-  { k: "calories", name: "Calories", unit: "kcal", f: v => Math.round(v).toLocaleString("en-US") },
-  { k: "weight_kg", name: "Weight", unit: "kg", f: v => v.toFixed(1) },
+  { k: "sleep_hours", name: "Sleep", f: v => v.toFixed(1), met: v => v >= goals.sleep },
+  { k: "steps", name: "Steps", f: v => Math.round(v).toLocaleString("en-US"), met: v => v >= goals.steps },
+  { k: "calories", name: "Calories", f: v => Math.round(v).toLocaleString("en-US"), met: () => false },
+  { k: "weight_kg", name: "Weight", f: v => v.toFixed(1), met: () => false },
 ];
+const byKey = Object.fromEntries(M.map(m => [m.k, m]));
 const today = new Date().toLocaleDateString("en-CA", { timeZone: TZ });
 const add = (iso, n) => { const d = new Date(iso + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 const label = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", { weekday: "short", day: "numeric", timeZone: "UTC" });
 const NO = '<span class="no">no data</span>';
+let days = {};
 
-function avg(days, k) {                       // 7 full days, ending yesterday
+function avg(k) {                              // 7 full days, ending yesterday
   const v = [];
   for (let i = 1; i <= 7; i++) { const x = (days[add(today, -i)] || {})[k]; if (x != null) v.push(x); }
   return v.length ? v.reduce((a, b) => a + b) / v.length : null;
 }
 
-function weightDelta(days) {                  // latest reading this week vs the one before the week
+function weightPerWeek() {                     // kg per week; negative = losing
   const r = Object.keys(days).filter(d => days[d].weight_kg != null).sort();
   const start = add(today, -6), win = r.filter(d => d >= start);
   if (!win.length) return null;
   const base = r.filter(d => d < start).pop() || (win.length > 1 ? win[0] : null);
-  return base ? days[win[win.length - 1]].weight_kg - days[base].weight_kg : null;
+  if (!base) return null;
+  const last = win[win.length - 1];
+  const span = (new Date(last) - new Date(base)) / 864e5;
+  return span > 0 ? (days[last].weight_kg - days[base].weight_kg) / span * 7 : null;
 }
 
-function summary(days) {
-  const items = [
-    ["Sleep", avg(days, "sleep_hours"), v => v.toFixed(1) + " h", false],
-    ["Steps", avg(days, "steps"), v => Math.round(v).toLocaleString("en-US"), null],
-    ["Calories", avg(days, "calories"), v => Math.round(v).toLocaleString("en-US"), false],
-  ];
-  let html = "";
-  for (const [name, v, f] of items) {
-    const green = name === "Steps" && v != null && v > GOAL_STEPS;
-    html += `<div><b class="${green ? "good" : ""}">${v == null ? '<span class="no">no data</span>' : f(v)}</b><small>${name}, 7-day avg</small></div>`;
-  }
-  const d = weightDelta(days);
-  const txt = d == null ? '<span class="no">no data</span>' : (d > 0 ? "+" : d < 0 ? "−" : "") + Math.abs(d).toFixed(1) + " kg";
-  html += `<div><b class="${d != null && d < 0 ? "good" : ""}">${txt}</b><small>Weight change${d == null ? "" : d < 0 ? ", lost" : d > 0 ? ", gained" : ""}</small></div>`;
-  document.getElementById("top").innerHTML = html;
+function summary() {
+  const cell = (val, text, green, sub) =>
+    `<div><b class="${green ? "good" : ""}">${val == null ? NO : text}</b><small>${sub}</small></div>`;
+  const sl = avg("sleep_hours"), st = avg("steps"), ca = avg("calories"), w = weightPerWeek();
+  const loss = w == null ? null : -w;
+  const wText = w == null ? "" : (w > 0 ? "+" : w < 0 ? "−" : "") + Math.abs(w).toFixed(1) + " kg";
+  document.getElementById("top").innerHTML =
+    cell(sl, sl == null ? "" : sl.toFixed(1) + " h", sl != null && sl >= goals.sleep, "Sleep, 7-day avg") +
+    cell(st, st == null ? "" : Math.round(st).toLocaleString("en-US"), st != null && st >= goals.steps, "Steps, 7-day avg") +
+    cell(ca, ca == null ? "" : Math.round(ca).toLocaleString("en-US"), false, "Calories, 7-day avg") +
+    cell(w, wText, loss != null && loss > 0 && loss >= goals.weight,
+         w == null ? "Weight per week" : "Weight per week, " + (w < 0 ? "lost" : w > 0 ? "gained" : "no change"));
 }
 
-function table(days) {
+function table() {
   let html = "";
   for (let i = 0; i < 7; i++) {
     const d = add(today, -i), r = days[d] || {};
     html += `<tr><td>${label(d)}</td>` + M.map(m => {
       const v = r[m.k];
-      if (v == null) return `<td>${NO}</td>`;
-      const green = m.k === "steps" && v > GOAL_STEPS;
-      return `<td class="${green ? "good" : ""}">${m.f(v)}</td>`;
+      return v == null ? `<td>${NO}</td>` : `<td class="${m.met(v) ? "good" : ""}">${m.f(v)}</td>`;
     }).join("") + "</tr>";
   }
   document.getElementById("rows").innerHTML = html;
 }
 
-function chart(days, m) {
+function chart(m) {
   const N = 30, W = 300, H = 48;
   const vals = Array.from({ length: N }, (_, i) => (days[add(today, i - N + 1)] || {})[m.k] ?? null);
   const have = vals.filter(v => v != null);
@@ -117,20 +149,47 @@ function chart(days, m) {
         vals.map((v, i) => v == null ? "" : `<circle cx="${i * s + s / 2}" cy="${y(v)}" r="2" fill="currentColor"/>`).join("");
   } else {
     g = vals.map((v, i) => v == null ? "" :
-      `<rect x="${i * s + 1}" y="${y(v)}" width="${s - 2}" height="${H - 2 - y(v)}" fill="${m.k === "steps" && v > GOAL_STEPS ? "var(--green)" : "currentColor"}"/>`).join("");
+      `<rect x="${i * s + 1}" y="${y(v)}" width="${s - 2}" height="${H - 2 - y(v)}" fill="${m.met(v) ? "var(--green)" : "currentColor"}"/>`).join("");
   }
   div.innerHTML = `<small>${m.name}, 30 days</small><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${g}</svg>`;
   return div;
 }
+
+function render() {
+  summary(); table();
+  const box = document.getElementById("charts");
+  box.replaceChildren(...M.map(chart));
+}
+
+// --- standards panel ---
+const inputs = { steps: "s-steps", sleep: "s-sleep", weight: "s-weight" };
+for (const [key, id] of Object.entries(inputs)) {
+  const el = document.getElementById(id);
+  el.value = goals[key];
+  el.addEventListener("input", () => {
+    const v = parseFloat(el.value);
+    goals[key] = Number.isFinite(v) && v >= 0 ? v : DEFAULTS[key];
+    saveGoals(); render();
+  });
+}
+document.getElementById("reset").addEventListener("click", () => {
+  goals = { ...DEFAULTS };
+  for (const [key, id] of Object.entries(inputs)) document.getElementById(id).value = goals[key];
+  saveGoals(); render();
+});
+const toggle = document.getElementById("toggle"), panel = document.getElementById("standards");
+toggle.addEventListener("click", () => {
+  const open = panel.classList.toggle("open");
+  toggle.setAttribute("aria-expanded", open);
+});
 
 fetch("data.json", { cache: "no-store" }).then(r => { if (!r.ok) throw 0; return r.json(); }).catch(() => null).then(data => {
   if (!data) {
     document.getElementById("updated").textContent = "Could not load data.json (open the site through a web server, not as a file).";
     data = { days: {} };
   }
-  const days = data.days || {};
-  summary(days); table(days);
-  M.forEach(m => document.getElementById("charts").append(chart(days, m)));
+  days = data.days || {};
+  render();
   if (data.updated) document.getElementById("updated").textContent = "Updated " +
     new Date(data.updated).toLocaleString("en-US", { timeZone: TZ, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 });
