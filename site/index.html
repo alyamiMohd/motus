@@ -28,9 +28,9 @@ const M = [
 ];
 let days = {};
 
-function avg(k) {                              // 7 full days, ending yesterday
+function avgRange(k, from, to) {               // mean of the days that have data, inclusive dates
   const v = [];
-  for (let i = 1; i <= 7; i++) { const x = (days[add(today, -i)] || {})[k]; if (x != null) v.push(x); }
+  for (let d = from; d <= to; d = add(d, 1)) { const x = (days[d] || {})[k]; if (x != null) v.push(x); }
   return v.length ? v.reduce((a, b) => a + b) / v.length : null;
 }
 
@@ -63,20 +63,33 @@ function weekStrip(ws, thisWeek, lastWeek) {   // Sunday -> Saturday circles, fi
          `<small>Workouts this week, ${thisWeek} of ${goals.workouts} · last week ${lastWeek}</small></div>`;
 }
 
+function lastWeekLine(ws, workouts) {         // previous Sunday -> Saturday, one line
+  const from = add(ws, -7), to = add(ws, -1);
+  const sl = avgRange("sleep_hours", from, to), st = avgRange("steps", from, to), ca = avgRange("calories", from, to);
+  const part = (v, f, unit, noun) => v == null ? `<span class="no">no ${noun} data</span>` : f(v) + " " + unit;
+  return `<div class="wide lastweek"><small>Last week · ` + [
+    part(sl, v => v.toFixed(1), "h sleep", "sleep"),
+    part(st, v => Math.round(v).toLocaleString("en-US"), "steps", "step"),
+    part(ca, v => Math.round(v).toLocaleString("en-US"), "kcal", "calorie"),
+    workouts + " workout" + (workouts === 1 ? "" : "s"),
+  ].join(" · ") + "</small></div>";
+}
+
 function summary() {
   const cell = (val, text, green, sub, cls) =>
     `<div class="${cls || ""}"><b class="${green ? "good" : ""}">${val == null ? NO : text}</b><small>${sub}</small></div>`;
-  const sl = avg("sleep_hours"), st = avg("steps"), ca = avg("calories"), w = weightPerWeek();
+  const ws = weekStart(today);                 // weeks start on Sunday; averages run Sunday -> today
+  const sl = avgRange("sleep_hours", ws, today), st = avgRange("steps", ws, today), ca = avgRange("calories", ws, today), w = weightPerWeek();
   const loss = w == null ? null : -w;
   const wText = w == null ? "" : (w > 0 ? "+" : w < 0 ? "−" : "") + Math.abs(w).toFixed(1) + " kg";
-  const ws = weekStart(today), thisWeek = workoutsBetween(ws, today), lastWeek = workoutsBetween(add(ws, -7), add(ws, -1));
+  const thisWeek = workoutsBetween(ws, today), lastWeek = workoutsBetween(add(ws, -7), add(ws, -1));
   document.getElementById("top").innerHTML =
-    cell(sl, sl == null ? "" : sl.toFixed(1) + " h", sl != null && sl >= goals.sleep, "Sleep, 7-day avg") +
-    cell(st, st == null ? "" : Math.round(st).toLocaleString("en-US"), st != null && st >= goals.steps, "Steps, 7-day avg") +
-    cell(ca, ca == null ? "" : Math.round(ca).toLocaleString("en-US"), false, "Calories, 7-day avg") +
+    cell(sl, sl == null ? "" : sl.toFixed(1) + " h", sl != null && sl >= goals.sleep, "Sleep, avg since Sunday") +
+    cell(st, st == null ? "" : Math.round(st).toLocaleString("en-US"), st != null && st >= goals.steps, "Steps, avg since Sunday") +
+    cell(ca, ca == null ? "" : Math.round(ca).toLocaleString("en-US"), false, "Calories, avg since Sunday") +
     cell(w, wText, loss != null && loss > 0 && loss >= goals.weight,
          w == null ? "Weight per week" : "Weight per week, " + (w < 0 ? "lost" : w > 0 ? "gained" : "no change")) +
-    weekStrip(ws, thisWeek, lastWeek);
+    weekStrip(ws, thisWeek, lastWeek) + lastWeekLine(ws, lastWeek);
 }
 
 function table() {
