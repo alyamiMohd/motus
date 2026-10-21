@@ -95,6 +95,13 @@ def main() -> None:
             if rec.get("calories") is None:
                 rec["calories"] = kcal
 
+    wh = ROOT / "history" / "mfp-weight.json"
+    if wh.exists():
+        for date, kg in json.loads(wh.read_text(encoding="utf-8")).get("weight_kg", {}).items():
+            rec = days.setdefault(date, {})
+            if rec.get("weight_kg") is None:
+                rec["weight_kg"] = kg
+
     # make every record have every field, null when missing
     for date, rec in days.items():
         for f in FIELDS:
