@@ -1,0 +1,353 @@
+{
+  "activeCalories" : [
+    {
+      "date" : "2026-10-14",
+      "unit" : "kcal",
+      "value" : 241.40600000000001
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "kcal",
+      "value" : 150.67100000000005
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "kcal",
+      "value" : 217.27200000000016
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "kcal",
+      "value" : 531.33199999999999
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "kcal",
+      "value" : 184.15800000000016
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "kcal",
+      "value" : 249.41599999999997
+    }
+  ],
+  "basalCalories" : [
+
+  ],
+  "bmi" : [
+
+  ],
+  "bodyFat" : [
+
+  ],
+  "dietaryCarbohydrates" : [
+
+  ],
+  "dietaryEnergy" : [
+    {
+      "date" : "2026-10-21",
+      "unit" : "kcal",
+      "value" : 0
+    }
+  ],
+  "dietaryFatTotal" : [
+
+  ],
+  "dietaryProtein" : [
+
+  ],
+  "exerciseMinutes" : [
+
+  ],
+  "exportInfo" : {
+    "appVersion" : "1.6.1",
+    "dataTypes" : [
+      "stepCount",
+      "walkingDistance",
+      "activeCalories",
+      "basalCalories",
+      "exerciseMinutes",
+      "flightsClimbed",
+      "restingHeartRate",
+      "walkingHeartRate",
+      "heartRateVariability",
+      "oxygenSaturation",
+      "respiratoryRate",
+      "weight",
+      "bmi",
+      "bodyFat",
+      "leanBodyMass",
+      "dietaryEnergy",
+      "dietaryProtein",
+      "dietaryCarbohydrates",
+      "dietaryFatTotal",
+      "sleepTime",
+      "vo2Max",
+      "wristTemperature"
+    ],
+    "endDate" : "2026-10-21",
+    "exportDate" : "2026-10-21T11:43:08Z",
+    "measurementSystem" : "metric",
+    "startDate" : "2026-10-14"
+  },
+  "flightsClimbed" : [
+    {
+      "date" : "2026-10-14",
+      "unit" : "count",
+      "value" : 3
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "count",
+      "value" : 4
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "count",
+      "value" : 6
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "count",
+      "value" : 6
+    },
+    {
+      "date" : "2026-10-20",
+      "unit" : "count",
+      "value" : 7
+    },
+    {
+      "date" : "2026-10-21",
+      "unit" : "count",
+      "value" : 3
+    }
+  ],
+  "heartRateVariability" : [
+
+  ],
+  "leanBodyMass" : [
+
+  ],
+  "oxygenSaturation" : [
+
+  ],
+  "respiratoryRate" : [
+
+  ],
+  "restingHeartRate" : [
+    {
+      "date" : "2026-10-14",
+      "unit" : "bpm",
+      "value" : 48
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "bpm",
+      "value" : 39
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "bpm",
+      "value" : 44
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "bpm",
+      "value" : 48
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "bpm",
+      "value" : 45
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "bpm",
+      "value" : 39
+    }
+  ],
+  "sleepTime" : [
+    {
+      "date" : "2026-10-14",
+      "stages" : {
+        "awake" : 8,
+        "core" : 334,
+        "deep" : 44,
+        "rem" : 152,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 530
+    },
+    {
+      "date" : "2026-10-15",
+      "stages" : {
+        "awake" : 1,
+        "core" : 259,
+        "deep" : 76,
+        "rem" : 76,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 411
+    },
+    {
+      "date" : "2026-10-16",
+      "stages" : {
+        "awake" : 22,
+        "core" : 405,
+        "deep" : 282,
+        "rem" : 111,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 798
+    },
+    {
+      "date" : "2026-10-17",
+      "stages" : {
+        "awake" : 2,
+        "core" : 229,
+        "deep" : 108,
+        "rem" : 79,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 416
+    },
+    {
+      "date" : "2026-10-18",
+      "stages" : {
+        "awake" : 4,
+        "core" : 138,
+        "deep" : 155,
+        "rem" : 64,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 357
+    },
+    {
+      "date" : "2026-10-19",
+      "stages" : {
+        "awake" : 0,
+        "core" : 177,
+        "deep" : 66,
+        "rem" : 61,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 304
+    }
+  ],
+  "stepCount" : [
+    {
+      "date" : "2026-10-14",
+      "unit" : "count",
+      "value" : 8176
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "count",
+      "value" : 5197
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "count",
+      "value" : 6969.4831102609478
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "count",
+      "value" : 15020.516889739052
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "count",
+      "value" : 6055
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "count",
+      "value" : 11876
+    },
+    {
+      "date" : "2026-10-20",
+      "unit" : "count",
+      "value" : 9911.8051631869694
+    },
+    {
+      "date" : "2026-10-21",
+      "unit" : "count",
+      "value" : 4634.1948368130306
+    }
+  ],
+  "vo2Max" : [
+
+  ],
+  "walkingDistance" : [
+    {
+      "date" : "2026-10-14",
+      "unit" : "m",
+      "value" : 5439.1764504811727
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "m",
+      "value" : 3505.6770082684234
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "m",
+      "value" : 4360.4423626046073
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "m",
+      "value" : 10195.138288242333
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "m",
+      "value" : 4207.7899999497458
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "m",
+      "value" : 8289.9351238245144
+    },
+    {
+      "date" : "2026-10-20",
+      "unit" : "m",
+      "value" : 7024.8600797461331
+    },
+    {
+      "date" : "2026-10-21",
+      "unit" : "m",
+      "value" : 3272.4315235601753
+    }
+  ],
+  "walkingHeartRate" : [
+
+  ],
+  "weight" : [
+    {
+      "date" : "2026-10-21",
+      "unit" : "kg",
+      "value" : 64.699965497380077
+    }
+  ],
+  "wristTemperature" : [
+
+  ]
+}
