@@ -9,7 +9,11 @@
 </head>
 <body>
 <main>
-  <div class="score" id="score"></div>
+  <h2 style="margin-top:0">Last workout rating</h2>
+  <div class="score" id="last"></div>
+
+  <h2>Overall rating, last 4 weeks</h2>
+  <div class="score sm" id="score"></div>
   <ul class="parts" id="parts"></ul>
 
   <h2>Workouts per week, last 12 weeks</h2>
@@ -18,8 +22,8 @@
   <h2>Exercises, estimated 1RM (last 4 weeks vs the 4 before)</h2>
   <div id="exercises"></div>
 
-  <h2>Recent workouts</h2>
-  <div id="recent"></div>
+  <h2>Workout ratings &nbsp;<button class="tab on" data-w="0">This week</button> <button class="tab" data-w="1">Last week</button></h2>
+  <div id="ratings"></div>
 
   <p class="muted" id="updated" style="font-size:12px;margin-top:32px"></p>
 </main>
@@ -118,19 +122,60 @@ function renderExercises(stats) {
   if (more) more.onclick = () => { showAll = !showAll; renderExercises(stats); };
 }
 
-function renderRecent() {
-  const dates = Object.keys(days).filter(d => days[d].workout_count).sort().slice(-7).reverse();
-  const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  document.getElementById("recent").innerHTML = dates.map(d => {
-    const r = days[d];
-    return `<div class="recent"><span class="t">${label(d)} · ${esc((r.workout_titles || []).join(", "))}</span>` +
-           `<span class="r">${r.workout_minutes} min · ${(r.workout_volume_kg / 1000).toFixed(1)} t</span></div>`;
-  }).join("") || '<span class="no">no data</span>';
+// One workout: each exercise's best e1RM that day vs the mean of its previous (up to) 4 sessions.
+function workoutScore(date) {
+  const parts = [];
+  for (const [title, rows] of Object.entries(exercises)) {
+    const i = rows.findIndex(r => r[0] === date);
+    if (i < 0) continue;
+    const prev = rows.slice(Math.max(0, i - 4), i);
+    if (prev.length < 2) continue;                       // not enough history to compare
+    const pct = rows[i][1] / mean(prev.map(r => r[1])) - 1;
+    parts.push({ title, pct, score: clamp(5 + pct * 100, 0, 10) });
+  }
+  return parts.length ? { score: mean(parts.map(p => p.score)), parts } : null;
 }
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pctText = p => (p > 0 ? "+" : p < 0 ? "−" : "") + Math.abs(p * 100).toFixed(1) + "%";
+const scoreHTML = sc => sc == null ? '<span class="no">no data</span>'
+  : `<span class="${sc >= 7 ? "good" : ""}">${sc.toFixed(1)}</span>`;
+
+function workoutDates() { return Object.keys(days).filter(d => days[d].workout_count).sort(); }
+
+function renderLast() {
+  const dates = workoutDates();
+  const el = document.getElementById("last");
+  if (!dates.length) { el.innerHTML = '<span class="no">no data</span>'; return; }
+  const d = dates[dates.length - 1], r = workoutScore(d);
+  el.innerHTML = r
+    ? `<b class="${r.score >= 7 ? "good" : ""}">${r.score.toFixed(1)}</b><span> / 10</span>`
+    : '<span class="no" style="font-size:20px">no data</span>';
+  el.insertAdjacentHTML("beforeend", `<div><small>${label(d)} · ${esc((days[d].workout_titles || []).join(", "))}</small></div>`);
+}
+
+let weekOffset = 0;
+function renderRatings() {
+  const ws = add(weekStart(today), -7 * weekOffset);
+  const dates = workoutDates().filter(d => d >= ws && d <= add(ws, 6)).reverse();
+  const scored = dates.map(workoutScore).filter(Boolean);
+  let html = dates.map(d => {
+    const r = workoutScore(d), t = esc((days[d].workout_titles || []).join(", "));
+    const detail = r ? r.parts.sort((a, b) => b.pct - a.pct).map(p =>
+      `<div class="recent"><span class="t">${esc(p.title)}</span><span class="r ${p.pct > 0 ? "good" : ""}">${pctText(p.pct)}</span></div>`).join("")
+      : '<div class="recent"><span class="t muted">not enough history to compare</span></div>';
+    return `<details><summary class="recent"><span class="t">${label(d)} · ${t}</span><span>${scoreHTML(r && r.score)}</span></summary>${detail}</details>`;
+  }).join("");
+  if (!dates.length) html = '<span class="no">no workouts</span>';
+  else if (scored.length > 1) html += `<div class="recent"><span class="t muted">Average</span><span>${scoreHTML(mean(scored.map(r => r.score)))}</span></div>`;
+  document.getElementById("ratings").innerHTML = html;
+  document.querySelectorAll(".tab").forEach(b => b.classList.toggle("on", +b.dataset.w === weekOffset));
+}
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => { weekOffset = +b.dataset.w; renderRatings(); });
 
 function render() {
   const stats = exerciseStats();
-  renderScore(stats); renderWeeks(); renderExercises(stats); renderRecent();
+  renderLast(); renderScore(stats); renderWeeks(); renderExercises(stats); renderRatings();
 }
 
 initNav("workouts", render);
