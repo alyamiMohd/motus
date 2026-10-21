@@ -1,0 +1,1133 @@
+{
+  "activeCalories" : [
+    {
+      "date" : "2026-09-21",
+      "unit" : "kcal",
+      "value" : 153.90700000000021
+    },
+    {
+      "date" : "2026-09-22",
+      "unit" : "kcal",
+      "value" : 158.48800000000011
+    },
+    {
+      "date" : "2026-09-23",
+      "unit" : "kcal",
+      "value" : 76.598999999999961
+    },
+    {
+      "date" : "2026-09-24",
+      "unit" : "kcal",
+      "value" : 382.07800000000003
+    },
+    {
+      "date" : "2026-09-25",
+      "unit" : "kcal",
+      "value" : 206.16600000000003
+    },
+    {
+      "date" : "2026-09-26",
+      "unit" : "kcal",
+      "value" : 30.986999999999998
+    },
+    {
+      "date" : "2026-09-27",
+      "unit" : "kcal",
+      "value" : 273.1629999999999
+    },
+    {
+      "date" : "2026-09-28",
+      "unit" : "kcal",
+      "value" : 367.05700000000013
+    },
+    {
+      "date" : "2026-09-29",
+      "unit" : "kcal",
+      "value" : 163.42500000000004
+    },
+    {
+      "date" : "2026-09-30",
+      "unit" : "kcal",
+      "value" : 365.83699999999988
+    },
+    {
+      "date" : "2026-10-01",
+      "unit" : "kcal",
+      "value" : 183.46499999999983
+    },
+    {
+      "date" : "2026-10-02",
+      "unit" : "kcal",
+      "value" : 164.40300000000013
+    },
+    {
+      "date" : "2026-10-03",
+      "unit" : "kcal",
+      "value" : 68.642999999999944
+    },
+    {
+      "date" : "2026-10-04",
+      "unit" : "kcal",
+      "value" : 201.2060000000003
+    },
+    {
+      "date" : "2026-10-05",
+      "unit" : "kcal",
+      "value" : 320.72500000000002
+    },
+    {
+      "date" : "2026-10-06",
+      "unit" : "kcal",
+      "value" : 214.33199999999999
+    },
+    {
+      "date" : "2026-10-07",
+      "unit" : "kcal",
+      "value" : 188.85399999999987
+    },
+    {
+      "date" : "2026-10-08",
+      "unit" : "kcal",
+      "value" : 136.84999999999999
+    },
+    {
+      "date" : "2026-10-09",
+      "unit" : "kcal",
+      "value" : 564.67399999999964
+    },
+    {
+      "date" : "2026-10-10",
+      "unit" : "kcal",
+      "value" : 223.16499999999999
+    },
+    {
+      "date" : "2026-10-11",
+      "unit" : "kcal",
+      "value" : 313.21100000000001
+    },
+    {
+      "date" : "2026-10-12",
+      "unit" : "kcal",
+      "value" : 306.3250000000001
+    },
+    {
+      "date" : "2026-10-13",
+      "unit" : "kcal",
+      "value" : 174.03600000000012
+    },
+    {
+      "date" : "2026-10-14",
+      "unit" : "kcal",
+      "value" : 241.40600000000001
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "kcal",
+      "value" : 150.67100000000005
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "kcal",
+      "value" : 217.27200000000016
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "kcal",
+      "value" : 531.33199999999999
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "kcal",
+      "value" : 184.15800000000016
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "kcal",
+      "value" : 249.41599999999997
+    }
+  ],
+  "basalCalories" : [
+    {
+      "date" : "2026-10-11",
+      "unit" : "kcal",
+      "value" : 13.554999999999987
+    }
+  ],
+  "bmi" : [
+
+  ],
+  "bodyFat" : [
+
+  ],
+  "dietaryCarbohydrates" : [
+
+  ],
+  "dietaryEnergy" : [
+    {
+      "date" : "2026-10-21",
+      "unit" : "kcal",
+      "value" : 0
+    }
+  ],
+  "dietaryFatTotal" : [
+
+  ],
+  "dietaryProtein" : [
+
+  ],
+  "exerciseMinutes" : [
+
+  ],
+  "exportInfo" : {
+    "appVersion" : "1.6.1",
+    "dataTypes" : [
+      "stepCount",
+      "walkingDistance",
+      "activeCalories",
+      "basalCalories",
+      "exerciseMinutes",
+      "flightsClimbed",
+      "restingHeartRate",
+      "walkingHeartRate",
+      "heartRateVariability",
+      "oxygenSaturation",
+      "respiratoryRate",
+      "weight",
+      "bmi",
+      "bodyFat",
+      "leanBodyMass",
+      "dietaryEnergy",
+      "dietaryProtein",
+      "dietaryCarbohydrates",
+      "dietaryFatTotal",
+      "sleepTime",
+      "vo2Max",
+      "wristTemperature"
+    ],
+    "endDate" : "2026-10-21",
+    "exportDate" : "2026-10-21T11:44:42Z",
+    "measurementSystem" : "metric",
+    "startDate" : "2026-09-21"
+  },
+  "flightsClimbed" : [
+    {
+      "date" : "2026-09-21",
+      "unit" : "count",
+      "value" : 1
+    },
+    {
+      "date" : "2026-09-22",
+      "unit" : "count",
+      "value" : 3
+    },
+    {
+      "date" : "2026-09-24",
+      "unit" : "count",
+      "value" : 4
+    },
+    {
+      "date" : "2026-09-25",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-09-26",
+      "unit" : "count",
+      "value" : 1
+    },
+    {
+      "date" : "2026-09-27",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-09-28",
+      "unit" : "count",
+      "value" : 4
+    },
+    {
+      "date" : "2026-09-29",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-09-30",
+      "unit" : "count",
+      "value" : 3
+    },
+    {
+      "date" : "2026-10-02",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-10-03",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-10-04",
+      "unit" : "count",
+      "value" : 3
+    },
+    {
+      "date" : "2026-10-05",
+      "unit" : "count",
+      "value" : 3
+    },
+    {
+      "date" : "2026-10-06",
+      "unit" : "count",
+      "value" : 4
+    },
+    {
+      "date" : "2026-10-07",
+      "unit" : "count",
+      "value" : 3
+    },
+    {
+      "date" : "2026-10-08",
+      "unit" : "count",
+      "value" : 1
+    },
+    {
+      "date" : "2026-10-09",
+      "unit" : "count",
+      "value" : 6
+    },
+    {
+      "date" : "2026-10-10",
+      "unit" : "count",
+      "value" : 4
+    },
+    {
+      "date" : "2026-10-11",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-10-12",
+      "unit" : "count",
+      "value" : 5
+    },
+    {
+      "date" : "2026-10-13",
+      "unit" : "count",
+      "value" : 1
+    },
+    {
+      "date" : "2026-10-14",
+      "unit" : "count",
+      "value" : 3
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "count",
+      "value" : 4
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "count",
+      "value" : 6
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "count",
+      "value" : 2
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "count",
+      "value" : 6
+    },
+    {
+      "date" : "2026-10-20",
+      "unit" : "count",
+      "value" : 7
+    },
+    {
+      "date" : "2026-10-21",
+      "unit" : "count",
+      "value" : 3
+    }
+  ],
+  "heartRateVariability" : [
+
+  ],
+  "leanBodyMass" : [
+
+  ],
+  "oxygenSaturation" : [
+
+  ],
+  "respiratoryRate" : [
+
+  ],
+  "restingHeartRate" : [
+    {
+      "date" : "2026-09-21",
+      "unit" : "bpm",
+      "value" : 45
+    },
+    {
+      "date" : "2026-09-22",
+      "unit" : "bpm",
+      "value" : 55
+    },
+    {
+      "date" : "2026-09-23",
+      "unit" : "bpm",
+      "value" : 52
+    },
+    {
+      "date" : "2026-09-24",
+      "unit" : "bpm",
+      "value" : 56
+    },
+    {
+      "date" : "2026-09-25",
+      "unit" : "bpm",
+      "value" : 47
+    },
+    {
+      "date" : "2026-09-26",
+      "unit" : "bpm",
+      "value" : 44
+    },
+    {
+      "date" : "2026-09-27",
+      "unit" : "bpm",
+      "value" : 46
+    },
+    {
+      "date" : "2026-09-28",
+      "unit" : "bpm",
+      "value" : 45
+    },
+    {
+      "date" : "2026-09-29",
+      "unit" : "bpm",
+      "value" : 46
+    },
+    {
+      "date" : "2026-09-30",
+      "unit" : "bpm",
+      "value" : 47
+    },
+    {
+      "date" : "2026-10-01",
+      "unit" : "bpm",
+      "value" : 47
+    },
+    {
+      "date" : "2026-10-02",
+      "unit" : "bpm",
+      "value" : 47
+    },
+    {
+      "date" : "2026-10-03",
+      "unit" : "bpm",
+      "value" : 45
+    },
+    {
+      "date" : "2026-10-05",
+      "unit" : "bpm",
+      "value" : 53
+    },
+    {
+      "date" : "2026-10-06",
+      "unit" : "bpm",
+      "value" : 52
+    },
+    {
+      "date" : "2026-10-07",
+      "unit" : "bpm",
+      "value" : 50
+    },
+    {
+      "date" : "2026-10-08",
+      "unit" : "bpm",
+      "value" : 51
+    },
+    {
+      "date" : "2026-10-09",
+      "unit" : "bpm",
+      "value" : 58
+    },
+    {
+      "date" : "2026-10-10",
+      "unit" : "bpm",
+      "value" : 49
+    },
+    {
+      "date" : "2026-10-11",
+      "unit" : "bpm",
+      "value" : 51
+    },
+    {
+      "date" : "2026-10-12",
+      "unit" : "bpm",
+      "value" : 44
+    },
+    {
+      "date" : "2026-10-13",
+      "unit" : "bpm",
+      "value" : 45
+    },
+    {
+      "date" : "2026-10-14",
+      "unit" : "bpm",
+      "value" : 48
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "bpm",
+      "value" : 39
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "bpm",
+      "value" : 44
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "bpm",
+      "value" : 48
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "bpm",
+      "value" : 45
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "bpm",
+      "value" : 39
+    }
+  ],
+  "sleepTime" : [
+    {
+      "date" : "2026-09-21",
+      "stages" : {
+        "awake" : 21,
+        "core" : 213,
+        "deep" : 62,
+        "rem" : 49,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 324
+    },
+    {
+      "date" : "2026-09-23",
+      "stages" : {
+        "awake" : 4,
+        "core" : 294,
+        "deep" : 160,
+        "rem" : 131,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 585
+    },
+    {
+      "date" : "2026-09-24",
+      "stages" : {
+        "awake" : 11,
+        "core" : 452,
+        "deep" : 187,
+        "rem" : 231,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 870
+    },
+    {
+      "date" : "2026-09-25",
+      "stages" : {
+        "awake" : 0,
+        "core" : 115,
+        "deep" : 47,
+        "rem" : 44,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 206
+    },
+    {
+      "date" : "2026-09-26",
+      "stages" : {
+        "awake" : 28,
+        "core" : 629,
+        "deep" : 178,
+        "rem" : 129,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 936
+    },
+    {
+      "date" : "2026-09-28",
+      "stages" : {
+        "awake" : 5,
+        "core" : 489,
+        "deep" : 103,
+        "rem" : 183,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 775
+    },
+    {
+      "date" : "2026-09-29",
+      "stages" : {
+        "awake" : 42,
+        "core" : 358,
+        "deep" : 97,
+        "rem" : 133,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 588
+    },
+    {
+      "date" : "2026-09-30",
+      "stages" : {
+        "awake" : 7,
+        "core" : 307,
+        "deep" : 67,
+        "rem" : 71,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 445
+    },
+    {
+      "date" : "2026-10-01",
+      "stages" : {
+        "awake" : 30,
+        "core" : 274,
+        "deep" : 108,
+        "rem" : 86,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 468
+    },
+    {
+      "date" : "2026-10-03",
+      "stages" : {
+        "awake" : 5,
+        "core" : 281,
+        "deep" : 82,
+        "rem" : 96,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 459
+    },
+    {
+      "date" : "2026-10-05",
+      "stages" : {
+        "awake" : 14,
+        "core" : 260,
+        "deep" : 159,
+        "rem" : 98,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 517
+    },
+    {
+      "date" : "2026-10-06",
+      "stages" : {
+        "awake" : 4,
+        "core" : 242,
+        "deep" : 69,
+        "rem" : 73,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 384
+    },
+    {
+      "date" : "2026-10-07",
+      "stages" : {
+        "awake" : 5,
+        "core" : 290,
+        "deep" : 123,
+        "rem" : 113,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 526
+    },
+    {
+      "date" : "2026-10-08",
+      "stages" : {
+        "awake" : 0,
+        "core" : 175,
+        "deep" : 83,
+        "rem" : 83,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 341
+    },
+    {
+      "date" : "2026-10-10",
+      "stages" : {
+        "awake" : 10,
+        "core" : 419,
+        "deep" : 130,
+        "rem" : 201,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 750
+    },
+    {
+      "date" : "2026-10-11",
+      "stages" : {
+        "awake" : 20,
+        "core" : 122,
+        "deep" : 122,
+        "rem" : 27,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 271
+    },
+    {
+      "date" : "2026-10-12",
+      "stages" : {
+        "awake" : 7,
+        "core" : 234,
+        "deep" : 119,
+        "rem" : 75,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 428
+    },
+    {
+      "date" : "2026-10-13",
+      "stages" : {
+        "awake" : 15,
+        "core" : 232,
+        "deep" : 136,
+        "rem" : 77,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 445
+    },
+    {
+      "date" : "2026-10-14",
+      "stages" : {
+        "awake" : 8,
+        "core" : 334,
+        "deep" : 44,
+        "rem" : 152,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 530
+    },
+    {
+      "date" : "2026-10-15",
+      "stages" : {
+        "awake" : 1,
+        "core" : 259,
+        "deep" : 76,
+        "rem" : 76,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 411
+    },
+    {
+      "date" : "2026-10-16",
+      "stages" : {
+        "awake" : 22,
+        "core" : 405,
+        "deep" : 282,
+        "rem" : 111,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 798
+    },
+    {
+      "date" : "2026-10-17",
+      "stages" : {
+        "awake" : 2,
+        "core" : 229,
+        "deep" : 108,
+        "rem" : 79,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 416
+    },
+    {
+      "date" : "2026-10-18",
+      "stages" : {
+        "awake" : 4,
+        "core" : 138,
+        "deep" : 155,
+        "rem" : 64,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 357
+    },
+    {
+      "date" : "2026-10-19",
+      "stages" : {
+        "awake" : 0,
+        "core" : 177,
+        "deep" : 66,
+        "rem" : 61,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 304
+    }
+  ],
+  "stepCount" : [
+    {
+      "date" : "2026-09-21",
+      "unit" : "count",
+      "value" : 5727
+    },
+    {
+      "date" : "2026-09-22",
+      "unit" : "count",
+      "value" : 5553
+    },
+    {
+      "date" : "2026-09-23",
+      "unit" : "count",
+      "value" : 2786
+    },
+    {
+      "date" : "2026-09-24",
+      "unit" : "count",
+      "value" : 11188
+    },
+    {
+      "date" : "2026-09-25",
+      "unit" : "count",
+      "value" : 6531
+    },
+    {
+      "date" : "2026-09-26",
+      "unit" : "count",
+      "value" : 1236.4058618540005
+    },
+    {
+      "date" : "2026-09-27",
+      "unit" : "count",
+      "value" : 9096.5941381459998
+    },
+    {
+      "date" : "2026-09-28",
+      "unit" : "count",
+      "value" : 11107
+    },
+    {
+      "date" : "2026-09-29",
+      "unit" : "count",
+      "value" : 4332
+    },
+    {
+      "date" : "2026-09-30",
+      "unit" : "count",
+      "value" : 9704
+    },
+    {
+      "date" : "2026-10-01",
+      "unit" : "count",
+      "value" : 4304
+    },
+    {
+      "date" : "2026-10-02",
+      "unit" : "count",
+      "value" : 5347
+    },
+    {
+      "date" : "2026-10-03",
+      "unit" : "count",
+      "value" : 2051.7220726296055
+    },
+    {
+      "date" : "2026-10-04",
+      "unit" : "count",
+      "value" : 6447.2779273703945
+    },
+    {
+      "date" : "2026-10-05",
+      "unit" : "count",
+      "value" : 6725
+    },
+    {
+      "date" : "2026-10-06",
+      "unit" : "count",
+      "value" : 6105
+    },
+    {
+      "date" : "2026-10-07",
+      "unit" : "count",
+      "value" : 5950
+    },
+    {
+      "date" : "2026-10-08",
+      "unit" : "count",
+      "value" : 4918
+    },
+    {
+      "date" : "2026-10-09",
+      "unit" : "count",
+      "value" : 11649
+    },
+    {
+      "date" : "2026-10-10",
+      "unit" : "count",
+      "value" : 6579.1353810017499
+    },
+    {
+      "date" : "2026-10-11",
+      "unit" : "count",
+      "value" : 9809.8646189982483
+    },
+    {
+      "date" : "2026-10-12",
+      "unit" : "count",
+      "value" : 10530
+    },
+    {
+      "date" : "2026-10-13",
+      "unit" : "count",
+      "value" : 4652
+    },
+    {
+      "date" : "2026-10-14",
+      "unit" : "count",
+      "value" : 8176
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "count",
+      "value" : 5197
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "count",
+      "value" : 6969.4831102609478
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "count",
+      "value" : 15020.516889739052
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "count",
+      "value" : 6055
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "count",
+      "value" : 11876
+    },
+    {
+      "date" : "2026-10-20",
+      "unit" : "count",
+      "value" : 9911.8051631869694
+    },
+    {
+      "date" : "2026-10-21",
+      "unit" : "count",
+      "value" : 4634.1948368130306
+    }
+  ],
+  "vo2Max" : [
+
+  ],
+  "walkingDistance" : [
+    {
+      "date" : "2026-09-21",
+      "unit" : "m",
+      "value" : 3761.4199999957345
+    },
+    {
+      "date" : "2026-09-22",
+      "unit" : "m",
+      "value" : 3622.2254067221656
+    },
+    {
+      "date" : "2026-09-23",
+      "unit" : "m",
+      "value" : 1910.4113278444856
+    },
+    {
+      "date" : "2026-09-24",
+      "unit" : "m",
+      "value" : 8254.7572635835968
+    },
+    {
+      "date" : "2026-09-25",
+      "unit" : "m",
+      "value" : 4286.372605253011
+    },
+    {
+      "date" : "2026-09-26",
+      "unit" : "m",
+      "value" : 826.91401364705189
+    },
+    {
+      "date" : "2026-09-27",
+      "unit" : "m",
+      "value" : 5508.7239948254573
+    },
+    {
+      "date" : "2026-09-28",
+      "unit" : "m",
+      "value" : 7623.2270105648786
+    },
+    {
+      "date" : "2026-09-29",
+      "unit" : "m",
+      "value" : 2964.7251239260659
+    },
+    {
+      "date" : "2026-09-30",
+      "unit" : "m",
+      "value" : 6633.9028027020395
+    },
+    {
+      "date" : "2026-10-01",
+      "unit" : "m",
+      "value" : 2805.4435737105086
+    },
+    {
+      "date" : "2026-10-02",
+      "unit" : "m",
+      "value" : 3530.5047762044705
+    },
+    {
+      "date" : "2026-10-03",
+      "unit" : "m",
+      "value" : 1398.0655678251899
+    },
+    {
+      "date" : "2026-10-04",
+      "unit" : "m",
+      "value" : 4469.2322464434292
+    },
+    {
+      "date" : "2026-10-05",
+      "unit" : "m",
+      "value" : 4617.6074372990988
+    },
+    {
+      "date" : "2026-10-06",
+      "unit" : "m",
+      "value" : 4101.9699999857694
+    },
+    {
+      "date" : "2026-10-07",
+      "unit" : "m",
+      "value" : 3775.2646360513754
+    },
+    {
+      "date" : "2026-10-08",
+      "unit" : "m",
+      "value" : 3184.2099999766797
+    },
+    {
+      "date" : "2026-10-09",
+      "unit" : "m",
+      "value" : 7764.191007675603
+    },
+    {
+      "date" : "2026-10-10",
+      "unit" : "m",
+      "value" : 4495.007394101207
+    },
+    {
+      "date" : "2026-10-11",
+      "unit" : "m",
+      "value" : 6245.5940994217835
+    },
+    {
+      "date" : "2026-10-12",
+      "unit" : "m",
+      "value" : 6852.5702264676802
+    },
+    {
+      "date" : "2026-10-13",
+      "unit" : "m",
+      "value" : 3140.989999982994
+    },
+    {
+      "date" : "2026-10-14",
+      "unit" : "m",
+      "value" : 5439.1764504811727
+    },
+    {
+      "date" : "2026-10-15",
+      "unit" : "m",
+      "value" : 3505.6770082684234
+    },
+    {
+      "date" : "2026-10-16",
+      "unit" : "m",
+      "value" : 4360.4423626046073
+    },
+    {
+      "date" : "2026-10-17",
+      "unit" : "m",
+      "value" : 10195.138288242333
+    },
+    {
+      "date" : "2026-10-18",
+      "unit" : "m",
+      "value" : 4207.7899999497458
+    },
+    {
+      "date" : "2026-10-19",
+      "unit" : "m",
+      "value" : 8289.9351238245144
+    },
+    {
+      "date" : "2026-10-20",
+      "unit" : "m",
+      "value" : 7024.8600797461331
+    },
+    {
+      "date" : "2026-10-21",
+      "unit" : "m",
+      "value" : 3272.4315235601753
+    }
+  ],
+  "walkingHeartRate" : [
+
+  ],
+  "weight" : [
+    {
+      "date" : "2026-10-21",
+      "unit" : "kg",
+      "value" : 64.699965497380077
+    }
+  ],
+  "wristTemperature" : [
+
+  ]
+}
