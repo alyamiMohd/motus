@@ -1,6 +1,8 @@
-:root { --bg: #fff; --text: #111; --muted: #888; --line: #eee; --green: #16a34a; }
+:root { --bg: #fff; --text: #111; --muted: #888; --line: #eee; --green: #16a34a;
+        --c1: #bbb; --c2: #ea580c; --c3: #ca8a04; --c4: #0284c7; --c5: #16a34a; }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #000; --text: #eee; --muted: #777; --line: #1c1c1c; --green: #4ade80; }
+  :root { --bg: #000; --text: #eee; --muted: #777; --line: #1c1c1c; --green: #4ade80;
+          --c1: #555; --c2: #fb923c; --c3: #facc15; --c4: #38bdf8; --c5: #4ade80; }
 }
 body { margin: 0; background: var(--bg); color: var(--text);
        font: 16px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
@@ -76,3 +78,7 @@ details > .recent { padding-left: 12px; font-size: 13px; }
 .dot.future { color: var(--muted); }
 .dot.on { background: var(--text); color: var(--bg); box-shadow: none; }
 .dot.on.met { background: var(--green); }
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 8px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend small { margin-left: auto; }

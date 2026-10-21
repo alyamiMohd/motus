@@ -93,16 +93,22 @@ function renderScore(stats) {
 
 function renderWeeks() {
   const start = weekStart(today), N = 12, W = 300, H = 48;
-  const counts = Array.from({ length: N }, (_, i) => {
+  const weeks = Array.from({ length: N }, (_, i) => {
     const s = add(start, -7 * (N - 1 - i));
-    return workoutsBetween(s, add(s, 6));
+    return { s, c: workoutsBetween(s, add(s, 6)) };
   });
-  const hi = Math.max(goals.workouts, ...counts) * 1.1, s = W / N;
-  const bars = counts.map((c, i) => c === 0 ? "" :
-    `<rect x="${i * s + 2}" y="${H - 2 - c / hi * (H - 4)}" width="${s - 4}" height="${c / hi * (H - 4)}" fill="${c >= goals.workouts ? "var(--green)" : "currentColor"}"/>`).join("");
+  const hi = Math.max(6, ...weeks.map(w => w.c)) * 1.05, step = W / N;
+  const bars = weeks.map((w, i) => {
+    if (!w.c) return "";
+    const h = w.c / hi * (H - 4), cur = i === N - 1;
+    return `<rect x="${i * step + 2}" y="${H - 2 - h}" width="${step - 4}" height="${h}" fill="var(--c${Math.min(w.c, 5)})"` +
+           `${cur ? ' opacity=".5"' : ""}><title>Week of ${label(w.s)}: ${w.c}</title></rect>`;
+  }).join("");
+  const legend = [["1", "0–1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5+"]]
+    .map(([k, t]) => `<span><i style="background:var(--c${k})"></i>${t}</span>`).join("");
   document.getElementById("weeks").innerHTML =
     `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${bars}</svg>` +
-    `<small>${counts.join(" · ")}</small>`;
+    `<div class="legend">${legend}<small>fainter = this week</small></div>`;
 }
 
 function renderExercises(stats) {
