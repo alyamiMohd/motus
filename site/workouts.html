@@ -121,6 +121,15 @@ function renderExercises(stats) {
   if (more) more.onclick = () => { showAll = !showAll; renderExercises(stats); };
 }
 
+// pct = today's best e1RM vs your recent level for that exercise.
+// 7 = a normal session (within 5% below, plain noise); up to 10 at +10%; -0.8 per 10% under the 5% band; never below 3.
+function sessionScore(pct) {
+  const p = pct * 100;
+  if (p >= 0) return Math.min(10, 7 + 0.3 * p);
+  if (p >= -5) return 7;
+  return Math.max(3, 7 + 0.08 * (p + 5));
+}
+
 // One workout: each exercise's best e1RM that day vs the mean of its previous (up to) 4 sessions.
 function workoutScore(date) {
   const parts = [], skipped = [], cutoff = add(date, -90);   // only compare with the last ~3 months
@@ -130,7 +139,7 @@ function workoutScore(date) {
     const prev = rows.slice(Math.max(0, i - 4), i).filter(r => r[0] >= cutoff);
     if (prev.length < 2) { skipped.push(title); continue; }   // not enough recent history to compare
     const pct = rows[i][1] / mean(prev.map(r => r[1])) - 1;
-    parts.push({ title, pct, score: clamp(5 + pct * 100, 0, 10) });
+    parts.push({ title, pct, score: sessionScore(pct) });
   }
   return parts.length ? { score: mean(parts.map(p => p.score)), parts, skipped } : null;
 }
