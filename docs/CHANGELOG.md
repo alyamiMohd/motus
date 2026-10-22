@@ -3,6 +3,8 @@
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
 ## 2026-10-22
+- Hevy client now retries transient failures (network errors, timeouts, 429, 5xx; 4 attempts, backoff) after a DNS failure made a whole sync fail; tests extended to 49.
+- Audit pass: footer no longer says "no workouts" when the Hevy check failed (shows last known workout + "check failed"); test counts corrected in docs; K18 added.
 - Hevy visibility and refresh rate (this commit): schedule is now every 3 hours; `status.json` records Hevy's newest workout time and total; the dashboard footer shows last Hevy workout / last Health upload / last check; tests extended to 43 (Hevy stub, failure path, `check_status` output).
 - Investigated "nothing in Lift on Thu 22": Hevy's API had no workout for today (KNOWN_ISSUES K17).
 - **Docs/memory system**: `CLAUDE.md`, `docs/*`, `tests/test_pipeline.py` in the repo; README corrected; `.claude/launch.json` now runs `serve.py` (this commit; see `git log`).

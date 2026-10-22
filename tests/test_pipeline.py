@@ -164,6 +164,52 @@ gh_out = work / "gh_output.txt"
 rc, out = run("check_status.py", GITHUB_OUTPUT=str(gh_out))
 check("check_status reports the error count for the workflow", rc == 0 and "errors=1" in gh_out.read_text(encoding="utf-8"), out)
 
+print("6. Hevy client retries transient failures but not client errors")
+sys.path.insert(0, str(ROOT))
+import fetch_hevy                                    # the real client (not the stub), requests.get faked below
+import requests as _rq
+
+class _Resp:
+    def __init__(self, code, body=None):
+        self.status_code, self._b = code, body or {}
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise _rq.HTTPError(f"HTTP {self.status_code}")
+    def json(self):
+        return self._b
+
+def run_get(script):
+    calls = {"n": 0, "sleeps": []}
+    fetch_hevy._sleep = lambda t: calls["sleeps"].append(t)
+    def fake(url, headers=None, params=None, timeout=None):
+        calls["n"] += 1
+        item = script[min(calls["n"], len(script)) - 1]
+        if isinstance(item, Exception):
+            raise item
+        return item
+    real = _rq.get
+    _rq.get = fake
+    try:
+        try:
+            out = fetch_hevy._get("u", {}, {})
+        except Exception as e:
+            out = e
+    finally:
+        _rq.get = real
+    return out, calls
+
+out, c = run_get([_rq.ConnectionError("dns"), _rq.Timeout("slow"), _Resp(200, {"ok": 1})])
+check("network error then timeout then success -> succeeds on attempt 3", getattr(out, "status_code", None) == 200 and c["n"] == 3, (out, c))
+check("backs off between attempts (2 s, 4 s)", c["sleeps"] == [2, 4], c)
+out, c = run_get([_Resp(503), _Resp(502), _Resp(200)])
+check("temporary server errors are retried", getattr(out, "status_code", None) == 200 and c["n"] == 3, (out, c))
+out, c = run_get([_rq.ConnectionError("down")] * 4)
+check("gives up after 4 attempts and raises", isinstance(out, _rq.ConnectionError) and c["n"] == 4, (out, c))
+out, c = run_get([_Resp(401)])
+check("a bad key (401) fails immediately, no retry", isinstance(out, _rq.HTTPError) and c["n"] == 1, (out, c))
+out, c = run_get([_Resp(429), _Resp(200)])
+check("rate limiting (429) is retried", getattr(out, "status_code", None) == 200 and c["n"] == 2, (out, c))
+
 print(f"\n{passes} passed, {len(fails)} failed")
 if fails:
     print("FAILED:", fails)

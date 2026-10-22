@@ -11,8 +11,11 @@ Last updated: **2026-10-22**. Read `CLAUDE.md` first. Update this file at the en
 1. Diagnosed the missing morning update: no scheduled run ever fired; no phone upload. Reworked scheduling/alerting (3 off-peak crons, `status.json`, failing run on source errors, staleness banner).
 2. Added admin corrections (workflow-based, validated, revertable) and tested them live; wrote `tests/test_pipeline.py`.
 3. Workouts page: exercises sorted by recency; per-workout rating rescaled (7 = normal, floor 3) after the user objected to a 0.0 score.
-3b. Investigated "no Lift on Thu 22": Hevy has no workout for today. Added every-3-hours schedule, Hevy fields in `status.json`, and a footer showing last Hevy workout / Health upload / check time; tests now 43.
+3b. Investigated "no Lift on Thu 22": Hevy has no workout for today. Added every-3-hours schedule, Hevy fields in `status.json`, and a footer showing last Hevy workout / Health upload / check time; tests now 49 (incl. Hevy retry logic).
 4. Created this memory system (`CLAUDE.md`, `docs/`).
+
+## Audit (2026-10-22, end of day)
+Re-checked every issue from today against code, tests and live state; see KNOWN_ISSUES for what can still recur (K1 cron unverified, K2/K3 phone upload and late sleep, K13 token expiry, K18 alert path unverified). A transient DNS failure on the dev laptop mid-Hevy-fetch was handled correctly (1 error reported, no data lost).
 
 ## Next priority
 1. **Confirm a scheduled run fires**: `gh run list --repo alyamiMohd/motus --event schedule` (now every 3 hours at :17 UTC). If none appears over a day, investigate Actions settings / consider a different trigger.
@@ -25,7 +28,7 @@ Last updated: **2026-10-22**. Read `CLAUDE.md` first. Update this file at the en
 `CLAUDE.md`, this file, `daily.py`, `.github/workflows/daily.yml`, `site/index.html`, `site/workouts.html`, `site/shared.js`, `overrides.py`, `docs/KNOWN_ISSUES.md`.
 
 ## Tests run / not run
-- Run and passing (2026-10-22): `python tests/test_pipeline.py` → 43 passed. Live checks: owner edit → sync → revert; invalid input rejected by the workflow; unauthenticated/fake-token API calls → 401; dashboard averages match an independent calculation.
+- Run and passing (2026-10-22): `python tests/test_pipeline.py` → 49 passed. Live checks: owner edit → sync → revert; invalid input rejected by the workflow; unauthenticated/fake-token API calls → 401; dashboard averages match an independent calculation.
 - Not run / unverified: a real cron-triggered run; the phone's automation; the edit page with a real token; real iPhone Safari rendering; any frontend automated tests (none exist).
 
 ## Warnings

@@ -21,7 +21,8 @@ Close an issue only after verification; move it to "Closed" with the date and ho
 | K14 | **Weekly goal (4) vs planned training days (5)**; the caption/colors use the goal. | The user has not decided to change it. |
 | K15 | Workflow push step resolves rebase conflicts with `-X theirs` (my side wins). Generated files are regenerated next run, so the worst case is a briefly stale file, but two simultaneous correction runs could drop one correction. | Low risk; not reproduced. |
 | K17 | **A workout done today does not appear until Hevy has it.** On 2026-10-22 (about 10:40 Riyadh) Hevy's API listed 331 workouts, the newest being Wed 2026-10-21 19:04–20:04, and its events feed showed nothing newer, so Thu 22 had no Lift value although the user believed a workout existed. The fetcher was checked for ordering/pagination bugs and is correct. Likely cause: workout not finished/synced in the Hevy app. | Open until the user confirms in the Hevy app. Mitigation shipped: runs every 3 hours; footer shows "Hevy: last workout …". |
-| K16 | No automated tests for the frontend or the Hevy client; `tests/test_pipeline.py` covers `daily.py`/`edit.py`/`overrides.py` only. | Technical debt. |
+| K16 | No automated tests for the frontend or the live Hevy HTTP exchange (tests stub the client and fake `requests.get` for the retry logic); `tests/test_pipeline.py` covers `daily.py`/`edit.py`/`overrides.py`/`check_status.py`. | Technical debt. |
+| K18 | **Failure-alert path never exercised live.** The workflow's `report` job (fails the run after deploying when `status.errors` is non-empty) and GitHub's failure e-mails have not been seen working; e-mail delivery depends on the owner's GitHub notification settings (Unknown). Logic is covered locally (`check_status.py` output tested). | Verify by temporarily breaking the Hevy secret (needs the owner's OK) or watch for the first real failure. |
 
 ## Closed
 | ID | Issue | Closed | Verification |

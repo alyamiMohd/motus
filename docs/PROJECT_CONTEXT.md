@@ -33,12 +33,12 @@ history/*.json (one-off backfills)        overrides.json (manual corrections)
 | `data.json` | Daily records (generated, committed) · `workouts.json` per-exercise history (generated, committed) |
 | `overrides.json` | Manual corrections (admin-written via workflow) · `history/*.json` one-off backfills |
 | `inbox/` | Raw uploads from the phone (public) |
-| `tests/test_pipeline.py` | Synthetic pipeline tests (36 checks) |
+| `tests/test_pipeline.py` | Synthetic pipeline tests (49 checks; Hevy client stubbed, plus retry logic with a faked `requests.get`) |
 | `.github/workflows/daily.yml` | The only workflow |
 
 ## Data sources
 1. **Hevy** (workouts). `GET https://api.hevyapp.com/v1/workouts` with header `api-key` (env `HEVY_API_KEY`; requires Hevy PRO). Full history fetched every run
-   (331 workouts on 2026-10-22, 10 per page). **Hevy returns only finished and synced workouts**: a workout that was not finished in the app, or has not synced, is absent from the API (and therefore from the site) until it syncs. Days are grouped by workout *start time* in Riyadh time. Read-only: no other HTTP method appears in the code.
+   (331 workouts on 2026-10-22, 10 per page). **Hevy returns only finished and synced workouts**: a workout that was not finished in the app, or has not synced, is absent from the API (and therefore from the site) until it syncs. Days are grouped by workout *start time* in Riyadh time. Read-only: no other HTTP method appears in the code. Requests retry up to 4 times with 2/4/8 s backoff on network errors, timeouts, 429 and 5xx; client errors such as a bad key (401) fail at once.
 2. **Apple Health via iPhone Shortcut** (steps, sleep, weight, calories, active calories). A shortcut named `Health to Drive` (legacy name) runs the action
    **Export Health Data** from the third-party app *Health Exporter & Shortcuts* (daily aggregated JSON), Base64-encodes it, and PUTs it to
    `https://api.github.com/repos/alyamiMohd/motus/contents/inbox/health-<yyyy-MM-dd-HHmm>.json` using a fine-grained GitHub token (Contents: read/write on this repo only,
@@ -119,7 +119,7 @@ GitHub Pages (workflow deployment) at https://alyamimohd.github.io/motus/. Free 
 Scheduled runs can be delayed/dropped by GitHub; mitigated by an every-3-hours off-peak schedule, the staleness banner, the footer source times and failure alerts.
 
 ## Testing status
-- `tests/test_pipeline.py`: 36 checks, all passing on 2026-10-22 (today's data arrives, history intact, no duplicates, no-op runs identical, edit/revert, correction survives sync, revert restores latest automatic value, 14 invalid/unauthorized requests rejected, corrupt overrides tolerated).
+- `tests/test_pipeline.py`: 49 checks, all passing on 2026-10-22 (today's data arrives, history intact, no duplicates, no-op runs identical, edit/revert, correction survives sync, revert restores latest automatic value, 14 invalid/unauthorized requests rejected, corrupt overrides tolerated).
 - Live end-to-end on 2026-10-22: owner edit → normal sync → revert on a real date; invalid value rejected by the workflow; unauthenticated API calls rejected.
 - Frontend: verified manually in the browser pane at 390px/320px widths with the console checked; no automated UI tests. Real iPhone Safari rendering is **Unverified**.
 - **Unverified**: that a scheduled (cron) run has ever fired; the phone's Wake Up automation; the edit page driven by a real admin token from a browser (only a stubbed-fetch UI test and `gh workflow run` were done).

@@ -1,4 +1,5 @@
 """Fetch workouts from Hevy (read-only) and summarise them per day (Asia/Riyadh)."""
+import time
 from collections import defaultdict
 from datetime import datetime, timedelta
 
@@ -9,13 +10,33 @@ from common import TZ, load_env, require
 BASE = "https://api.hevyapp.com/v1"
 
 
+_sleep = time.sleep   # patched out in tests
+
+
+def _get(url: str, headers: dict, params: dict, attempts: int = 4) -> requests.Response:
+    """GET with retries for network errors, timeouts, 429 and 5xx. Client errors (e.g. a bad key, 401) fail at once."""
+    for i in range(attempts):
+        last = i == attempts - 1
+        try:
+            r = requests.get(url, headers=headers, params=params, timeout=30)
+        except (requests.ConnectionError, requests.Timeout):
+            if last:
+                raise
+            _sleep(2 ** (i + 1))
+            continue
+        if r.status_code in (429, 500, 502, 503, 504) and not last:
+            _sleep(2 ** (i + 1))
+            continue
+        r.raise_for_status()
+        return r
+    raise RuntimeError("unreachable")
+
+
 def fetch_workouts(since: datetime) -> list[dict]:
     headers = {"api-key": require("HEVY_API_KEY")}
     out, page = [], 1
     while True:
-        r = requests.get(f"{BASE}/workouts", headers=headers,
-                         params={"page": page, "pageSize": 10}, timeout=30)
-        r.raise_for_status()
+        r = _get(f"{BASE}/workouts", headers, {"page": page, "pageSize": 10})
         data = r.json()
         for w in data.get("workouts", []):
             if datetime.fromisoformat(w["start_time"]) < since:

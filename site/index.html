@@ -179,7 +179,8 @@ function showFooter(data, status) {
   if (status) {
     const hv = status.hevy || {}, hl = status.health || {};
     lines.push([
-      "Hevy: " + (hv.latest_workout_start ? "last workout " + when(hv.latest_workout_start) : "no workouts"),
+      "Hevy: " + (hv.latest_workout_start ? "last workout " + when(hv.latest_workout_start)
+                 : hv.latest_workout ? "last workout " + label(hv.latest_workout) : "no workouts") + (hv.ok === false ? " (check failed)" : ""),
       "Health: " + (hl.latest_upload ? "last upload " + when(hl.latest_upload) : "no uploads"),
       status.run ? "checked " + when(status.run) : "",
     ].filter(Boolean).join(" · "));
