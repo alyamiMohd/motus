@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-22T10:12:34+03:00",
+ "updated": "2026-10-22T10:14:45+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4444,10 +4444,13 @@
    "workout_titles": [
     "Push"
    ],
-   "sleep_hours": 12.15,
+   "sleep_hours": 7.0,
    "calories": 500,
    "weight_kg": 64.4,
-   "active_kcal": 381
+   "active_kcal": 381,
+   "orig": {
+    "sleep_hours": 12.15
+   }
   },
   "2026-10-21": {
    "steps": 4836,
