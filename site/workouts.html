@@ -18,7 +18,7 @@
   <h2>Workouts per week, last 12 weeks</h2>
   <div class="chart" id="weeks"></div>
 
-  <h2>Exercises, estimated 1RM (last 4 weeks vs the 4 before)</h2>
+  <h2>Exercises, estimated 1RM, most recent first</h2>
   <div id="exercises"></div>
 
   <h2>Workout ratings &nbsp;<button class="tab on" data-w="0">This week</button> <button class="tab" data-w="1">Last week</button></h2>
@@ -50,10 +50,10 @@ function exerciseStats() {
     if (!recent.length && !prior.length) continue;
     const cur = recent.length ? Math.max(...recent.map(r => r[1])) : rows[rows.length - 1][1];
     const pct = recent.length && prior.length ? mean(recent.map(r => r[1])) / mean(prior.map(r => r[1])) - 1 : null;
-    out.push({ title, rows, n: recent.length + prior.length, cur, pct,
+    out.push({ title, rows, n: recent.length + prior.length, cur, pct, last: rows[rows.length - 1][0],
                scored: recent.length >= 2 && prior.length >= 2 });
   }
-  return out.sort((a, b) => b.n - a.n || a.title.localeCompare(b.title));
+  return out.sort((a, b) => b.last.localeCompare(a.last) || b.n - a.n || a.title.localeCompare(b.title));   // most recently trained first
 }
 
 function rating(stats) {
@@ -105,7 +105,7 @@ function renderWeeks() {
 }
 
 function renderExercises(stats) {
-  const list = stats.filter(s => s.n >= 2);
+  const list = stats;                                    // everything trained in the last 8 weeks, newest first
   const shown = showAll ? list : list.slice(0, 10);
   const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   let html = shown.map(s => {
@@ -123,16 +123,16 @@ function renderExercises(stats) {
 
 // One workout: each exercise's best e1RM that day vs the mean of its previous (up to) 4 sessions.
 function workoutScore(date) {
-  const parts = [];
+  const parts = [], skipped = [], cutoff = add(date, -90);   // only compare with the last ~3 months
   for (const [title, rows] of Object.entries(exercises)) {
     const i = rows.findIndex(r => r[0] === date);
     if (i < 0) continue;
-    const prev = rows.slice(Math.max(0, i - 4), i);
-    if (prev.length < 2) continue;                       // not enough history to compare
+    const prev = rows.slice(Math.max(0, i - 4), i).filter(r => r[0] >= cutoff);
+    if (prev.length < 2) { skipped.push(title); continue; }   // not enough recent history to compare
     const pct = rows[i][1] / mean(prev.map(r => r[1])) - 1;
     parts.push({ title, pct, score: clamp(5 + pct * 100, 0, 10) });
   }
-  return parts.length ? { score: mean(parts.map(p => p.score)), parts } : null;
+  return parts.length ? { score: mean(parts.map(p => p.score)), parts, skipped } : null;
 }
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -161,7 +161,8 @@ function renderRatings() {
   let html = dates.map(d => {
     const r = workoutScore(d), t = esc((days[d].workout_titles || []).join(", "));
     const detail = r ? r.parts.sort((a, b) => b.pct - a.pct).map(p =>
-      `<div class="recent"><span class="t">${esc(p.title)}</span><span class="r ${p.pct > 0 ? "good" : ""}">${pctText(p.pct)}</span></div>`).join("")
+      `<div class="recent"><span class="t">${esc(p.title)}</span><span class="r ${p.pct > 0 ? "good" : ""}">${pctText(p.pct)}</span></div>`).join("") +
+      r.skipped.map(t => `<div class="recent"><span class="t muted">${esc(t)}</span><span class="r">not rated (new)</span></div>`).join("")
       : '<div class="recent"><span class="t muted">not enough history to compare</span></div>';
     return `<details><summary class="recent"><span class="t">${label(d)} · ${t}</span><span>${scoreHTML(r && r.score)}</span></summary>${detail}</details>`;
   }).join("");
