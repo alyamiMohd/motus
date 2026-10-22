@@ -26,3 +26,11 @@ site/workouts.json
 status.json
 site/status.json
 site/overrides.json
+
+# local tooling / OS
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.claude/settings.local.json
+.env.local

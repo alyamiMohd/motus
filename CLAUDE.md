@@ -1,0 +1,73 @@
+# Motus — instructions for Claude
+
+Motus is a personal fitness dashboard for one user (GitHub: `alyamiMohd`). A daily GitHub Actions job merges
+Apple Health data (uploaded by an iPhone Shortcut) and Hevy workouts into `data.json`; a static site on
+GitHub Pages shows weekly averages, a daily table, charts, a workout-rating page and an admin edit page.
+Live site: https://alyamimohd.github.io/motus/ · Repo: https://github.com/alyamiMohd/motus (public).
+
+**GitHub is the source of truth.** Everything needed to resume the project is in this repo. Keep it that way.
+
+## Read before changing anything
+1. This file, then `docs/SESSION_HANDOFF.md` (current state and next priority).
+2. As relevant: `docs/PROJECT_CONTEXT.md` (architecture, data model, pipeline), `docs/FEATURES_AND_REQUIREMENTS.md`,
+   `docs/DECISIONS.md` (do not silently reverse these), `docs/KNOWN_ISSUES.md`, `docs/CHANGELOG.md`.
+
+## Recovering in a fresh session / new computer
+1. Open the repo in Claude Code. If it isn't cloned yet: `git clone https://github.com/alyamiMohd/motus.git && cd motus`.
+2. Read this file, then `docs/SESSION_HANDOFF.md`, then the other docs above as needed.
+3. `git status`, `git log --oneline -10`, `git branch --show-current` (branch is `main`). Note the bot adds
+   `Update data` commits to `main` daily, so always `git pull --rebase` first.
+4. **Compare the code with the docs before assuming a feature exists.** Docs mark each item as
+   verified / implemented / unverified; trust the code and the live site over the docs when they disagree, then fix the docs.
+5. Continue from the "Next priority" in `docs/SESSION_HANDOFF.md`; do not redo completed work.
+
+## Setup on a new computer
+- Needs Python 3.10+ (`pip install -r requirements.txt`, only `requests`), git, and the GitHub CLI (`gh auth login`).
+- Secrets: copy `.env.example` to `.env` (git-ignored) and fill `HEVY_API_KEY` (Hevy → Settings → Developer; needs Hevy PRO).
+  The same key lives in the GitHub repo secret `HEVY_API_KEY` (set with `gh secret set HEVY_API_KEY`). Never commit `.env`.
+  `STRAVA_*` names in `.env.example` are unused (Strava was dropped).
+- The iPhone Shortcut and the admin edit token are configured outside the repo; see `docs/PROJECT_CONTEXT.md` ("Secrets and tokens").
+
+## Run, test, deploy
+- Rebuild data locally: `python daily.py` (reads `inbox/`, Hevy, `history/`, `overrides.json`; writes `data.json`, `workouts.json`, `status.json`).
+- Preview the site: `python serve.py` → http://localhost:8099 (serves `site/` and maps `/data.json`, `/workouts.json`,
+  `/overrides.json`, `/status.json` from the repo root; no caching).
+- Tests: `python tests/test_pipeline.py` (synthetic, no network; must print `0 failed`). The frontend has no automated
+  tests: verify in a browser at phone widths (390px and 320px) and read the console.
+- Deploy: automatic. `.github/workflows/daily.yml` runs on schedule (06:17/09:17/12:17 Riyadh), on pushes that touch
+  `inbox/ site/ history/ overrides.json *.py`, and manually (`gh workflow run daily.yml`). It builds, commits data, and deploys to Pages.
+
+## Conventions and constraints
+- **Minimalist** static site: plain HTML/CSS/JS, no framework, no build step, no CDN. Black/white with green as the only accent
+  (bright green = met standard in cards/table/charts; dark green `--green2` = met standard in the "Last Week" line).
+- **Timezone is Asia/Riyadh = fixed UTC+3** (no DST, no tzdata dependency). **Weeks start on Sunday.**
+- Missing data is `null`/"no data", never 0. Zero steps/sleep/calories from Health is treated as no data.
+- **Never overwrite or delete history.** `data.json` keeps every day; sources only overwrite with non-null values.
+- Hevy access is **read-only** (single `GET /v1/workouts`). Keep it that way.
+- Manual corrections always beat automatic values; originals are kept (`orig`) so a revert restores the latest automatic value.
+- The repo and site are **public** (accepted trade-off, see decisions). Never commit secrets, tokens or `.env`. Document variable
+  *names* only.
+- Standards (goals) live per-device in `localStorage` key `stotis-goals` (old name kept on purpose so saved settings survive the rename).
+
+## Mandatory workflow for every change
+Do not wait to be asked to commit or push; this is the default.
+1. Read this file and the relevant docs. 2. Check `git status` for uncommitted user changes; never discard them.
+3. Implement. 4. Update docs in the same change: `PROJECT_CONTEXT` (architecture/behavior), `FEATURES_AND_REQUIREMENTS`,
+`DECISIONS` (significant choices; never silently reverse one), `KNOWN_ISSUES` (open/closed only after verification),
+`CHANGELOG`, and always `SESSION_HANDOFF`. 5. Run `python tests/test_pipeline.py` and verify UI changes in a browser.
+6. Review `git diff`; make sure no secrets or unrelated changes are included (`git diff --cached | grep -i "github_pat\|api[_-]key"`).
+7. Commit code + docs together with a meaningful message. 8. `git pull --rebase` then `git push` to `origin main`.
+9. **Verify** the push: `git fetch && git log origin/main -1` must show your commit; for site changes also confirm the Actions run
+succeeded and the live URL serves the change. 10. Report what changed, what was tested, the commit hash, and whether the push was verified.
+If the push fails, keep local changes, report the exact error, and say how to fix it. Never claim a push succeeded unless verified.
+
+## Tooling gotchas (learned the hard way)
+- Windows + Git Bash: `/tmp` in bash is not the same path Python sees. Python on Windows defaults to cp1252: use
+  `encoding="utf-8"` (workout titles contain emoji) or `python -X utf8`.
+- Backslash escapes inside bash heredocs sent through the tool can be unescaped once (a `\n` in a Python string literal became a real newline).
+  For files containing escapes, use the Write/Edit tools, or build characters with `chr(92)`.
+- `data.json` / `workouts.json` are generated and also committed by the bot; on a rebase conflict in them, either side is fine
+  (re-run `python daily.py`). `site/data.json`, `site/workouts.json`, `site/overrides.json`, `site/status.json`, `status.json` are git-ignored.
+- To preview in the Claude desktop browser pane, the dev-server entry must be in the *session's* `.claude/launch.json`; this repo's
+  own `.claude/launch.json` only works when the session is opened in this folder.
+- `GITHUB_TOKEN` pushes (from the workflow) do not trigger other workflows; the single workflow does everything in one run.
