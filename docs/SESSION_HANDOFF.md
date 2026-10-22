@@ -13,6 +13,7 @@ Last updated: **2026-10-22**. Read `CLAUDE.md` first. Update this file at the en
 3. Workouts page: exercises sorted by recency; per-workout rating rescaled (7 = normal, floor 3) after the user objected to a 0.0 score.
 3b. Investigated "no Lift on Thu 22": Hevy has no workout for today. Added every-3-hours schedule, Hevy fields in `status.json`, and a footer showing last Hevy workout / Health upload / check time; tests now 49 (incl. Hevy retry logic).
 4. Created this memory system (`CLAUDE.md`, `docs/`).
+5b. Weekly history: `weekly.py` → `weeks.json` + `WEEKLY_STATS.md` (committed each run when changed), `site/weeks.html`, "Weeks" in the nav; 78 weeks backfilled. Watch for the first live Sunday append on 2026-10-25.
 5. Averages rule changed at the user's request: steps/calories Sunday → yesterday, sleep/weight Sunday → today; weight card now average-based (K5, K7 closed). Rule is `weekAvg` in `site/shared.js` with `tests/test_week_logic.mjs`.
 
 ## Audit (2026-10-22, end of day)
@@ -29,7 +30,7 @@ Re-checked every issue from today against code, tests and live state; see KNOWN_
 `CLAUDE.md`, this file, `daily.py`, `.github/workflows/daily.yml`, `site/index.html`, `site/workouts.html`, `site/shared.js`, `overrides.py`, `docs/KNOWN_ISSUES.md`.
 
 ## Tests run / not run
-- Run and passing (2026-10-22): `python tests/test_pipeline.py` → 49 passed; `node tests/test_week_logic.mjs` → 16 passed. Live checks: owner edit → sync → revert; invalid input rejected by the workflow; unauthenticated/fake-token API calls → 401; dashboard averages match an independent calculation.
+- Run and passing (2026-10-22): `python tests/test_pipeline.py` → 67 passed; `node tests/test_week_logic.mjs` → 16 passed. Live checks: owner edit → sync → revert; invalid input rejected by the workflow; unauthenticated/fake-token API calls → 401; dashboard averages match an independent calculation.
 - Not run / unverified: a real cron-triggered run; the phone's automation; the edit page with a real token; real iPhone Safari rendering; any frontend automated tests (none exist).
 
 ## Warnings

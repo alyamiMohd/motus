@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 work = Path(tempfile.mkdtemp(prefix="motus_test_"))
-for name in ("daily.py", "edit.py", "overrides.py", "common.py", "check_status.py", "fetch_hevy.py"):
+for name in ("daily.py", "edit.py", "overrides.py", "common.py", "check_status.py", "fetch_hevy.py", "weekly.py"):
     shutil.copy(ROOT / name, work / name)
 (work / "inbox").mkdir()
 (work / "history").mkdir()
@@ -209,6 +209,62 @@ out, c = run_get([_Resp(401)])
 check("a bad key (401) fails immediately, no retry", isinstance(out, _rq.HTTPError) and c["n"] == 1, (out, c))
 out, c = run_get([_Resp(429), _Resp(200)])
 check("rate limiting (429) is retried", getattr(out, "status_code", None) == 200 and c["n"] == 2, (out, c))
+
+print("7. Weekly stats: completed Sunday-Saturday weeks only, appended when a week ends, frozen to data, quiet when unchanged")
+import tempfile as _tf
+import weekly
+from datetime import date as _date
+
+def _wk(a, b, **kw):
+    out = {}
+    d = _date.fromisoformat(a)
+    while d <= _date.fromisoformat(b):
+        out[d.isoformat()] = dict(kw)
+        d += timedelta(days=1)
+    return out
+
+wdays = {}
+wdays["2026-09-22"] = {"steps": 500}                                           # week of Sun 20 Sep (one day of data)
+# Sun 27 Sep - Sat 3 Oct: no data at all (a gap week)
+wdays["2026-10-05"] = {"steps": 1000}; wdays["2026-10-06"] = {"steps": 3000, "workout_count": 1, "workout_minutes": 40, "workout_volume_kg": 1000}
+for i, st in enumerate((1000, 2000, 3000, 4000, 5000, 6000, 7000)):             # Sun 11 - Sat 17 Oct
+    wdays[str(_date(2026, 10, 11) + timedelta(days=i))] = {"steps": st}
+wdays["2026-10-12"].update(sleep_hours=6.0, workout_count=1, workout_minutes=30, workout_volume_kg=500, weight_kg=65.0)
+wdays["2026-10-14"].update(sleep_hours=8.0, workout_count=1, workout_minutes=45, workout_volume_kg=700, weight_kg=64.0)
+wdays.update(_wk("2026-10-18", "2026-10-21", steps=99999, sleep_hours=1, calories=9999))   # the current week must stay out
+
+W = weekly.build_weeks(wdays, _date(2026, 10, 22))                              # Thursday
+check("only completed weeks, oldest first, gap week skipped", [w["start"] for w in W] == ["2026-09-20", "2026-10-04", "2026-10-11"], [w["start"] for w in W])
+w11 = W[-1]
+check("steps average over the days with data (1000..7000 -> 4000)", w11["steps"] == 4000 and isinstance(w11["steps"], int), w11)
+check("sleep average over the 2 nights with data, 2 decimals", w11["sleep_hours"] == 7.0 and w11["days_with_data"]["sleep_hours"] == 2, w11)
+check("weight average; calories null when never recorded", w11["weight_kg"] == 64.5 and w11["calories"] is None, w11)
+check("workouts, minutes and volume are weekly totals", (w11["workouts"], w11["workout_minutes"], w11["workout_volume_kg"]) == (2, 75, 1200), w11)
+check("a partly empty week averages only what exists", W[1]["steps"] == 2000 and W[1]["workouts"] == 1, W[1])
+check("the in-progress week never appears", all(w["end"] < "2026-10-18" for w in W))
+check("Saturday: this week is still in progress", "2026-10-18" not in [w["start"] for w in weekly.build_weeks(wdays, _date(2026, 10, 24))])
+check("Sunday: the week that just ended is added", weekly.build_weeks(wdays, _date(2026, 10, 25))[-1]["start"] == "2026-10-18")
+check("weeks start on Sunday", weekly.week_start(_date(2026, 10, 18)) == _date(2026, 10, 18) and weekly.week_start(_date(2026, 10, 24)) == _date(2026, 10, 18) and weekly.week_start(_date(2026, 10, 19)) == _date(2026, 10, 18))
+check("no data at all -> no weeks", weekly.build_weeks({}, _date(2026, 10, 22)) == [])
+md = weekly.to_markdown(W)
+check("markdown lists newest first", md.index("11 Oct") < md.index("4 Oct") < md.index("20 Sep"), md)
+tmp = Path(_tf.mkdtemp(prefix="motus_weekly_"))
+first = weekly.write(wdays, tmp, _date(2026, 10, 22))
+before = ((tmp / "weeks.json").read_text(encoding="utf-8"), (tmp / "WEEKLY_STATS.md").read_text(encoding="utf-8"))
+check("files are written", len(first) == 3 and json.loads(before[0])["weeks"][-1]["start"] == "2026-10-11")
+check("rewriting identical content reports no change", weekly._write_if_changed(tmp / "weeks.json", before[0]) is False and weekly._write_if_changed(tmp / "WEEKLY_STATS.md", before[1]) is False)
+wdays2 = {**wdays, "2026-10-17": {"steps": 7000, "calories": 1800}}
+weekly.write(wdays2, tmp, _date(2026, 10, 22))
+check("late data for a finished week flows into that week", json.loads((tmp / "weeks.json").read_text(encoding="utf-8"))["weeks"][-1]["calories"] == 1800)
+shutil.rmtree(tmp, ignore_errors=True)
+
+run("daily.py")                                                              # integration: the real script in the sandbox
+wk1 = (work / "weeks.json").read_text(encoding="utf-8"); md1 = (work / "WEEKLY_STATS.md").read_text(encoding="utf-8")
+wj = json.loads(wk1)["weeks"]
+check("daily.py writes weeks.json and WEEKLY_STATS.md", bool(md1) and isinstance(wj, list))
+check("every week in the file has ended, in order", all(w["end"] < str(today) for w in wj) and [w["start"] for w in wj] == sorted(w["start"] for w in wj))
+run("daily.py")
+check("a second run leaves both weekly files byte-identical", (work / "weeks.json").read_text(encoding="utf-8") == wk1 and (work / "WEEKLY_STATS.md").read_text(encoding="utf-8") == md1)
 
 print(f"\n{passes} passed, {len(fails)} failed")
 if fails:

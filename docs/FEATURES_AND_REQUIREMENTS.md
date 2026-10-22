@@ -26,7 +26,14 @@ Status: **planned · in progress · implemented · verified**. "Verified" means 
 | U7 | Standards panel (steps, sleep, calories *less than*, weight loss/week, workouts/week, training days) | verified | Per-device (`localStorage`); changes recolor live. Lock/visitor-proofing question unanswered. |
 | U8 | Staleness/error banner | implemented | See D7. |
 | U9 | Minimalist look, black/white + green, works on phones | verified (emulated) | |
+| U11 | **Weeks page**: simple table of every completed Sunday-Saturday week (sleep, steps, calories, weight, lifts), newest first, green when a standard is met | verified (emulated phone) | Fits at 390/320 px; links to `WEEKLY_STATS.md`. |
 | U10 | Footer shows what each source last delivered ("Hevy: last workout …· Health: last upload …· checked …") | verified | Lets a missing workout/upload be diagnosed from the page. |
+
+## Weekly history
+| # | Item | Status | Files | Acceptance criteria · notes |
+|---|---|---|---|---|
+| H1 | A file that keeps the weekly stats: new week finishes → its row is added, pushed to GitHub; readable later | verified | `weekly.py`, `weeks.json`, `WEEKLY_STATS.md`, `daily.yml` | Completed Sunday-Saturday weeks only; the first run after a week ends adds it; derived from `data.json`, so late data/corrections update that week; quiet runs commit nothing (67 tests incl. Sunday/Saturday edges). **The Sunday-rollover append itself has not yet been seen live** (first chance: Sunday 2026-10-25 run). |
+| H2 | Interface for browsing the weekly stats | verified | `site/weeks.html` | Simple, concise, phone-safe; "Show all". |
 
 ## Workouts page (`site/workouts.html`)
 | # | Item | Status | Acceptance · notes |

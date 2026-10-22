@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Motus · Weeks</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <table>
+    <thead><tr><th>Week</th><th>Sleep</th><th>Steps</th><th>Cal</th><th>Kg</th><th>Lifts</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <button class="more" id="more" hidden></button>
+  <p class="muted" id="foot" style="font-size:12px;margin-top:24px"></p>
+</main>
+
+<script src="shared.js"></script>
+<script>
+let weeks = [], showAll = false;
+const SHOWN = 12;
+const NODATA = '<span class="no">no data</span>';
+
+const f1 = v => v.toFixed(1), f0 = v => Math.round(v).toLocaleString("en-US");
+const span = w => (w.start.slice(5, 7) === w.end.slice(5, 7) ? String(+w.start.slice(8)) : dayMonth(w.start)) + "–" + dayMonth(w.end);
+
+function cell(v, fmt, green) {
+  return v == null ? `<td>${NODATA}</td>` : `<td class="${green ? "good" : ""}">${fmt(v)}</td>`;
+}
+
+function render() {
+  const byStart = Object.fromEntries(weeks.map(w => [w.start, w]));
+  const list = [...weeks].reverse();                       // newest first
+  const rows = (showAll ? list : list.slice(0, SHOWN)).map(w => {
+    const prev = byStart[add(w.start, -7)];                // the week before (weight is green when it dropped by the goal)
+    const lost = prev && prev.weight_kg != null && w.weight_kg != null ? prev.weight_kg - w.weight_kg : null;
+    return `<tr><td>${span(w)}</td>` +
+      cell(w.sleep_hours, f1, w.sleep_hours >= goals.sleep) +
+      cell(w.steps, f0, w.steps >= goals.steps) +
+      cell(w.calories, f0, w.calories <= goals.calories) +
+      cell(w.weight_kg, f1, lost != null && lost > 0 && lost >= goals.weight) +
+      `<td class="${w.workouts >= goals.workouts ? "good" : ""}">${w.workouts}</td></tr>`;
+  });
+  document.getElementById("rows").innerHTML = rows.join("") ||
+    `<tr><td colspan="6">${NODATA}</td></tr>`;
+  const more = document.getElementById("more");
+  more.hidden = list.length <= SHOWN;
+  more.textContent = showAll ? "Show fewer" : "Show all " + list.length;
+}
+
+document.getElementById("more").onclick = () => { showAll = !showAll; render(); };
+initNav("weeks", render);
+loadJSON("weeks.json").then(data => {
+  weeks = (data && data.weeks) || [];
+  render();
+  document.getElementById("foot").innerHTML = data
+    ? 'A week is added here when it ends (Sunday to Saturday). Full history: ' +
+      '<a href="https://github.com/alyamiMohd/motus/blob/main/WEEKLY_STATS.md" style="text-decoration:underline">WEEKLY_STATS.md</a> on GitHub.'
+    : "Could not load weeks.json (open the site through a web server, not as a file).";
+});
+</script>
+</body>
+</html>

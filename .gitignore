@@ -34,3 +34,4 @@ Thumbs.db
 *.log
 .claude/settings.local.json
 .env.local
+site/weeks.json

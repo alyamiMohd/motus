@@ -19,6 +19,8 @@ const adminToken = () => { try { return sessionStorage.getItem(ADMIN_KEY) || "";
 const today = new Date().toLocaleDateString("en-CA", { timeZone: TZ });
 const add = (iso, n) => { const d = new Date(iso + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 const label = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", { weekday: "short", day: "numeric", timeZone: "UTC" });
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const dayMonth = iso => +iso.slice(8) + " " + MONTHS[+iso.slice(5, 7) - 1];      // "27 Sep"
 const NO = '<span class="no">no data</span>';
 const weekStart = iso => add(iso, -new Date(iso + "T00:00:00Z").getUTCDay());   // weeks start on Sunday
 
@@ -47,7 +49,7 @@ function initNav(active, onChange) {
     <span class="links">
       <a href="./" class="${active === "home" ? "on" : ""}">Dashboard</a>
       <a href="workouts.html" class="${active === "workouts" ? "on" : ""}">Workouts</a>
-      ${adminToken() ? `<a href="edit.html" class="${active === "edit" ? "on" : ""}">Edit</a>` : ""}
+      <a href="weeks.html" class="${active === "weeks" ? "on" : ""}">Weeks</a>
       <button id="toggle" aria-expanded="false" aria-controls="standards">Standards</button>
     </span>
   </div>
@@ -57,6 +59,7 @@ function initNav(active, onChange) {
     <label>Calories per day, less than <input id="s-calories" type="number" inputmode="numeric" min="0" step="50"></label>
     <label>Weight loss kg per week <input id="s-weight" type="number" inputmode="decimal" min="0" step="0.1"></label>
     <label>Workouts per week <input id="s-workouts" type="number" inputmode="numeric" min="1" max="14" step="1"></label>
+    ${adminToken() ? '<div class="row2" style="margin:0 0 8px"><a href="edit.html" style="text-decoration:underline">Edit data →</a></div>' : ""}
     <div class="label2">Training days</div>
     <div class="chips" id="s-days"></div>
     <div class="row2"><small>Green when you reach it. Saved on this device.</small><button id="reset">Reset</button></div>

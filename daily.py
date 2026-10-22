@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import overrides
+import weekly
 from common import TZ, load_env
 
 ROOT = Path(__file__).parent
@@ -157,6 +158,8 @@ def main() -> None:
     changed = json.dumps(days, sort_keys=True) != before
     stamp = now if changed or "updated" not in existing else existing["updated"]
     DATA.write_text(json.dumps({"updated": stamp, "days": days}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    weekly.write(days, ROOT, datetime.now(TZ).date())     # one row per completed Sunday-Saturday week
 
     STATUS.write_text(json.dumps({
         "run": now,

@@ -1,0 +1,1330 @@
+{
+ "weeks": [
+  {
+   "start": "2025-04-20",
+   "end": "2025-04-26",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 305,
+   "workout_volume_kg": 24847,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-04-27",
+   "end": "2025-05-03",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 3174,
+   "workout_volume_kg": 20968,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-05-04",
+   "end": "2025-05-10",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 344,
+   "workout_volume_kg": 19924,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-05-11",
+   "end": "2025-05-17",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 6,
+   "workout_minutes": 1599,
+   "workout_volume_kg": 39802,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-05-18",
+   "end": "2025-05-24",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 200,
+   "workout_volume_kg": 27988,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-05-25",
+   "end": "2025-05-31",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 772,
+   "workout_volume_kg": 36727,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-06-01",
+   "end": "2025-06-07",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 3210,
+   "workout_volume_kg": 27205,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-06-08",
+   "end": "2025-06-14",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 479,
+   "workout_volume_kg": 29861,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-06-15",
+   "end": "2025-06-21",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 572,
+   "workout_volume_kg": 32300,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-06-22",
+   "end": "2025-06-28",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 364,
+   "workout_volume_kg": 30697,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-06-29",
+   "end": "2025-07-05",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 923,
+   "workout_volume_kg": 18849,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-07-06",
+   "end": "2025-07-12",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 3390,
+   "workout_volume_kg": 39254,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-07-13",
+   "end": "2025-07-19",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 222,
+   "workout_volume_kg": 17311,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-07-20",
+   "end": "2025-07-26",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 542,
+   "workout_volume_kg": 24537,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-07-27",
+   "end": "2025-08-02",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 446,
+   "workout_volume_kg": 30704,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-08-03",
+   "end": "2025-08-09",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 524,
+   "workout_volume_kg": 27309,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-08-10",
+   "end": "2025-08-16",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 285,
+   "workout_volume_kg": 22608,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-08-17",
+   "end": "2025-08-23",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 2449,
+   "workout_volume_kg": 22163,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-08-24",
+   "end": "2025-08-30",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 1991,
+   "workout_volume_kg": 30495,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-08-31",
+   "end": "2025-09-06",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 461,
+   "workout_volume_kg": 20943,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-09-07",
+   "end": "2025-09-13",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 394,
+   "workout_volume_kg": 22517,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-09-14",
+   "end": "2025-09-20",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 354,
+   "workout_volume_kg": 23726,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-09-21",
+   "end": "2025-09-27",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 255,
+   "workout_volume_kg": 18908,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-09-28",
+   "end": "2025-10-04",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 343,
+   "workout_volume_kg": 23050,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-10-05",
+   "end": "2025-10-11",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 351,
+   "workout_volume_kg": 23947,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-10-12",
+   "end": "2025-10-18",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 358,
+   "workout_volume_kg": 16554,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-10-19",
+   "end": "2025-10-25",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 6,
+   "workout_minutes": 441,
+   "workout_volume_kg": 26262,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-10-26",
+   "end": "2025-11-01",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 343,
+   "workout_volume_kg": 20706,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-11-02",
+   "end": "2025-11-08",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 326,
+   "workout_volume_kg": 15755,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-11-09",
+   "end": "2025-11-15",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 402,
+   "workout_volume_kg": 28708,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-11-16",
+   "end": "2025-11-22",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 371,
+   "workout_volume_kg": 27436,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-11-23",
+   "end": "2025-11-29",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 342,
+   "workout_volume_kg": 21521,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-11-30",
+   "end": "2025-12-06",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 153,
+   "workout_volume_kg": 19036,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-12-07",
+   "end": "2025-12-13",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 367,
+   "workout_volume_kg": 32846,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-12-14",
+   "end": "2025-12-20",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 294,
+   "workout_volume_kg": 29708,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-12-21",
+   "end": "2025-12-27",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 455,
+   "workout_volume_kg": 30801,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2025-12-28",
+   "end": "2026-01-03",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 341,
+   "workout_volume_kg": 31062,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-01-04",
+   "end": "2026-01-10",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 435,
+   "workout_volume_kg": 35591,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-01-11",
+   "end": "2026-01-17",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 443,
+   "workout_volume_kg": 36030,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-01-18",
+   "end": "2026-01-24",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 350,
+   "workout_volume_kg": 27125,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-01-25",
+   "end": "2026-01-31",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 404,
+   "workout_volume_kg": 26755,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-02-01",
+   "end": "2026-02-07",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 185,
+   "workout_volume_kg": 12129,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-02-08",
+   "end": "2026-02-14",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 2,
+   "workout_minutes": 141,
+   "workout_volume_kg": 9552,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-02-15",
+   "end": "2026-02-21",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 300,
+   "workout_volume_kg": 25900,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-02-22",
+   "end": "2026-02-28",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 360,
+   "workout_volume_kg": 19538,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-03-01",
+   "end": "2026-03-07",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 220,
+   "workout_volume_kg": 17679,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-03-08",
+   "end": "2026-03-14",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 1,
+   "workout_minutes": 63,
+   "workout_volume_kg": 2966,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-03-15",
+   "end": "2026-03-21",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 2,
+   "workout_minutes": 172,
+   "workout_volume_kg": 14530,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-03-22",
+   "end": "2026-03-28",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 205,
+   "workout_volume_kg": 17613,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-03-29",
+   "end": "2026-04-04",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 267,
+   "workout_volume_kg": 30254,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-04-05",
+   "end": "2026-04-11",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 478,
+   "workout_volume_kg": 25366,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-04-12",
+   "end": "2026-04-18",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 334,
+   "workout_volume_kg": 21209,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-04-19",
+   "end": "2026-04-25",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 150,
+   "workout_volume_kg": 9403,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-04-26",
+   "end": "2026-05-02",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 317,
+   "workout_volume_kg": 20827,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-05-03",
+   "end": "2026-05-09",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 278,
+   "workout_volume_kg": 29832,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-05-10",
+   "end": "2026-05-16",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 197,
+   "workout_volume_kg": 22156,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-05-17",
+   "end": "2026-05-23",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 221,
+   "workout_volume_kg": 21237,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-05-24",
+   "end": "2026-05-30",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 246,
+   "workout_volume_kg": 11232,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-05-31",
+   "end": "2026-06-06",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 405,
+   "workout_volume_kg": 28531,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-06-07",
+   "end": "2026-06-13",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 278,
+   "workout_volume_kg": 23240,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-06-14",
+   "end": "2026-06-20",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 378,
+   "workout_volume_kg": 30321,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-06-21",
+   "end": "2026-06-27",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 279,
+   "workout_volume_kg": 28389,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-06-28",
+   "end": "2026-07-04",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 531,
+   "workout_volume_kg": 24355,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-07-05",
+   "end": "2026-07-11",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 215,
+   "workout_volume_kg": 18742,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-07-12",
+   "end": "2026-07-18",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 238,
+   "workout_volume_kg": 20407,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-07-19",
+   "end": "2026-07-25",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 476,
+   "workout_volume_kg": 18759,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-07-26",
+   "end": "2026-08-01",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 307,
+   "workout_volume_kg": 21506,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-08-02",
+   "end": "2026-08-08",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 3,
+   "workout_minutes": 211,
+   "workout_volume_kg": 12072,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-08-09",
+   "end": "2026-08-15",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 295,
+   "workout_volume_kg": 17904,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-08-16",
+   "end": "2026-08-22",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 299,
+   "workout_volume_kg": 20250,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-08-23",
+   "end": "2026-08-29",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": null,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 213,
+   "workout_volume_kg": 11614,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 0,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-08-30",
+   "end": "2026-09-05",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": 1937,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 253,
+   "workout_volume_kg": 22462,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 5,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-09-06",
+   "end": "2026-09-12",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": 3351,
+   "weight_kg": null,
+   "workouts": 5,
+   "workout_minutes": 282,
+   "workout_volume_kg": 20846,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 7,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-09-13",
+   "end": "2026-09-19",
+   "sleep_hours": null,
+   "steps": null,
+   "calories": 1763,
+   "weight_kg": null,
+   "workouts": 4,
+   "workout_minutes": 269,
+   "workout_volume_kg": 14989,
+   "days_with_data": {
+    "sleep_hours": 0,
+    "steps": 0,
+    "calories": 7,
+    "weight_kg": 0
+   }
+  },
+  {
+   "start": "2026-09-20",
+   "end": "2026-09-26",
+   "sleep_hours": 9.74,
+   "steps": 5504,
+   "calories": 3316,
+   "weight_kg": 67.02,
+   "workouts": 2,
+   "workout_minutes": 154,
+   "workout_volume_kg": 6804,
+   "days_with_data": {
+    "sleep_hours": 5,
+    "steps": 6,
+    "calories": 7,
+    "weight_kg": 5
+   }
+  },
+  {
+   "start": "2026-09-27",
+   "end": "2026-10-03",
+   "sleep_hours": 9.12,
+   "steps": 6563,
+   "calories": 1745,
+   "weight_kg": 66.23,
+   "workouts": 3,
+   "workout_minutes": 220,
+   "workout_volume_kg": 13784,
+   "days_with_data": {
+    "sleep_hours": 5,
+    "steps": 7,
+    "calories": 7,
+    "weight_kg": 7
+   }
+  },
+  {
+   "start": "2026-10-04",
+   "end": "2026-10-10",
+   "sleep_hours": 8.39,
+   "steps": 6910,
+   "calories": 1951,
+   "weight_kg": 65.71,
+   "workouts": 5,
+   "workout_minutes": 310,
+   "workout_volume_kg": 13077,
+   "days_with_data": {
+    "sleep_hours": 5,
+    "steps": 7,
+    "calories": 7,
+    "weight_kg": 7
+   }
+  },
+  {
+   "start": "2026-10-11",
+   "end": "2026-10-17",
+   "sleep_hours": 7.85,
+   "steps": 8622,
+   "calories": 1337,
+   "weight_kg": 64.99,
+   "workouts": 4,
+   "workout_minutes": 249,
+   "workout_volume_kg": 24064,
+   "days_with_data": {
+    "sleep_hours": 7,
+    "steps": 7,
+    "calories": 7,
+    "weight_kg": 7
+   }
+  }
+ ]
+}

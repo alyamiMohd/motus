@@ -29,12 +29,14 @@ history/*.json (one-off backfills)        overrides.json (manual corrections)
 | `check_status.py` | Reads `status.json`, emits `errors=N` so the workflow can fail loudly after deploying |
 | `common.py` | `.env` loader, fixed `TZ` (UTC+3) |
 | `serve.py` | Local preview server (port 8099) |
-| `site/index.html` | Dashboard · `site/workouts.html` Workouts page · `site/edit.html` admin edit page · `site/shared.js` nav, standards, helpers · `site/style.css` |
+| `site/index.html` | Dashboard · `site/workouts.html` Workouts page · `site/weeks.html` weekly history · `site/edit.html` admin edit page · `site/shared.js` nav, standards, helpers · `site/style.css` |
 | `data.json` | Daily records (generated, committed) · `workouts.json` per-exercise history (generated, committed) |
 | `overrides.json` | Manual corrections (admin-written via workflow) · `history/*.json` one-off backfills |
 | `inbox/` | Raw uploads from the phone (public) |
+| `weekly.py` | Builds the weekly history from `data.json`; writes `weeks.json` and `WEEKLY_STATS.md` |
+| `weeks.json` / `WEEKLY_STATS.md` | Generated weekly stats: one row per completed Sunday-Saturday week (JSON for the site, a Markdown table to read on GitHub). Never edit by hand |
 | `tests/test_week_logic.mjs` | Node tests for the week-to-date averaging rule (16 checks) |
-| `tests/test_pipeline.py` | Synthetic pipeline tests (49 checks; Hevy client stubbed, plus retry logic with a faked `requests.get`) |
+| `tests/test_pipeline.py` | Synthetic pipeline tests (67 checks; Hevy client stubbed, retry logic with a faked `requests.get`, weekly stats) |
 | `.github/workflows/daily.yml` | The only workflow |
 
 ## Data sources
@@ -70,6 +72,12 @@ unweighted sets ignored).
 Editable metrics and server-side limits (`overrides.py`): steps 0–100000 (int), sleep_hours 0–24, calories 0–20000 (int), weight_kg 20–400, active_kcal 0–20000, workout_count 0–10,
 workout_minutes 0–1440, workout_volume_kg 0–500000; dates must be ≤ today (Riyadh) and ≤ 800 days old; ≤ 500 corrections; notes ≤ 200 chars.
 
+## Weekly stats (`weekly.py`)
+- One row per **completed** week, **Sunday to Saturday (Riyadh)**. A week is added the first run after it ends (a Sunday run adds the week that just finished); the in-progress week never appears. Weeks with no data at all are skipped.
+- Row = `start`, `end`, averages over the days that have data (`sleep_hours`, `steps`, `calories`, `weight_kg`), weekly totals (`workouts`, `workout_minutes`, `workout_volume_kg`) and `days_with_data` counts.
+- **Derived, not frozen**: rebuilt from `data.json` (which keeps every day) on each run, so history cannot drift or be lost, and late syncs or manual corrections flow into the affected week. Files are rewritten only when their content changes, so quiet runs commit nothing. Weeks before Sep 2026 mostly have workouts only (Hevy history starts Apr 2025; Health data starts Sep 2026).
+- The workflow commits `weeks.json` and `WEEKLY_STATS.md` to `main` and publishes `weeks.json` with the site.
+
 ## Workflow `.github/workflows/daily.yml`
 - Triggers: `schedule` `17 */3 * * *` (every 3 hours at :17 UTC, i.e. 03:17, 06:17, 09:17 ... Riyadh; off the busy `:00` mark); `push` touching `inbox/**`, `site/**`, `history/**`, `overrides.json`, `*.py`; `workflow_dispatch`
   (optionally with correction inputs: `action` none|set|revert, `date`, `metric`, `value`, `note`).
@@ -85,8 +93,9 @@ workout_minutes 0–1440, workout_volume_kg 0–500000; dates must be ≤ today 
   with `*` marking corrected values; four 30-day charts.
 - **Workouts** (`workouts.html`): Last workout rating, Overall rating (last 4 weeks), workouts-per-week chart (12 weeks, green ≥ goal, white below, fainter = current week), exercise list sorted by most
   recently trained with est. 1RM, change and sparkline, per-workout ratings with This week / Last week toggle (tap a workout for per-exercise changes).
+- **Weeks** (`weeks.html`): a plain table of completed weeks, newest first (12 shown, "Show all N"): Sleep, Steps, Cal, Kg, Lifts; green when a standard is met (weight green when the average dropped by the goal vs the previous week); links to `WEEKLY_STATS.md` on GitHub.
 - **Edit** (`edit.html`): admin sign-in with a pasted token (kept in `sessionStorage` key `motus-admin-token`, cleared when the tab closes); form to correct/clear a value or revert; corrections list.
-  The Edit nav link and the table's day links appear only inside an admin session.
+  The table's day links and an "Edit data →" link inside the Standards panel appear only inside an admin session (the nav always has four items: Dashboard, Workouts, Weeks, Standards).
 - **Standards** (navbar panel, per device in `localStorage` key `stotis-goals`): steps/day (default 8000), sleep h/night (7), calories/day *less than* (1500), weight loss kg/week (0 = any loss), workouts/week (4),
   training days (Mon, Tue, Wed, Fri, Sat). Green when met. A one-time migration moves a saved calories value of 2000 to 1500 (flag `stotis-cal1500`).
 
@@ -120,7 +129,7 @@ GitHub Pages (workflow deployment) at https://alyamimohd.github.io/motus/. Free 
 Scheduled runs can be delayed/dropped by GitHub; mitigated by an every-3-hours off-peak schedule, the staleness banner, the footer source times and failure alerts.
 
 ## Testing status
-- `tests/test_pipeline.py`: 49 checks, all passing on 2026-10-22 (today's data arrives, history intact, no duplicates, no-op runs identical, edit/revert, correction survives sync, revert restores latest automatic value, 14 invalid/unauthorized requests rejected, corrupt overrides tolerated).
+- `tests/test_pipeline.py`: 67 checks, all passing on 2026-10-22 (today's data arrives, history intact, no duplicates, no-op runs identical, edit/revert, correction survives sync, revert restores latest automatic value, 14 invalid/unauthorized requests rejected, corrupt overrides tolerated).
 - `tests/test_week_logic.mjs`: 16 checks for `weekAvg`/`weekStart` (steps/calories stop at yesterday, sleep/weight include today, Sunday/Saturday edges, no leakage across weeks), all passing on 2026-10-22.
 - Live end-to-end on 2026-10-22: owner edit → normal sync → revert on a real date; invalid value rejected by the workflow; unauthenticated API calls rejected.
 - Frontend: verified manually in the browser pane at 390px/320px widths with the console checked; no automated UI tests. Real iPhone Safari rendering is **Unverified**.

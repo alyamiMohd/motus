@@ -17,7 +17,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def translate_path(self, path):
         name = path.split("?")[0]
-        if name in ("/data.json", "/workouts.json", "/overrides.json", "/status.json"):
+        if name in ("/data.json", "/workouts.json", "/overrides.json", "/status.json", "/weeks.json"):
             return str(ROOT / name.lstrip("/"))
         return super().translate_path(path)
 

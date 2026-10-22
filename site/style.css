@@ -111,3 +111,5 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .notice { font-size: 13px; color: var(--warn); margin: 0 0 16px; line-height: 1.5; }
 .ed { color: var(--muted); font-size: 10px; margin-left: 1px; vertical-align: super; }
 td a { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.bar { gap: 8px; }
+@media (max-width: 360px) { .links { gap: 8px; } .links a, .links button { font-size: 13px; } }

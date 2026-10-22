@@ -82,7 +82,7 @@ jobs:
         run: |
           git config user.name "motus-bot"
           git config user.email "motus-bot@users.noreply.github.com"
-          git add data.json workouts.json overrides.json
+          git add data.json workouts.json overrides.json weeks.json WEEKLY_STATS.md
           if ! git diff --cached --quiet; then
             git commit -m "Update data"
             ok=0
@@ -95,7 +95,7 @@ jobs:
           fi
 
       - name: Assemble site
-        run: cp data.json workouts.json overrides.json status.json site/
+        run: cp data.json workouts.json overrides.json status.json weeks.json site/
 
       - uses: actions/configure-pages@v5
 
