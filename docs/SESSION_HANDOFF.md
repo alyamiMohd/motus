@@ -13,6 +13,7 @@ Last updated: **2026-10-22**. Read `CLAUDE.md` first. Update this file at the en
 3. Workouts page: exercises sorted by recency; per-workout rating rescaled (7 = normal, floor 3) after the user objected to a 0.0 score.
 3b. Investigated "no Lift on Thu 22": Hevy has no workout for today. Added every-3-hours schedule, Hevy fields in `status.json`, and a footer showing last Hevy workout / Health upload / check time; tests now 49 (incl. Hevy retry logic).
 4. Created this memory system (`CLAUDE.md`, `docs/`).
+5. Averages rule changed at the user's request: steps/calories Sunday → yesterday, sleep/weight Sunday → today; weight card now average-based (K5, K7 closed). Rule is `weekAvg` in `site/shared.js` with `tests/test_week_logic.mjs`.
 
 ## Audit (2026-10-22, end of day)
 Re-checked every issue from today against code, tests and live state; see KNOWN_ISSUES for what can still recur (K1 cron unverified, K2/K3 phone upload and late sleep, K13 token expiry, K18 alert path unverified). A transient DNS failure on the dev laptop mid-Hevy-fetch was handled correctly (1 error reported, no data lost).
@@ -21,14 +22,14 @@ Re-checked every issue from today against code, tests and live state; see KNOWN_
 1. **Confirm a scheduled run fires**: `gh run list --repo alyamiMohd/motus --event schedule` (now every 3 hours at :17 UTC). If none appears over a day, investigate Actions settings / consider a different trigger.
    Also ask the user whether today's workout is finished and synced in the Hevy app (K17); the footer's "Hevy: last workout" shows what the site has.
 2. **Confirm the phone side**: does the Wake Up automation exist and upload? Does today's sleep show up after an afternoon export? (K2, K3).
-3. Open user decisions (ask, don't assume): lock or leave the Standards panel (K12); include today in the steps average (K7); base the weight card on averages (K5); align the overall rating scale with the per-workout scale (K6); weekly goal 4 vs 5 planned days (K14); whether to add other Health metrics (see FEATURES "ideas").
+3. Open user decisions (ask, don't assume): lock or leave the Standards panel (K12); align the overall rating scale with the per-workout scale (K6); weekly goal 4 vs 5 planned days (K14); whether to add other Health metrics (see FEATURES "ideas").
 4. The user needs to create the **admin token** (fine-grained, Actions: read/write, repo `motus` only) and try `site/edit.html` once (K8). Also check the 12–13 h sleep nights (K4).
 
 ## Files to inspect first
 `CLAUDE.md`, this file, `daily.py`, `.github/workflows/daily.yml`, `site/index.html`, `site/workouts.html`, `site/shared.js`, `overrides.py`, `docs/KNOWN_ISSUES.md`.
 
 ## Tests run / not run
-- Run and passing (2026-10-22): `python tests/test_pipeline.py` → 49 passed. Live checks: owner edit → sync → revert; invalid input rejected by the workflow; unauthenticated/fake-token API calls → 401; dashboard averages match an independent calculation.
+- Run and passing (2026-10-22): `python tests/test_pipeline.py` → 49 passed; `node tests/test_week_logic.mjs` → 16 passed. Live checks: owner edit → sync → revert; invalid input rejected by the workflow; unauthenticated/fake-token API calls → 401; dashboard averages match an independent calculation.
 - Not run / unverified: a real cron-triggered run; the phone's automation; the edit page with a real token; real iPhone Safari rendering; any frontend automated tests (none exist).
 
 ## Warnings

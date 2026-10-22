@@ -17,8 +17,8 @@ Status: **planned · in progress · implemented · verified**. "Verified" means 
 ## Dashboard (`site/index.html`)
 | # | Item | Status | Acceptance · notes |
 |---|---|---|---|
-| U1 | Averages for sleep, steps, calories from **Sunday to today**, resetting each Sunday; heading "Avg since Sunday, <date>" | verified | Matches independent calculation. Includes today's partial steps (decision pending, see KNOWN_ISSUES). |
-| U2 | Weight per week card (kg lost/gained) | implemented | Green when loss ≥ goal. Based on single readings → noisy (smoothing proposed, not approved). |
+| U1 | Week-to-date averages (weeks start Sunday), resetting each Sunday; heading "Avg since Sunday, <date> · steps and calories to yesterday". **Steps and calories: Sunday → yesterday** (today is a partial day); **sleep and weight: Sunday → today** | verified | Rule lives in `weekAvg` (`site/shared.js`), 16 unit tests; matches an independent calculation. On a Sunday steps/calories show "no data" (nothing complete yet). |
+| U2 | Weight card: this week's average (Sunday → today) minus last week's average (kg lost/gained) | verified | Green when loss ≥ goal. Needs readings in both weeks, else "no data". |
 | U3 | Week strip Sun→Sat: green = trained, gray = planned training day, ring = today | verified (emulated phone) | Fits at 390/320 px. Real iPhone unverified. |
 | U4 | One-line **Last Week:** Sunday–Saturday averages; steps and weight show change vs week before; values dark green when standard met; pipe separators | verified | Calories, sleep, workouts show no comparison (user request). |
 | U5 | Daily table (7 days) with Lift minutes; "no data" for missing | verified | `*` marks corrected values (original in tooltip). |

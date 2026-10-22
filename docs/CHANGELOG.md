@@ -3,6 +3,7 @@
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
 ## 2026-10-22
+- **Averages rule**: steps and calories now average Sunday → yesterday (today is partial), sleep and weight Sunday → today; weight card is this week's average minus last week's; heading says "steps and calories to yesterday"; one tested function `weekAvg` (`site/shared.js`), 16 new tests (this commit).
 - Hevy client now retries transient failures (network errors, timeouts, 429, 5xx; 4 attempts, backoff) after a DNS failure made a whole sync fail; tests extended to 49.
 - Audit pass: footer no longer says "no workouts" when the Hevy check failed (shows last known workout + "check failed"); test counts corrected in docs; K18 added.
 - Hevy visibility and refresh rate (this commit): schedule is now every 3 hours; `status.json` records Hevy's newest workout time and total; the dashboard footer shows last Hevy workout / last Health upload / last check; tests extended to 43 (Hevy stub, failure path, `check_status` output).

@@ -22,6 +22,18 @@ const label = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", { 
 const NO = '<span class="no">no data</span>';
 const weekStart = iso => add(iso, -new Date(iso + "T00:00:00Z").getUTCDay());   // weeks start on Sunday
 
+// Week-to-date average (weeks start on Sunday). Steps and calories stop at YESTERDAY because today is only a
+// partial day (first steps / first meals); sleep and weight include TODAY (a night's sleep and a morning weigh-in are complete).
+// Days without data are ignored; no data at all gives null (on a Sunday, steps/calories have nothing to average yet).
+const AVG_THROUGH = { steps: "yesterday", calories: "yesterday", sleep_hours: "today", weight_kg: "today" };
+function weekAvg(days, key, todayISO = today) {
+  const from = weekStart(todayISO);
+  const to = AVG_THROUGH[key] === "yesterday" ? add(todayISO, -1) : todayISO;
+  const v = [];
+  for (let d = from; d <= to; d = add(d, 1)) { const x = (days[d] || {})[key]; if (x != null) v.push(x); }
+  return v.length ? v.reduce((a, b) => a + b) / v.length : null;
+}
+
 function loadJSON(path) {
   return fetch(path, { cache: "no-store" }).then(r => { if (!r.ok) throw 0; return r.json(); }).catch(() => null);
 }

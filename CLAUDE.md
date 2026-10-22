@@ -32,7 +32,7 @@ Live site: https://alyamimohd.github.io/motus/ · Repo: https://github.com/alyam
 - Rebuild data locally: `python daily.py` (reads `inbox/`, Hevy, `history/`, `overrides.json`; writes `data.json`, `workouts.json`, `status.json`).
 - Preview the site: `python serve.py` → http://localhost:8099 (serves `site/` and maps `/data.json`, `/workouts.json`,
   `/overrides.json`, `/status.json` from the repo root; no caching).
-- Tests: `python tests/test_pipeline.py` (synthetic, no network, stubs the Hevy client; must print `0 failed`). The frontend has no automated
+- Tests: `python tests/test_pipeline.py` (synthetic, no network, stubs the Hevy client; must print `0 failed`). Also run `node tests/test_week_logic.mjs` (week-averaging rule in `site/shared.js`; needs Node). The rest of the frontend has no automated
   tests: verify in a browser at phone widths (390px and 320px) and read the console.
 - Deploy: automatic. `.github/workflows/daily.yml` runs on schedule (every 3 hours at :17), on pushes that touch
   `inbox/ site/ history/ overrides.json *.py`, and manually (`gh workflow run daily.yml`). It builds, commits data, and deploys to Pages.
