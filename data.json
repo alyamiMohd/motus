@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-22T10:16:23+03:00",
+ "updated": "2026-10-22T10:20:39+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4450,10 +4450,10 @@
    "active_kcal": 381
   },
   "2026-10-21": {
-   "steps": 4836,
+   "steps": 9868,
    "weight_kg": 64.7,
    "sleep_hours": 6.12,
-   "calories": 600,
+   "calories": 629,
    "active_kcal": 132,
    "workout_count": 1,
    "workout_minutes": 60,
@@ -4461,6 +4461,17 @@
    "workout_titles": [
     "❌Pull - 30mins cardio"
    ]
+  },
+  "2026-10-22": {
+   "steps": 391,
+   "weight_kg": 63.9,
+   "sleep_hours": null,
+   "calories": null,
+   "active_kcal": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
   }
  }
 }
