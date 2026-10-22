@@ -17,7 +17,7 @@ Status: **planned · in progress · implemented · verified**. "Verified" means 
 ## Dashboard (`site/index.html`)
 | # | Item | Status | Acceptance · notes |
 |---|---|---|---|
-| U1 | Week-to-date averages (weeks start Sunday), resetting each Sunday; heading "Avg since Sunday, <date> · steps and calories to yesterday". **Steps and calories: Sunday → yesterday** (today is a partial day); **sleep and weight: Sunday → today** | verified | Rule lives in `weekAvg` (`site/shared.js`), 16 unit tests; matches an independent calculation. On a Sunday steps/calories show "no data" (nothing complete yet). |
+| U1 | Week-to-date averages (weeks start Sunday), resetting each Sunday; heading "Weekly avg (Since Sun, <Sunday date, e.g. 18 Oct>)" (it does not mention that steps/calories stop at yesterday; the rule is documented here and in DECISIONS). **Steps and calories: Sunday → yesterday** (today is a partial day); **sleep and weight: Sunday → today** | verified | Rule lives in `weekAvg` (`site/shared.js`), 16 unit tests; matches an independent calculation. On a Sunday steps/calories show "no data" (nothing complete yet). |
 | U2 | Weight card: this week's average (Sunday → today) minus last week's average (kg lost/gained) | verified | Green when loss ≥ goal. Needs readings in both weeks, else "no data". |
 | U3 | Week strip Sun→Sat: green = trained, gray = planned training day, ring = today | verified (emulated phone) | Fits at 390/320 px. Real iPhone unverified. |
 | U4 | One-line **Last Week:** Sunday–Saturday averages; steps and weight show change vs week before; values dark green when standard met; pipe separators | verified | Calories, sleep, workouts show no comparison (user request). |

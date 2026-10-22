@@ -3,6 +3,8 @@
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
 ## 2026-10-22
+- Heading now reads "Weekly avg (Since Sun, 18 Oct)" (Sunday's date, updates every week) (this commit).
+- **Data correction (owner request)**: calories for 2026-10-20 and 2026-10-21 set to 1250 through the correction workflow (`overrides.json`; originals 500 and 629 kept and revertable). Applied by two sequential `workflow_dispatch` runs (bot commits on `main`).
 - **Averages rule**: steps and calories now average Sunday → yesterday (today is partial), sleep and weight Sunday → today; weight card is this week's average minus last week's; heading says "steps and calories to yesterday"; one tested function `weekAvg` (`site/shared.js`), 16 new tests (this commit).
 - Hevy client now retries transient failures (network errors, timeouts, 429, 5xx; 4 attempts, backoff) after a DNS failure made a whole sync fail; tests extended to 49.
 - Audit pass: footer no longer says "no workouts" when the Hevy check failed (shows last known workout + "check failed"); test counts corrected in docs; K18 added.

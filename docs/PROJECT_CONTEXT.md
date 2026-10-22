@@ -79,7 +79,7 @@ workout_minutes 0–1440, workout_volume_kg 0–500000; dates must be ≤ today 
 - Permissions: `contents: write`, `pages: write`, `id-token: write`. Pages source is "GitHub Actions".
 
 ## Frontend
-- **Dashboard** (`index.html`): notice banner (from `status.json`: no upload by 11:00 Riyadh, last run > 36 h ago, source errors); "Avg since Sunday, <Sunday date>" cards for sleep, steps, calories
+- **Dashboard** (`index.html`): notice banner (from `status.json`: no upload by 11:00 Riyadh, last run > 36 h ago, source errors); "Weekly avg (Since Sun, <Sunday date>)" cards for sleep, steps, calories
   (week-to-date: **steps and calories Sunday → yesterday**, **sleep and weight Sunday → today**, via `weekAvg` in `shared.js`) plus "Weight per week" (this week's average weight minus last week's average, shown as kg lost/gained); week strip Sunday→Saturday (green = trained, gray = planned
   training day not yet done, ring = today); one-line **Last Week** summary (Sunday–Saturday averages; steps and weight also show change vs the week before); 7-day table (Sleep, Steps, Cal, Kg, Lift minutes)
   with `*` marking corrected values; four 30-day charts.

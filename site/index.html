@@ -87,9 +87,9 @@ function summary() {
   const loss = w == null ? null : -w;
   const wText = w == null ? "" : (w > 0 ? "+" : w < 0 ? "−" : "") + Math.abs(w).toFixed(1) + " kg";
   const lastWeek = workoutsBetween(add(ws, -7), add(ws, -1));
-  const sundayLong = new Date(ws + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+  const sundayLong = new Date(ws + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
   document.getElementById("top").innerHTML =
-    `<div class="wide"><small>Avg since Sunday, ${sundayLong} · steps and calories to yesterday</small></div>` +
+    `<div class="wide"><small>Weekly avg (Since Sun, ${sundayLong})</small></div>` +
     cell(sl, sl == null ? "" : sl.toFixed(1) + " h", sl != null && sl >= goals.sleep, "Sleep") +
     cell(st, st == null ? "" : Math.round(st).toLocaleString("en-US"), st != null && st >= goals.steps, "Steps") +
     cell(ca, ca == null ? "" : Math.round(ca).toLocaleString("en-US"), ca != null && ca <= goals.calories, "Calories") +
