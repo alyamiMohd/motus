@@ -10,7 +10,7 @@ Status: **planned · in progress · implemented · verified**. "Verified" means 
 | D3 | Apple Health ingestion from phone uploads (steps, sleep, weight, calories, active kcal) | implemented | `daily.py`, `inbox/` | Newest upload wins per date; 0 = no data. **Phone automation unverified.** |
 | D4 | iPhone Shortcut uploads export to the repo via GitHub API | implemented | (outside repo) | File appears in `inbox/` and triggers a run. Needs token renewal reminder; see KNOWN_ISSUES. |
 | D5 | MyFitnessPal backfills (calories Sep 1–Oct 21, weight Sep 22–Oct 21) as gap-fill | implemented | `history/*.json`, `daily.py` | Health values always win. Weight values are chart estimates ±0.1 kg. |
-| D6 | Run every morning at 06:00 Riyadh | in progress | `daily.yml` | **Cron has never been observed firing.** Now 3 off-peak schedules (06:17/09:17/12:17 Riyadh); confirm a `schedule` run appears. |
+| D6 | Refresh automatically (originally "every morning at 06:00 Riyadh") | in progress | `daily.yml` | **Cron has never been observed firing.** Now every 3 hours at :17 so late-synced Hevy workouts/uploads appear within hours; confirm a `schedule` run appears. |
 | D7 | Reliability signals: `status.json`, failure alert, staleness banner | implemented | `daily.py`, `check_status.py`, `daily.yml`, `index.html` | Source error → run fails after deploy; banner on no upload by 11:00 / run >36 h old. Banner logic verified with synthetic statuses. |
 | D8 | Strava cardio | planned (dropped) | — | Blocked: API needs paid subscription. |
 
@@ -26,6 +26,7 @@ Status: **planned · in progress · implemented · verified**. "Verified" means 
 | U7 | Standards panel (steps, sleep, calories *less than*, weight loss/week, workouts/week, training days) | verified | Per-device (`localStorage`); changes recolor live. Lock/visitor-proofing question unanswered. |
 | U8 | Staleness/error banner | implemented | See D7. |
 | U9 | Minimalist look, black/white + green, works on phones | verified (emulated) | |
+| U10 | Footer shows what each source last delivered ("Hevy: last workout …· Health: last upload …· checked …") | verified | Lets a missing workout/upload be diagnosed from the page. |
 
 ## Workouts page (`site/workouts.html`)
 | # | Item | Status | Acceptance · notes |

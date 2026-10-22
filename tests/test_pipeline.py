@@ -138,6 +138,32 @@ check("invalid entries ignored and reported", days(d6)[D1]["sleep_hours"] == 9.0
 (work / "overrides.json").write_text("{not json")
 check("corrupt overrides.json reported, not fatal", any("not valid JSON" in e for e in daily()[1]["errors"]))
 
+print("5. Hevy: today's workout appears, status exposes what Hevy last delivered, failures are reported and non-fatal")
+(work / "overrides.json").write_text("{}", encoding="utf-8")        # clear the deliberately corrupt file from section 4
+STUB = """
+def fetch_workouts(since):
+    return [{"start_time": "__D__T06:00:00+00:00", "end_time": "__D__T07:00:00+00:00", "title": "Test", "exercises": []}]
+def per_day(ws):
+    return {"__D__": {"workouts": 1, "minutes": 45, "volume_kg": 1000, "titles": ["Test"]}}
+def exercise_history(ws):
+    return {}
+"""
+(work / "fetch_hevy.py").write_text(STUB.replace("__D__", D2), encoding="utf-8")
+rc, out = run("daily.py", HEVY_API_KEY="x")
+d7, s7 = read("data.json"), read("status.json")
+check("today's Hevy workout lands in today's row", rc == 0 and days(d7)[D2]["workout_count"] == 1 and days(d7)[D2]["workout_minutes"] == 45, out)
+check("status shows Hevy's newest workout time (Riyadh)", s7["hevy"]["latest_workout_start"] == f"{D2}T09:00:00+03:00", s7["hevy"])
+check("status shows ok / total / latest day", s7["hevy"]["ok"] is True and s7["hevy"]["total_workouts"] == 1 and s7["hevy"]["latest_workout"] == D2)
+(work / "fetch_hevy.py").write_text("def fetch_workouts(since):\n    raise RuntimeError('boom')\n", encoding="utf-8")
+rc, out = run("daily.py", HEVY_API_KEY="x")
+d8, s8 = read("data.json"), read("status.json")
+check("a failing Hevy does not crash the run", rc == 0, out)
+check("the failure is reported in status.errors", any("Hevy fetch failed" in e for e in s8["errors"]) and s8["hevy"]["ok"] is False, s8["errors"])
+check("history from the earlier good run is kept", days(d8)[D2]["workout_count"] == 1)
+gh_out = work / "gh_output.txt"
+rc, out = run("check_status.py", GITHUB_OUTPUT=str(gh_out))
+check("check_status reports the error count for the workflow", rc == 0 and "errors=1" in gh_out.read_text(encoding="utf-8"), out)
+
 print(f"\n{passes} passed, {len(fails)} failed")
 if fails:
     print("FAILED:", fails)

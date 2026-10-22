@@ -2,11 +2,9 @@ name: Daily update
 
 on:
   schedule:
-    # Off the busy :00 mark, where GitHub delays or drops scheduled runs. Three tries a day;
-    # every run is idempotent and makes no commit when nothing changed.
-    - cron: "17 3 * * *"       # 06:17 Riyadh
-    - cron: "17 6 * * *"       # 09:17 Riyadh
-    - cron: "17 9 * * *"       # 12:17 Riyadh
+    # Every 3 hours, off the busy :00 mark (GitHub delays/drops scheduled runs at :00). A workout or phone
+    # upload that syncs late is picked up within hours. Runs are idempotent and commit nothing when unchanged.
+    - cron: "17 */3 * * *"     # 03:17, 06:17, 09:17 ... Riyadh (00:17, 03:17 ... UTC)
   push:
     paths: ["inbox/**", "site/**", "history/**", "overrides.json", "*.py"]   # new export, site, correction or script change
   workflow_dispatch:

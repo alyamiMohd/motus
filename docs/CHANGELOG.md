@@ -3,6 +3,8 @@
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
 ## 2026-10-22
+- Hevy visibility and refresh rate (this commit): schedule is now every 3 hours; `status.json` records Hevy's newest workout time and total; the dashboard footer shows last Hevy workout / last Health upload / last check; tests extended to 43 (Hevy stub, failure path, `check_status` output).
+- Investigated "nothing in Lift on Thu 22": Hevy's API had no workout for today (KNOWN_ISSUES K17).
 - **Docs/memory system**: `CLAUDE.md`, `docs/*`, `tests/test_pipeline.py` in the repo; README corrected; `.claude/launch.json` now runs `serve.py` (this commit; see `git log`).
 - Per-workout rating scale made gentler: 7 = normal session, floor 3 (`64b30b4`).
 - Workouts page: exercises sorted by most recently trained; rating baselines limited to 90 days; unrated exercises shown (`8838907`).

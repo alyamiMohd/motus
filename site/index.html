@@ -170,6 +170,23 @@ function showNotice(status) {
   el.textContent = msgs.join(" ");
 }
 
+// what each source last delivered, so a missing workout/upload is visible without digging through logs
+function showFooter(data, status) {
+  const when = iso => new Date(iso).toLocaleString("en-US", { timeZone: TZ, weekday: "short", hour: "numeric", minute: "2-digit" });
+  const lines = [];
+  if (data && data.updated) lines.push("Data changed " + new Date(data.updated).toLocaleString("en-US",
+    { timeZone: TZ, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }));
+  if (status) {
+    const hv = status.hevy || {}, hl = status.health || {};
+    lines.push([
+      "Hevy: " + (hv.latest_workout_start ? "last workout " + when(hv.latest_workout_start) : "no workouts"),
+      "Health: " + (hl.latest_upload ? "last upload " + when(hl.latest_upload) : "no uploads"),
+      status.run ? "checked " + when(status.run) : "",
+    ].filter(Boolean).join(" · "));
+  }
+  document.getElementById("updated").innerHTML = lines.join("<br>");
+}
+
 initNav("home", render);
 Promise.all([loadJSON("data.json"), loadJSON("status.json")]).then(([data, status]) => {
   if (!data) {
@@ -179,8 +196,7 @@ Promise.all([loadJSON("data.json"), loadJSON("status.json")]).then(([data, statu
   days = data.days || {};
   render();
   showNotice(status);
-  if (data.updated) document.getElementById("updated").textContent = "Data changed " +
-    new Date(data.updated).toLocaleString("en-US", { timeZone: TZ, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  showFooter(data, status);
 });
 </script>
 </body>

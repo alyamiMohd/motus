@@ -38,7 +38,7 @@ history/*.json (one-off backfills)        overrides.json (manual corrections)
 
 ## Data sources
 1. **Hevy** (workouts). `GET https://api.hevyapp.com/v1/workouts` with header `api-key` (env `HEVY_API_KEY`; requires Hevy PRO). Full history fetched every run
-   (~330 workouts, 10 per page). Days are grouped by workout *start time* in Riyadh time. Read-only: no other HTTP method appears in the code.
+   (331 workouts on 2026-10-22, 10 per page). **Hevy returns only finished and synced workouts**: a workout that was not finished in the app, or has not synced, is absent from the API (and therefore from the site) until it syncs. Days are grouped by workout *start time* in Riyadh time. Read-only: no other HTTP method appears in the code.
 2. **Apple Health via iPhone Shortcut** (steps, sleep, weight, calories, active calories). A shortcut named `Health to Drive` (legacy name) runs the action
    **Export Health Data** from the third-party app *Health Exporter & Shortcuts* (daily aggregated JSON), Base64-encodes it, and PUTs it to
    `https://api.github.com/repos/alyamiMohd/motus/contents/inbox/health-<yyyy-MM-dd-HHmm>.json` using a fine-grained GitHub token (Contents: read/write on this repo only,
@@ -65,12 +65,12 @@ history/*.json (one-off backfills)        overrides.json (manual corrections)
 `workouts.json`: `{"updated", "exercises": {title: [[date, best_e1RM, weight_kg, reps, volume_kg], ...]}}` — best set per exercise per day (Epley e1RM, reps ≤ 12, warm-ups and
 unweighted sets ignored).
 `overrides.json`: `{"date": {"metric": {"value": number|null, "note": str, "at": ISO}}}`; `null` means "no data".
-`status.json` (generated each run, uploaded to Pages, not committed): `run`, `health.latest_upload`, `health.latest_day`, `hevy.ok`, `hevy.latest_workout`, `corrections`, `errors[]`.
+`status.json` (generated each run, uploaded to Pages, not committed): `run`, `health.latest_upload`, `health.latest_day`, `hevy.ok`, `hevy.latest_workout` (date), `hevy.latest_workout_start` (ISO, Riyadh), `hevy.total_workouts`, `corrections`, `errors[]`. The dashboard footer prints "Hevy: last workout …· Health: last upload …· checked …" from it.
 Editable metrics and server-side limits (`overrides.py`): steps 0–100000 (int), sleep_hours 0–24, calories 0–20000 (int), weight_kg 20–400, active_kcal 0–20000, workout_count 0–10,
 workout_minutes 0–1440, workout_volume_kg 0–500000; dates must be ≤ today (Riyadh) and ≤ 800 days old; ≤ 500 corrections; notes ≤ 200 chars.
 
 ## Workflow `.github/workflows/daily.yml`
-- Triggers: `schedule` 03:17, 06:17, 09:17 UTC (06:17/09:17/12:17 Riyadh; off the busy `:00` mark); `push` touching `inbox/**`, `site/**`, `history/**`, `overrides.json`, `*.py`; `workflow_dispatch`
+- Triggers: `schedule` `17 */3 * * *` (every 3 hours at :17 UTC, i.e. 03:17, 06:17, 09:17 ... Riyadh; off the busy `:00` mark); `push` touching `inbox/**`, `site/**`, `history/**`, `overrides.json`, `*.py`; `workflow_dispatch`
   (optionally with correction inputs: `action` none|set|revert, `date`, `metric`, `value`, `note`).
 - Jobs: `build` (checkout, Python 3.12, optional **Apply manual correction** via `edit.py`, `daily.py`, `check_status.py`, commit `data.json workouts.json overrides.json` with retry,
   copy data files into `site/`, upload Pages artifact) → `deploy` (Pages) → `report` (fails the run when `status.errors` is non-empty, so GitHub notifies the owner; the site is still deployed).
@@ -116,7 +116,7 @@ workout_minutes 0–1440, workout_volume_kg 0–500000; dates must be ≤ today 
 
 ## Deployment environment
 GitHub Pages (workflow deployment) at https://alyamimohd.github.io/motus/. Free tier: Actions minutes are unlimited for public repos; Hevy PRO is the only recurring paid dependency (plus the Health Exporter app).
-Scheduled runs can be delayed/dropped by GitHub; mitigated by 3 off-peak schedules, the staleness banner and failure alerts.
+Scheduled runs can be delayed/dropped by GitHub; mitigated by an every-3-hours off-peak schedule, the staleness banner, the footer source times and failure alerts.
 
 ## Testing status
 - `tests/test_pipeline.py`: 36 checks, all passing on 2026-10-22 (today's data arrives, history intact, no duplicates, no-op runs identical, edit/revert, correction survives sync, revert restores latest automatic value, 14 invalid/unauthorized requests rejected, corrupt overrides tolerated).

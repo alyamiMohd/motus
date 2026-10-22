@@ -74,22 +74,29 @@ def latest_upload() -> str | None:
     return max(stamps) if stamps else None
 
 
-def load_hevy() -> tuple[dict[str, dict], dict | None, str | None]:
-    """Returns (per-day workout summary, per-exercise history, error). Full history every run."""
+def load_hevy() -> tuple[dict[str, dict], dict | None, str | None, dict]:
+    """Returns (per-day workout summary, per-exercise history, error, meta). Full history every run.
+
+    meta = {"latest_start": ISO time of Hevy's newest workout, "total": number of workouts} (empty on failure).
+    Hevy only returns *finished and synced* workouts, so a workout missing here is missing in Hevy's cloud.
+    """
     import os
     if not os.environ.get("HEVY_API_KEY"):
         print("WARN: HEVY_API_KEY not set, skipping Hevy", file=sys.stderr)
-        return {}, None, "HEVY_API_KEY is not set"
+        return {}, None, "HEVY_API_KEY is not set", {}
     try:
         from fetch_hevy import exercise_history, fetch_workouts, per_day
         ws = fetch_workouts(datetime(2000, 1, 1, tzinfo=TZ))
         days = {d: {"workout_count": i["workouts"], "workout_minutes": i["minutes"],
                     "workout_volume_kg": i["volume_kg"], "workout_titles": i["titles"]}
                 for d, i in per_day(ws).items()}
-        return days, exercise_history(ws), None
+        newest = max(ws, key=lambda w: w["start_time"]) if ws else None
+        meta = {"latest_start": datetime.fromisoformat(newest["start_time"]).astimezone(TZ).isoformat(timespec="seconds") if newest else None,
+                "total": len(ws)}
+        return days, exercise_history(ws), None, meta
     except Exception as e:  # a source failing must never break the daily run
         print(f"WARN: Hevy fetch failed: {e}", file=sys.stderr)
-        return {}, None, f"Hevy fetch failed: {e}"
+        return {}, None, f"Hevy fetch failed: {e}", {}
 
 
 def main() -> None:
@@ -105,7 +112,7 @@ def main() -> None:
         for metric, auto in (rec.pop("orig", None) or {}).items():
             rec[metric] = auto
 
-    hevy_days, exercises, hevy_error = load_hevy()
+    hevy_days, exercises, hevy_error, hevy_meta = load_hevy()
     if hevy_error:
         errors.append(hevy_error)
     for source in (load_health(errors), hevy_days):
@@ -156,7 +163,9 @@ def main() -> None:
         "health": {"latest_upload": latest_upload(),
                    "latest_day": max((d for d, r in days.items() if r.get("steps")), default=None)},
         "hevy": {"ok": hevy_error is None,
-                 "latest_workout": max((d for d, r in days.items() if r.get("workout_count")), default=None)},
+                 "latest_workout": max((d for d, r in days.items() if r.get("workout_count")), default=None),
+                 "latest_workout_start": hevy_meta.get("latest_start"),
+                 "total_workouts": hevy_meta.get("total")},
         "corrections": sum(len(m) for m in fixes.values()),
         "errors": errors,
     }, indent=1) + "\n", encoding="utf-8")
