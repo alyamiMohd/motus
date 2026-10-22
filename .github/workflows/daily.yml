@@ -2,23 +2,52 @@ name: Daily update
 
 on:
   schedule:
-    - cron: "0 3 * * *"        # 03:00 UTC = 06:00 Riyadh
+    # Off the busy :00 mark, where GitHub delays or drops scheduled runs. Three tries a day;
+    # every run is idempotent and makes no commit when nothing changed.
+    - cron: "17 3 * * *"       # 06:17 Riyadh
+    - cron: "17 6 * * *"       # 09:17 Riyadh
+    - cron: "17 9 * * *"       # 12:17 Riyadh
   push:
-    paths: ["inbox/**", "site/**", "history/**", "*.py"]   # new export, site or script change -> rebuild
+    paths: ["inbox/**", "site/**", "history/**", "overrides.json", "*.py"]   # new export, site, correction or script change
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Manual correction (none = normal run)"
+        type: choice
+        options: [none, set, revert]
+        default: none
+      date:
+        description: "Date, YYYY-MM-DD"
+        type: string
+        required: false
+      metric:
+        description: "Metric, e.g. steps, sleep_hours, calories, weight_kg, workout_count"
+        type: string
+        required: false
+      value:
+        description: "New value (empty = no data)"
+        type: string
+        required: false
+      note:
+        description: "Why (optional, 200 chars)"
+        type: string
+        required: false
 
 permissions:
-  contents: write              # commit data.json
+  contents: write              # commit data.json / overrides.json
   pages: write
   id-token: write
 
+# Corrections get their own group so a queued normal run can never replace them.
 concurrency:
-  group: daily
+  group: ${{ (github.event_name == 'workflow_dispatch' && inputs.action != 'none') && format('edit-{0}', github.run_id) || 'daily' }}
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      errors: ${{ steps.status.outputs.errors }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,24 +57,47 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      # Authorization + validation happen here, on the server: only the repo owner can
+      # dispatch this workflow, edit.py re-checks the actor and validates every field.
+      - name: Apply manual correction
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.action != 'none' }}
+        env:
+          EDIT_ACTION: ${{ inputs.action }}
+          EDIT_DATE: ${{ inputs.date }}
+          EDIT_METRIC: ${{ inputs.metric }}
+          EDIT_VALUE: ${{ inputs.value }}
+          EDIT_NOTE: ${{ inputs.note }}
+          EDIT_ACTOR: ${{ github.actor }}
+          REPO_OWNER: ${{ github.repository_owner }}
+        run: python edit.py
+
       - name: Build data.json
         env:
           HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
         run: python daily.py
 
-      - name: Commit data.json
+      - name: Check sources
+        id: status
+        run: python check_status.py
+
+      - name: Commit data
         run: |
           git config user.name "motus-bot"
           git config user.email "motus-bot@users.noreply.github.com"
-          git add data.json workouts.json
+          git add data.json workouts.json overrides.json
           if ! git diff --cached --quiet; then
-            git commit -m "Update data.json"
-            git pull --rebase
-            git push
+            git commit -m "Update data"
+            ok=0
+            for i in 1 2 3; do
+              if git pull --rebase -X theirs && git push; then ok=1; break; fi
+              git rebase --abort 2>/dev/null || true
+              sleep 3
+            done
+            if [ "$ok" != 1 ]; then echo "::error::could not push the update"; exit 1; fi
           fi
 
       - name: Assemble site
-        run: cp data.json workouts.json site/
+        run: cp data.json workouts.json overrides.json status.json site/
 
       - uses: actions/configure-pages@v5
 
@@ -62,3 +114,14 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # The site is deployed even when a source failed (so you still see the last good data),
+  # then the run is marked failed so GitHub notifies you.
+  report:
+    needs: [build, deploy]
+    if: ${{ always() && needs.build.outputs.errors != '' && needs.build.outputs.errors != '0' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "::error::${{ needs.build.outputs.errors }} source error(s): open the 'Check sources' step of the build job"
+          exit 1

@@ -21,3 +21,8 @@ scratch/
 # copied into site/ at deploy time
 site/data.json
 site/workouts.json
+
+# generated per run, never committed
+status.json
+site/status.json
+site/overrides.json

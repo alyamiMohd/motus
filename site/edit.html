@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Motus · Edit</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <section id="gate">
+    <h2 style="margin-top:0">Admin sign-in</h2>
+    <p class="muted" style="font-size:14px">Only the owner can correct data. Paste a GitHub token with
+      <b>Actions: Read and write</b> on this repository only. It stays in this browser tab and is cleared when you close it.</p>
+    <div class="form">
+      <label>Token <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..."></label>
+      <button id="connect" class="btn">Connect</button>
+    </div>
+    <p id="gateMsg" class="msg"></p>
+  </section>
+
+  <section id="editor" hidden>
+    <h2 style="margin-top:0">Correct a value</h2>
+    <div class="form">
+      <label>Date <input id="f-date" type="date"></label>
+      <label>Metric <select id="f-metric"></select></label>
+      <p id="current" class="muted" style="font-size:13px;margin:6px 0 10px"></p>
+      <label>New value <input id="f-value" inputmode="decimal" autocomplete="off" placeholder="empty = no data"></label>
+      <label>Note <input id="f-note" maxlength="200" autocomplete="off" placeholder="optional"></label>
+      <div class="actions">
+        <button id="save" class="btn">Save correction</button>
+        <button id="revert" class="btn ghost">Revert to original</button>
+      </div>
+    </div>
+    <p id="msg" class="msg"></p>
+
+    <h2>Corrections</h2>
+    <div id="list"></div>
+
+    <p style="margin-top:32px"><button id="signout" class="more" style="padding:0">Sign out</button></p>
+  </section>
+</main>
+
+<script src="shared.js"></script>
+<script>
+const REPO = "alyamiMohd/motus", API = "https://api.github.com";
+// UX-only limits; the workflow re-validates everything on the server (overrides.py)
+const METRICS = [
+  { k: "steps", label: "Steps", min: 0, max: 100000, int: true },
+  { k: "sleep_hours", label: "Sleep (hours)", min: 0, max: 24, int: false },
+  { k: "calories", label: "Calories (kcal)", min: 0, max: 20000, int: true },
+  { k: "weight_kg", label: "Weight (kg)", min: 20, max: 400, int: false },
+  { k: "active_kcal", label: "Active calories (kcal)", min: 0, max: 20000, int: true },
+  { k: "workout_count", label: "Workouts that day", min: 0, max: 10, int: true },
+  { k: "workout_minutes", label: "Workout minutes", min: 0, max: 1440, int: true },
+  { k: "workout_volume_kg", label: "Workout volume (kg)", min: 0, max: 500000, int: true },
+];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const labelOf = k => (METRICS.find(m => m.k === k) || { label: k }).label;
+const fmt = v => v == null ? "no data" : String(v);
+let days = {}, fixes = {};
+
+const setMsg = (el, text, kind) => { el.textContent = text; el.className = "msg " + (kind || ""); };
+const gh = (path, opts = {}) => fetch(API + path, {
+  ...opts,
+  headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + adminToken(),
+             "X-GitHub-Api-Version": "2022-11-28", ...(opts.headers || {}) },
+});
+
+async function reload() {
+  const [d, o] = await Promise.all([loadJSON("data.json"), loadJSON("overrides.json")]);
+  days = (d && d.days) || {};
+  fixes = o || {};
+  renderCurrent(); renderList();
+}
+
+function renderCurrent() {
+  const date = $("f-date").value, k = $("f-metric").value, rec = days[date] || {};
+  const edited = rec.orig && k in rec.orig;
+  $("current").innerHTML = date
+    ? `Now: <b>${fmt(rec[k])}</b>` + (edited ? ` &nbsp;·&nbsp; original: <b>${fmt(rec.orig[k])}</b> (manually corrected)` : "")
+    : "";
+  $("revert").disabled = !edited;
+}
+
+function renderList() {
+  const rows = [];
+  for (const d of Object.keys(fixes).sort().reverse())
+    for (const [k, e] of Object.entries(fixes[d])) {
+      const orig = days[d] && days[d].orig ? days[d].orig[k] : undefined;
+      rows.push(`<div class="recent"><span class="t">${esc(d)} · ${esc(labelOf(k))}<br><small>${orig === undefined ? "" : "was " + esc(fmt(orig)) + " · "}${esc(e.note || "")}</small></span>` +
+        `<span><b>${esc(fmt(e.value))}</b> <button class="more" style="padding:0 0 0 8px" data-d="${esc(d)}" data-k="${esc(k)}">Revert</button></span></div>`);
+    }
+  $("list").innerHTML = rows.join("") || '<span class="no">no corrections</span>';
+  $("list").querySelectorAll("button[data-k]").forEach(b => b.onclick = () => dispatch("revert", b.dataset.d, b.dataset.k));
+}
+
+function validate(k, raw) {
+  const m = METRICS.find(x => x.k === k);
+  if (raw.trim() === "") return { value: "null" };                   // clear = "no data"
+  const v = Number(raw);
+  if (!Number.isFinite(v)) return { error: "Not a number" };
+  if (v < m.min || v > m.max) return { error: `${m.label} must be between ${m.min} and ${m.max}` };
+  if (m.int && !Number.isInteger(v)) return { error: `${m.label} must be a whole number` };
+  return { value: String(v) };
+}
+
+async function dispatch(action, date, metric, value, note) {
+  const msg = $("msg");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return setMsg(msg, "Pick a date", "bad");
+  const t0 = Date.now();
+  setMsg(msg, "Sending…");
+  document.querySelectorAll(".btn, #list button").forEach(b => b.disabled = true);
+  try {
+    const r = await gh(`/repos/${REPO}/actions/workflows/daily.yml/dispatches`, {
+      method: "POST",
+      body: JSON.stringify({ ref: "main", inputs: { action, date, metric, value: value ?? "", note: note || "" } }),
+    });
+    if (r.status !== 204) {
+      const hint = r.status === 401 ? "Token rejected. Sign out and connect again."
+        : r.status === 403 || r.status === 404 ? "This token cannot run workflows here (needs Actions: Read and write)."
+        : "GitHub said " + r.status;
+      return setMsg(msg, hint, "bad");
+    }
+    setMsg(msg, "Submitted. Waiting for the server to validate and rebuild…");
+    for (let i = 0; i < 40; i++) {                                   // up to ~3.5 minutes
+      await new Promise(res => setTimeout(res, 5000));
+      const rr = await gh(`/repos/${REPO}/actions/workflows/daily.yml/runs?event=workflow_dispatch&per_page=5`);
+      if (!rr.ok) continue;
+      const run = (await rr.json()).workflow_runs.find(x => new Date(x.created_at).getTime() >= t0 - 20000);
+      if (run && run.status === "completed") {
+        if (run.conclusion === "success") {
+          setMsg(msg, "Done. The site is updated.", "ok");
+          await new Promise(res => setTimeout(res, 4000));
+          return reload();
+        }
+        msg.innerHTML = `Rejected or failed (${esc(run.conclusion)}). <a href="${esc(run.html_url)}" target="_blank" rel="noopener" style="text-decoration:underline">See the run log</a>.`;
+        msg.className = "msg bad";
+        return;
+      }
+    }
+    setMsg(msg, "Still running. Check back in a minute.", "");
+  } catch (e) {
+    setMsg(msg, "Network error: " + e.message, "bad");
+  } finally {
+    document.querySelectorAll(".btn, #list button").forEach(b => b.disabled = false);
+    renderCurrent();
+  }
+}
+
+function showEditor() {
+  $("gate").hidden = true; $("editor").hidden = false;
+  $("f-metric").innerHTML = METRICS.map(m => `<option value="${m.k}">${m.label}</option>`).join("");
+  const q = new URLSearchParams(location.search);
+  $("f-date").max = today;
+  $("f-date").value = /^\d{4}-\d{2}-\d{2}$/.test(q.get("date") || "") ? q.get("date") : today;
+  if (METRICS.some(m => m.k === q.get("metric"))) $("f-metric").value = q.get("metric");
+  ["f-date", "f-metric"].forEach(id => $(id).onchange = renderCurrent);
+  $("save").onclick = () => {
+    const v = validate($("f-metric").value, $("f-value").value);
+    if (v.error) return setMsg($("msg"), v.error, "bad");
+    dispatch("set", $("f-date").value, $("f-metric").value, v.value, $("f-note").value);
+  };
+  $("revert").onclick = () => dispatch("revert", $("f-date").value, $("f-metric").value);
+  $("signout").onclick = () => { try { sessionStorage.removeItem(ADMIN_KEY); } catch (e) {} location.reload(); };
+  reload();
+}
+
+$("connect").onclick = async () => {
+  const t = $("token").value.trim();
+  if (!t) return setMsg($("gateMsg"), "Paste your token", "bad");
+  try { sessionStorage.setItem(ADMIN_KEY, t); } catch (e) { return setMsg($("gateMsg"), "This browser blocks session storage", "bad"); }
+  setMsg($("gateMsg"), "Checking…");
+  try {
+    const r = await gh(`/repos/${REPO}`);
+    if (!r.ok) { sessionStorage.removeItem(ADMIN_KEY); return setMsg($("gateMsg"), "GitHub did not accept this token", "bad"); }
+    showEditor();
+  } catch (e) { setMsg($("gateMsg"), "Network error: " + e.message, "bad"); }
+};
+
+initNav("edit", () => {});
+if (adminToken()) showEditor();
+</script>
+</body>
+</html>

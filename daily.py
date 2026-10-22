@@ -2,18 +2,26 @@
 
 data.json keeps full history: {"updated": ISO time, "days": {"YYYY-MM-DD": {...}}}.
 Missing values are null. Zero for steps/sleep/calories is treated as "no data".
+
+Manual corrections (overrides.json) always win over automatic values. The automatic
+value is kept in the day's "orig" map and keeps refreshing underneath, so reverting a
+correction restores the latest automatic value. Every run also writes status.json
+(last run, last phone upload, source errors) for the dashboard and for failure alerts.
 """
 import json
+import re
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
+import overrides
 from common import TZ, load_env
 
 ROOT = Path(__file__).parent
 INBOX = ROOT / "inbox"
 DATA = ROOT / "data.json"
 WORKOUTS = ROOT / "workouts.json"
+STATUS = ROOT / "status.json"
 
 FIELDS = ("steps", "sleep_hours", "calories", "weight_kg", "active_kcal",
           "workout_count", "workout_minutes", "workout_volume_kg", "workout_titles")
@@ -44,7 +52,7 @@ def parse_health(path: Path) -> dict[str, dict]:
     return days
 
 
-def load_health() -> dict[str, dict]:
+def load_health(errors: list[str]) -> dict[str, dict]:
     merged: dict[str, dict] = {}
     for f in sorted(INBOX.glob("health-*.json")):  # oldest first, newer overrides
         try:
@@ -52,40 +60,62 @@ def load_health() -> dict[str, dict]:
                 merged.setdefault(date, {}).update(vals)
         except (json.JSONDecodeError, KeyError, TypeError) as e:
             print(f"WARN: skipping {f.name}: {e}", file=sys.stderr)
+            errors.append(f"could not read {f.name}: {e}")
     return merged
 
 
-def load_hevy() -> tuple[dict[str, dict], dict | None]:
-    """Returns (per-day workout summary, per-exercise history). Full history every run."""
+def latest_upload() -> str | None:
+    """Time of the newest phone upload, from its file name health-YYYY-MM-DD-HHMM.json (Riyadh time)."""
+    stamps = []
+    for f in INBOX.glob("health-*.json"):
+        m = re.match(r"health-(\d{4}-\d{2}-\d{2})-(\d{2})(\d{2})", f.name)
+        if m:
+            stamps.append(f"{m.group(1)}T{m.group(2)}:{m.group(3)}:00+03:00")
+    return max(stamps) if stamps else None
+
+
+def load_hevy() -> tuple[dict[str, dict], dict | None, str | None]:
+    """Returns (per-day workout summary, per-exercise history, error). Full history every run."""
     import os
     if not os.environ.get("HEVY_API_KEY"):
         print("WARN: HEVY_API_KEY not set, skipping Hevy", file=sys.stderr)
-        return {}, None
+        return {}, None, "HEVY_API_KEY is not set"
     try:
         from fetch_hevy import exercise_history, fetch_workouts, per_day
         ws = fetch_workouts(datetime(2000, 1, 1, tzinfo=TZ))
         days = {d: {"workout_count": i["workouts"], "workout_minutes": i["minutes"],
                     "workout_volume_kg": i["volume_kg"], "workout_titles": i["titles"]}
                 for d, i in per_day(ws).items()}
-        return days, exercise_history(ws)
+        return days, exercise_history(ws), None
     except Exception as e:  # a source failing must never break the daily run
         print(f"WARN: Hevy fetch failed: {e}", file=sys.stderr)
-        return {}, None
+        return {}, None, f"Hevy fetch failed: {e}"
 
 
 def main() -> None:
     load_env()
+    now = datetime.now(TZ).isoformat(timespec="seconds")
+    errors: list[str] = []
     existing = json.loads(DATA.read_text(encoding="utf-8")) if DATA.exists() else {"days": {}}
     days = existing["days"]
+    before = json.dumps(days, sort_keys=True)
 
-    hevy_days, exercises = load_hevy()
-    for source in (load_health(), hevy_days):
+    # undo last run's manual corrections so the automatic values can refresh underneath them
+    for rec in days.values():
+        for metric, auto in (rec.pop("orig", None) or {}).items():
+            rec[metric] = auto
+
+    hevy_days, exercises, hevy_error = load_hevy()
+    if hevy_error:
+        errors.append(hevy_error)
+    for source in (load_health(errors), hevy_days):
         for date, vals in source.items():
             days.setdefault(date, {}).update(vals)  # only non-null values reach here
-    if exercises is not None:  # keep the previous file if Hevy failed
-        stamp = datetime.now(TZ).isoformat(timespec="seconds")
-        WORKOUTS.write_text(json.dumps({"updated": stamp, "exercises": exercises},
-                                       separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
+    if exercises is not None:  # keep the previous file if Hevy failed; only rewrite when it changed
+        old = json.loads(WORKOUTS.read_text(encoding="utf-8")).get("exercises") if WORKOUTS.exists() else None
+        if old != exercises:
+            WORKOUTS.write_text(json.dumps({"updated": now, "exercises": exercises},
+                                           separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
 
     # one-off MyFitnessPal history: only fills days Apple Health has no calories for
     hist = ROOT / "history" / "mfp-calories.json"
@@ -102,15 +132,36 @@ def main() -> None:
             if rec.get("weight_kg") is None:
                 rec["weight_kg"] = kg
 
+    # manual corrections win; remember the automatic value so it can be shown and restored
+    fixes, override_errors = overrides.load(ROOT / "overrides.json")
+    errors += override_errors
+    for date, metrics in fixes.items():
+        rec = days.setdefault(date, {})
+        for metric, entry in metrics.items():
+            rec.setdefault("orig", {})[metric] = rec.get(metric)
+            rec[metric] = entry["value"]
+
     # make every record have every field, null when missing
     for date, rec in days.items():
         for f in FIELDS:
             rec.setdefault(f, None)
 
-    out = {"updated": datetime.now(TZ).isoformat(timespec="seconds"),
-           "days": dict(sorted(days.items()))}
-    DATA.write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"data.json: {len(days)} days, latest {max(days) if days else 'none'}")
+    days = dict(sorted(days.items()))
+    changed = json.dumps(days, sort_keys=True) != before
+    stamp = now if changed or "updated" not in existing else existing["updated"]
+    DATA.write_text(json.dumps({"updated": stamp, "days": days}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    STATUS.write_text(json.dumps({
+        "run": now,
+        "health": {"latest_upload": latest_upload(),
+                   "latest_day": max((d for d, r in days.items() if r.get("steps")), default=None)},
+        "hevy": {"ok": hevy_error is None,
+                 "latest_workout": max((d for d, r in days.items() if r.get("workout_count")), default=None)},
+        "corrections": sum(len(m) for m in fixes.values()),
+        "errors": errors,
+    }, indent=1) + "\n", encoding="utf-8")
+    print(f"data.json: {len(days)} days, latest {max(days) if days else 'none'}"
+          f"{' (unchanged)' if not changed else ''}; {len(errors)} error(s)")
 
 
 if __name__ == "__main__":

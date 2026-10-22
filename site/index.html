@@ -9,6 +9,7 @@
 </head>
 <body>
 <main>
+  <div class="notice" id="notice" hidden></div>
   <div class="top" id="top"></div>
   <table>
     <thead><tr><th>Day</th><th>Sleep</th><th>Steps</th><th>Cal</th><th>Kg</th><th>Lift</th></tr></thead>
@@ -103,15 +104,22 @@ function summary() {
     weekStrip(ws) + lastWeekLine(ws, lastWeek);
 }
 
+// small marker on a value that was manually corrected; the title shows the automatic original
+const edited = (r, ...keys) => {
+  const k = keys.find(x => r.orig && x in r.orig);
+  return k ? `<span class="ed" title="manually corrected; original ${r.orig[k] == null ? "no data" : r.orig[k]}">*</span>` : "";
+};
+
 function table() {
   let html = "";
   for (let i = 0; i < 7; i++) {
     const d = add(today, -i), r = days[d] || {};
-    html += `<tr><td>${label(d)}</td>` + M.map(m => {
+    const day = adminToken() ? `<a href="edit.html?date=${d}">${label(d)}</a>` : label(d);   // edit links only in an admin session
+    html += `<tr><td>${day}</td>` + M.map(m => {
       const v = r[m.k];
-      return v == null ? `<td>${NO}</td>` : `<td class="${m.met(v) ? "good" : ""}">${m.f(v)}</td>`;
+      return v == null ? `<td>${NO}${edited(r, m.k)}</td>` : `<td class="${m.met(v) ? "good" : ""}">${m.f(v)}${edited(r, m.k)}</td>`;
     }).join("") +
-      (r.workout_count ? `<td>${r.workout_minutes}m</td>` : '<td class="muted">–</td>') + "</tr>";
+      (r.workout_count ? `<td>${r.workout_minutes}m${edited(r, "workout_minutes", "workout_count")}</td>` : `<td class="muted">–${edited(r, "workout_count")}</td>`) + "</tr>";
   }
   document.getElementById("rows").innerHTML = html;
 }
@@ -146,15 +154,32 @@ function render() {
   document.getElementById("charts").replaceChildren(...M.map(chart));
 }
 
+function showNotice(status) {
+  const msgs = [], when = iso => new Date(iso).toLocaleString("en-US", { timeZone: TZ, weekday: "short", hour: "numeric", minute: "2-digit" });
+  const hour = +new Intl.DateTimeFormat("en-GB", { hour: "numeric", hourCycle: "h23", timeZone: TZ }).format(new Date());
+  if (!status) { msgs.push("No status information: automatic updates may not be running."); }
+  else {
+    const up = status.health && status.health.latest_upload;
+    if (!up) msgs.push("No Health data has ever been uploaded from your phone.");
+    else if (up.slice(0, 10) < today && hour >= 11) msgs.push(`No Health upload from your phone yet today (last: ${when(up)}). Run the Health to Drive shortcut.`);
+    if (status.run && Date.now() - new Date(status.run) > 36 * 3600e3) msgs.push(`Automatic updates look paused (last run: ${when(status.run)}).`);
+    (status.errors || []).slice(0, 2).forEach(e => msgs.push("Update problem: " + e));
+  }
+  const el = document.getElementById("notice");
+  el.hidden = !msgs.length;
+  el.textContent = msgs.join(" ");
+}
+
 initNav("home", render);
-loadJSON("data.json").then(data => {
+Promise.all([loadJSON("data.json"), loadJSON("status.json")]).then(([data, status]) => {
   if (!data) {
     document.getElementById("updated").textContent = "Could not load data.json (open the site through a web server, not as a file).";
     data = { days: {} };
   }
   days = data.days || {};
   render();
-  if (data.updated) document.getElementById("updated").textContent = "Updated " +
+  showNotice(status);
+  if (data.updated) document.getElementById("updated").textContent = "Data changed " +
     new Date(data.updated).toLocaleString("en-US", { timeZone: TZ, month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 });
 </script>

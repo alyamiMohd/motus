@@ -13,6 +13,9 @@ try {   // one-time: devices that saved the old 2000 default move to 1500
   }
 } catch (e) {}
 
+const ADMIN_KEY = "motus-admin-token";   // session-only; set by edit.html after you sign in
+const adminToken = () => { try { return sessionStorage.getItem(ADMIN_KEY) || ""; } catch (e) { return ""; } };
+
 const today = new Date().toLocaleDateString("en-CA", { timeZone: TZ });
 const add = (iso, n) => { const d = new Date(iso + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 const label = iso => new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", { weekday: "short", day: "numeric", timeZone: "UTC" });
@@ -32,6 +35,7 @@ function initNav(active, onChange) {
     <span class="links">
       <a href="./" class="${active === "home" ? "on" : ""}">Dashboard</a>
       <a href="workouts.html" class="${active === "workouts" ? "on" : ""}">Workouts</a>
+      ${adminToken() ? `<a href="edit.html" class="${active === "edit" ? "on" : ""}">Edit</a>` : ""}
       <button id="toggle" aria-expanded="false" aria-controls="standards">Standards</button>
     </span>
   </div>

@@ -1,8 +1,8 @@
 :root { --bg: #fff; --text: #111; --muted: #888; --line: #eee; --green: #16a34a;
-        --green2: #15803d; --gray: #d4d4d8; --c1: #bbb; --c2: #ea580c; --c3: #ca8a04; --c4: #0284c7; --c5: #16a34a; }
+        --warn: #b45309; --green2: #15803d; --gray: #d4d4d8; --c1: #bbb; --c2: #ea580c; --c3: #ca8a04; --c4: #0284c7; --c5: #16a34a; }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #000; --text: #eee; --muted: #777; --line: #1c1c1c; --green: #4ade80;
-          --green2: #1f9d55; --gray: #2e2e2e; --c1: #555; --c2: #fb923c; --c3: #facc15; --c4: #38bdf8; --c5: #4ade80; }
+          --warn: #fbbf24; --green2: #1f9d55; --gray: #2e2e2e; --c1: #555; --c2: #fb923c; --c3: #facc15; --c4: #38bdf8; --c5: #4ade80; }
 }
 body { margin: 0; background: var(--bg); color: var(--text);
        font: 16px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
@@ -95,3 +95,19 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .lastweek .no { font-size: inherit; }
 .good2 { color: var(--green2); }
 .sep { color: var(--muted); opacity: .6; margin: 0 2px; }
+
+/* edit page + notices */
+.form label { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 0; font-size: 14px; }
+.form input, .form select { width: 60%; font: inherit; color: var(--text); background: none; border: 0;
+                            border-bottom: 1px solid var(--line); padding: 6px 0; border-radius: 0; text-align: right; }
+.form select option { color: #111; }
+.form input:focus, .form select:focus { outline: 0; border-color: var(--text); }
+.actions { display: flex; gap: 12px; margin-top: 14px; }
+.btn { font: inherit; font-size: 14px; color: var(--bg); background: var(--text); border: 0; border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+.btn.ghost { color: var(--text); background: none; box-shadow: inset 0 0 0 1px var(--line); }
+.btn:disabled, .more:disabled { opacity: .4; cursor: default; }
+.msg { font-size: 13px; color: var(--muted); min-height: 1.2em; margin: 10px 0 0; }
+.msg.ok { color: var(--green); } .msg.bad { color: var(--warn); }
+.notice { font-size: 13px; color: var(--warn); margin: 0 0 16px; line-height: 1.5; }
+.ed { color: var(--muted); font-size: 10px; margin-left: 1px; vertical-align: super; }
+td a { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
