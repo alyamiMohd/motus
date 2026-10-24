@@ -56,3 +56,8 @@ Reconstruction of the chat, not a raw transcript. Secrets, personal identifiers 
 
 ### 7. Refresh of this save (2026-10-24)
 Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled runs seen (newest 2026-10-24 11:01 UTC), phone uploads arriving ~06:00 daily, `weeks.json` still ends 11–17 Oct (correct before Sunday), docs commit `19ddd00` closed K1/K2. The handoff files were refreshed to match.
+
+### 8. Resumed in a second session (2026-10-24)
+**User:** `/handoff resume alyamimohd/motus`, then "Yes" to closing K1/K2, then "i just handoffed from my other sesion, check if it matches".
+**Claude did:** resumed from `CLAUDE.md` + `docs/` (no `.handoff/` existed yet), verified scheduled runs and 06:00 uploads, closed K1/K2 (`19ddd00`). After the other session's handoff (`13c204a`) arrived, compared the two: they agree, except Claude had wrongly kept K17 open and asked about the 22 Oct workout, although the owner had already said there was none. K17 closed as C10; that question removed.
+**Not run:** `python tests/test_pipeline.py` (Python is not installed on this computer); docs-only change. `node tests/test_week_logic.mjs`: 16 passed.

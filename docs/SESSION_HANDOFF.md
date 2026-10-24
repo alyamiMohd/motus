@@ -21,7 +21,6 @@ Re-checked every issue from today against code, tests and live state; see KNOWN_
 
 ## Next priority
 1. **Sunday 2026-10-25**: confirm the first live weekly append (a new row for 18–24 Oct in `weeks.json` / `WEEKLY_STATS.md`).
-   Ask the user whether the 22 Oct workout was ever synced in the Hevy app (K17).
 2. **Late sleep (K3)**: does today's sleep show up in the afternoon exports? Scheduled runs (K1) and the 06:00 phone upload (K2) were verified on 2026-10-24.
 3. Open user decisions (ask, don't assume): lock or leave the Standards panel (K12); align the overall rating scale with the per-workout scale (K6); weekly goal 4 vs 5 planned days (K14); whether to add other Health metrics (see FEATURES "ideas").
 4. The user needs to create the **admin token** (fine-grained, Actions: read/write, repo `motus` only) and try `site/edit.html` once (K8). Also check the 12–13 h sleep nights (K4).
