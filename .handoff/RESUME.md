@@ -1,0 +1,36 @@
+# RESUME: read this first
+
+**Project:** Motus, a personal fitness dashboard (sleep, steps, calories, weight, Hevy workouts) that rebuilds itself on GitHub Actions and is served as a static site.
+**Repo:** https://github.com/alyamiMohd/motus (public, branch `main`) · **Live site:** https://alyamimohd.github.io/motus/
+**Last updated:** 2026-10-24 14:45 (UTC+03, Riyadh) · **Code state:** commit `19ddd00` (the handoff itself is the next commit on top). The work was done on 2026-10-21 and 2026-10-22; this save was refreshed on 2026-10-24.
+
+## Instructions for Claude
+1. Read in this order: `CLAUDE.md` → this file → `user-profile.md` → `requirements.md` → `decisions.md` → `project-state.md` → `next-steps.md` → the last 3 entries of `conversation-log.md` → `skills/`.
+   The repo also has its own project memory: `docs/SESSION_HANDOFF.md`, `docs/PROJECT_CONTEXT.md`, `docs/FEATURES_AND_REQUIREMENTS.md`, `docs/DECISIONS.md`, `docs/KNOWN_ISSUES.md`, `docs/CHANGELOG.md`. Both systems are kept current.
+2. Adopt `user-profile.md` from your first reply (plain, short, honest; do the work yourself; verify before claiming).
+3. Do not re-ask what `requirements.md` / `decisions.md` already settle. Do not reverse a recorded decision silently.
+4. Before anything: `git pull --rebase` (a bot commits `data.json` daily), check `git status`, compare code against the docs (trust the code and the live site when they disagree).
+5. Give a 3–6 line "where we left off", then continue with the next action below.
+6. Workflow for every change (from `CLAUDE.md`): implement → update docs → run `python tests/test_pipeline.py` and `node tests/test_week_logic.mjs` → verify UI in a browser at 390px and 320px → secret scan → commit + push → verify the remote commit and the Actions run → report. Also update `.handoff/` when you push (see `skills/github-session-handoff/SKILL.md`).
+
+## Current status
+- Live and working: dashboard (week-to-date averages, week strip, Last Week line, 7-day table, 30-day charts, standards panel, source-times footer), Workouts page (ratings out of 10 from estimated 1RM, exercises newest first, weekly chart), Weeks page (history of completed weeks), admin Edit page (validated manual corrections via a GitHub workflow), staleness/error banner.
+- Pipeline: iPhone Shortcut uploads Apple Health exports into `inbox/` (verified 2026-10-24: an upload arrives about 06:00 daily, plus extra uploads later in the day); Hevy is read-only; `daily.py` merges into `data.json`; `weekly.py` writes `weeks.json` + `WEEKLY_STATS.md`; the workflow runs every 3 hours at :17 UTC and on pushes. **Scheduled (cron) runs are confirmed firing** (9 seen, newest 2026-10-24 11:01 UTC); the earlier worry that they never ran is closed (docs C8, C9).
+- Tests: 67 pipeline checks + 16 averaging-rule checks all passing. Frontend verified manually in the browser pane (emulated phone widths); real iPhone Safari unverified.
+- Data corrections applied by the owner: calories for 2026-10-20 and 2026-10-21 set to 1250 (originals kept in `data.json` `orig`).
+- Repo and site are **public** by the owner's decision (see D-005). This handoff is public too.
+
+## Next action
+Watch the **first live Sunday rollover (2026-10-25)**: confirm the week 18–24 Oct is appended to `weeks.json` / `WEEKLY_STATS.md` (today, 2026-10-24, the newest row is still 11–17 Oct, which is correct because the current week has not ended). Then work through `next-steps.md`.
+
+## Open questions waiting on the owner
+- Lock the Standards panel (visitors can change their own view only) or leave it? (asked, unanswered)
+- Weekly workout goal is 4 but 5 training days are planned; change the goal to 5?
+- Add other Health metrics already in the export (resting heart rate, HRV, macros, sleep stages…)?
+- Did the 12–13 h sleep nights (e.g. 2026-10-16, 10-20) match the Health app? (suspected double counting)
+- Does today's sleep show up in the afternoon exports? (it has arrived late in the export; cause unknown)
+- Has the admin edit token been created (fine-grained, Actions read/write, this repo only)? Not yet.
+- Show last week's average on Sundays instead of "no data" for steps/calories? (side effect of the averaging rule)
+
+## Last thing in progress
+The owner asked for a weekly-stats file and a simple page; both shipped and were verified live. Then the owner typed `/handoff` (this save). Nothing is half-done.

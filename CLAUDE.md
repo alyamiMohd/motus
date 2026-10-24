@@ -71,3 +71,9 @@ If the push fails, keep local changes, report the exact error, and say how to fi
 - To preview in the Claude desktop browser pane, the dev-server entry must be in the *session's* `.claude/launch.json`; this repo's
   own `.claude/launch.json` only works when the session is opened in this folder.
 - `GITHUB_TOKEN` pushes (from the workflow) do not trigger other workflows; the single workflow does everything in one run.
+
+## Session handoff
+This project carries its full conversation context in `.handoff/` (requirements in the owner's words, decisions, preferences, state, next steps, chat history).
+Before doing anything, read `.handoff/RESUME.md` and follow it.
+After any change you push, update `.handoff/` following `.handoff/skills/github-session-handoff/SKILL.md`.
+Resume prompt for a new chat on any device: "Read the GitHub repo `alyamiMohd/motus`. Start with `.handoff/RESUME.md` and follow its instructions, then let's proceed exactly where we left off."

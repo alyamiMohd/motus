@@ -1,0 +1,29 @@
+# Decisions (with rejected alternatives)
+
+Who: **O** = owner, **C** = Claude. Full table with consequences also in `docs/DECISIONS.md`. Never reverse these silently.
+
+| ID | Decision | Alternatives rejected and why | Who | Date |
+|---|---|---|---|---|
+| D-001 | Static site on GitHub Pages + GitHub Actions + JSON files. No server, database or framework | A real backend (cost/ops); frameworks (owner wants minimalism) | C, O agreed | 10-21 |
+| D-002 | Phone data → iPhone Shortcut → PUT to the repo's `inbox/` via the GitHub API (fine-grained token stored only in the shortcut, Contents RW on this repo) | **Google Drive**: Drive does not appear under Files on the owner's phone; **iOS Files/iCloud**: Actions cannot read it; **Dropbox**: more accounts/tokens; **hand-built native Find-Health-Samples shortcut**: fragile (sleep grouping, JSON by hand, can't test); **Heartbridge shortcut**: sends one metric to a local server, not a fit | C proposed, O accepted | 10-21 |
+| D-003 | Use the third-party app *Health Exporter & Shortcuts* (action "Export Health Data") | **Health Auto Export**: the owner declined an app at first; the chosen app has Shortcuts actions that return daily aggregated JSON | O | 10-21 |
+| D-004 | Drop Strava | Strava API app creation needs a paid subscription | O | 10-21 |
+| D-005 | Repo, site and `inbox/` are **public** | **Cloudflare Pages + Access** (real login, free; may ask for a card), **encrypted data on public Pages**, private repo (free Pages needs public). Owner: "you can make the data public no worries, just make sure my api keys are safe." Privacy was raised again later and left undecided | O | 10-21 |
+| D-006 | Hevy read-only; one `GET /v1/workouts`; retries only for transient errors | Writing back to Hevy: never | O | 10-21 |
+| D-007 | Rename Stotis → **Motus** (repo, folder, titles); keep `localStorage` keys `stotis-*` so saved standards survive | Renaming keys (would reset the owner's settings) | O | 10-21 |
+| D-008 | Minimalist black/white UI, green as the only accent; dark green (`--green2`) for the Last Week line | Coloured legends per count (replaced by green/white) | O | 10-21 |
+| D-009 | Timezone fixed UTC+3; weeks start Sunday | zoneinfo (no tzdata on Windows) | C | 10-21 |
+| D-010 | Week-to-date averages: **steps and calories Sunday→yesterday; sleep and weight Sunday→today**; weight card = this week's average − last week's. Heading "Weekly avg (Since Sun, <date>)". Supersedes "Sunday→today for all" | Rolling 7 days; including today's partial steps | O | 10-22 |
+| D-011 | Last Week line compares averages with the week before **only for steps and weight** | Comparing every metric (owner removed it) | O | 10-21 |
+| D-012 | Standards stored per device (localStorage); defaults steps 8000, sleep 7 h, calories < 1500, weight loss any, workouts/week 4 | Server-side settings (no backend) | C, O | 10-21 |
+| D-013 | Estimated 1RM computed from Hevy sets with Epley (`w × (1 + reps/30)`, reps ≤ 12, no warm-ups/bodyweight) | Hevy's own 1RM (not in the API); bodyweight-ratio strength standards (most lifts are machine/dumbbell) | C | 10-21 |
+| D-014 | Per-workout rating: compare each exercise's best e1RM with the mean of its previous ≤4 sessions within 90 days (need ≥2); 7 = within 5 % below baseline, +0.3 per 1 % up to 10, −0.8 per 10 % below the band, floor 3; new exercises skipped. **Supersedes** the first scale (5 = baseline, 0 at −5 %), which gave 0.0 to a normal lighter session | Keeping the harsh scale | O requested, C built | 10-22 |
+| D-015 | Overall rating = 0.7 Progress + 0.3 Consistency, breakdown hidden. Known mismatch with D-014's scale | Showing the breakdown (owner did not understand it) | O | 10-21 |
+| D-016 | Schedule: `17 */3 * * *` (every 3 h, off `:00`), idempotent, commits nothing when unchanged. Supersedes the daily 03:00 UTC cron and the three fixed daily slots | `:00` cron (never fired) | C | 10-22 |
+| D-017 | Reliability: `status.json`, run fails *after* deploying when a source errors, stale banner, footer with last Hevy workout / upload / check, Hevy retries | Silent failure | C | 10-22 |
+| D-018 | Manual corrections via validated `workflow_dispatch` writing `overrides.json`; admin token with **Actions-only** scope; owner-only check in `edit.py`; corrections win over sync, originals kept in `orig`, revert restores the latest automatic value, `null` = no data | A server/DB (none exists); a token with Contents write (too powerful) | C | 10-22 |
+| D-019 | Weekly history derived from `data.json` each run (completed Sunday–Saturday weeks), not a sealed append-only snapshot | Sealing weeks the moment they end (would miss late Saturday data and corrections) | C (flagged to O) | 10-22 |
+| D-020 | Nav is always Dashboard / Workouts / Weeks / Standards; admin "Edit data" lives in the Standards panel | A fifth nav item (overflowed at 320 px) | C | 10-22 |
+| D-021 | MFP history files are gap-fill only (Health always wins); weight values were read from a chart image (±0.1 kg) | Overwriting Health data | C | 10-21 |
+| D-022 | Project memory in the repo (`CLAUDE.md`, `docs/`, `tests/`) and mandatory commit+push+docs workflow | | O | 10-22 |
+| D-023 | Handoff (`.handoff/`) saved into the same public repo. Content is scrubbed of personal identifiers and secrets | A separate private repo (not requested) | C, flagged to O | 10-22 |
