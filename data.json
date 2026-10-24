@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-24T14:20:42+03:00",
+ "updated": "2026-10-24T18:57:31+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4496,10 +4496,12 @@
    "calories": null,
    "weight_kg": 63.1,
    "active_kcal": 11,
-   "workout_count": null,
-   "workout_minutes": null,
-   "workout_volume_kg": null,
-   "workout_titles": null
+   "workout_count": 1,
+   "workout_minutes": 80,
+   "workout_volume_kg": 5233,
+   "workout_titles": [
+    "Upper - 10/10 VIBES"
+   ]
   }
  }
 }
