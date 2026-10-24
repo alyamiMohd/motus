@@ -1,0 +1,175 @@
+{
+  "activeCalories" : [
+    {
+      "date" : "2026-10-23",
+      "unit" : "kcal",
+      "value" : 205.95400000000006
+    },
+    {
+      "date" : "2026-10-24",
+      "unit" : "kcal",
+      "value" : 11.389999999999992
+    }
+  ],
+  "basalCalories" : [
+
+  ],
+  "bmi" : [
+
+  ],
+  "bodyFat" : [
+
+  ],
+  "dietaryCarbohydrates" : [
+
+  ],
+  "dietaryEnergy" : [
+    {
+      "date" : "2026-10-23",
+      "unit" : "kcal",
+      "value" : 1311.1100463867188
+    }
+  ],
+  "dietaryFatTotal" : [
+
+  ],
+  "dietaryProtein" : [
+
+  ],
+  "exerciseMinutes" : [
+
+  ],
+  "exportInfo" : {
+    "appVersion" : "1.6.1",
+    "dataTypes" : [
+      "stepCount",
+      "walkingDistance",
+      "activeCalories",
+      "basalCalories",
+      "exerciseMinutes",
+      "flightsClimbed",
+      "restingHeartRate",
+      "walkingHeartRate",
+      "heartRateVariability",
+      "oxygenSaturation",
+      "respiratoryRate",
+      "weight",
+      "bmi",
+      "bodyFat",
+      "leanBodyMass",
+      "dietaryEnergy",
+      "dietaryProtein",
+      "dietaryCarbohydrates",
+      "dietaryFatTotal",
+      "sleepTime",
+      "vo2Max",
+      "wristTemperature"
+    ],
+    "endDate" : "2026-10-24",
+    "exportDate" : "2026-10-24T11:20:32Z",
+    "measurementSystem" : "metric",
+    "startDate" : "2026-10-23"
+  },
+  "flightsClimbed" : [
+    {
+      "date" : "2026-10-23",
+      "unit" : "count",
+      "value" : 3
+    }
+  ],
+  "heartRateVariability" : [
+
+  ],
+  "leanBodyMass" : [
+
+  ],
+  "oxygenSaturation" : [
+
+  ],
+  "respiratoryRate" : [
+
+  ],
+  "restingHeartRate" : [
+    {
+      "date" : "2026-10-23",
+      "unit" : "bpm",
+      "value" : 47
+    },
+    {
+      "date" : "2026-10-24",
+      "unit" : "bpm",
+      "value" : 47
+    }
+  ],
+  "sleepTime" : [
+    {
+      "date" : "2026-10-23",
+      "stages" : {
+        "awake" : 6,
+        "core" : 363,
+        "deep" : 123,
+        "rem" : 89,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 575
+    },
+    {
+      "date" : "2026-10-24",
+      "stages" : {
+        "awake" : 11,
+        "core" : 304,
+        "deep" : 35,
+        "rem" : 20,
+        "unspecified" : 0
+      },
+      "unit" : "min",
+      "value" : 359
+    }
+  ],
+  "stepCount" : [
+    {
+      "date" : "2026-10-23",
+      "unit" : "count",
+      "value" : 6623
+    },
+    {
+      "date" : "2026-10-24",
+      "unit" : "count",
+      "value" : 237
+    }
+  ],
+  "vo2Max" : [
+
+  ],
+  "walkingDistance" : [
+    {
+      "date" : "2026-10-23",
+      "unit" : "m",
+      "value" : 4271.8781630229205
+    },
+    {
+      "date" : "2026-10-24",
+      "unit" : "m",
+      "value" : 166.68999999994412
+    }
+  ],
+  "walkingHeartRate" : [
+
+  ],
+  "weight" : [
+    {
+      "date" : "2026-10-23",
+      "unit" : "kg",
+      "value" : 63.50021174077439
+    },
+    {
+      "date" : "2026-10-24",
+      "unit" : "kg",
+      "value" : 63.100051577445527
+    }
+  ],
+  "wristTemperature" : [
+
+  ]
+}
