@@ -2,6 +2,9 @@
 
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
+## 2026-10-24
+- Resumed on a new session. Verified and closed K1 (scheduled runs fire) and K2 (the phone uploads at 06:00 on its own); docs only.
+
 ## 2026-10-22
 - **Weekly stats**: `weekly.py` builds `weeks.json` and `WEEKLY_STATS.md` (one row per completed Sunday-Saturday week, 78 weeks backfilled from `data.json`), committed by the workflow; new `site/weeks.html` page and "Weeks" nav link; Edit link moved into the Standards panel and nav tightened for 320 px; month names always three letters ("Sep"); 18 new tests (67 total) (this commit).
 - Heading now reads "Weekly avg (Since Sun, 18 Oct)" (Sunday's date, updates every week) (this commit).

@@ -5,8 +5,6 @@ Close an issue only after verification; move it to "Closed" with the date and ho
 ## Open
 | ID | Issue | Evidence / status |
 |---|---|---|
-| K1 | **Scheduled (cron) runs have never been observed.** The 06:00 UTC+3 schedule did not fire on 2026-10-22 (cause: cron on `:00`, which GitHub often delays/drops). Schedule moved to every 3 hours at :17 on 2026-10-22. | Unverified fix. Check `gh run list --event schedule`; confirm one appears. |
-| K2 | **Phone upload is not guaranteed daily.** No upload arrived by the morning of 2026-10-22; the first came at 10:20 after the user ran the shortcut by hand. Whether the *Wake Up* automation exists/fires is Unknown. | The dashboard banner appears after 11:00 Riyadh if no upload yet today. |
 | K3 | **Today's sleep arrives late in the export.** Seen on 2026-10-21 (missing at 14:43, present at 15:35) and 2026-10-22 (missing at 10:20). Cause unknown (the export app, or watch→phone sync). | Open. Idea: run the automation (or a second one) in the afternoon. |
 | K4 | **Implausibly long sleep values** (12–16 h): 2026-09-24, 09-26, 10-16 (13.3), 10-20 (12.15). Suspected double counting or naps merged into one day. | Unverified; the user was asked to compare with the Health app. Corrections can be made via the edit page. |
 | K6 | **Overall rating scale vs per-workout scale mismatch.** Overall Progress uses flat = 5/10 (`clamp(5 + pct%, 0, 10)`), per-workout uses normal session = 7. | Not yet aligned; the user has not asked. Overall rating currently 6.7. |
@@ -32,3 +30,5 @@ Close an issue only after verification; move it to "Closed" with the date and ho
 | C5 | Rename left the old repo address in place for the phone | 2026-10-22 | Probe: old API URL returns a 307 redirect (method preserved); end-to-end on the phone still Unverified (K2). |
 | C6 | Two definitions of weight change (K5) | 2026-10-22 | The top weight card is now this week's average (Sunday → today) minus last week's average, like the Last Week line. Verified: card shows −0.4 kg for 64.54 − 64.99 on 2026-10-22 data. |
 | C7 | Today's partial steps dragged the week average down (K7) | 2026-10-22 | Steps and calories now average Sunday → yesterday; sleep and weight Sunday → today. 16 unit tests (`tests/test_week_logic.mjs`) and a live comparison with an independent calculation. Side effect (by design): on a Sunday steps/calories show "no data" until Monday. |
+| C8 | Scheduled (cron) runs never observed (K1) | 2026-10-24 | `gh run list --event schedule` shows 8 successful scheduled runs from 2026-10-22 19:13 to 2026-10-24 11:01 UTC. GitHub runs them late and unevenly, not exactly every 3 h at :17, but they run. |
+| C9 | Phone upload not guaranteed daily (K2) | 2026-10-24 | The Wake Up automation uploaded on its own at 06:00 Riyadh on 2026-10-23 and 2026-10-24 (`inbox/health-2026-10-23-0600.json`, `health-2026-10-24-0600.json`). Late sleep (K3) and token expiry (K13) stay open. |

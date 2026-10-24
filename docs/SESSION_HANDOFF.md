@@ -1,6 +1,6 @@
 # Session handoff
 
-Last updated: **2026-10-22**. Read `CLAUDE.md` first. Update this file at the end of every meaningful session.
+Last updated: **2026-10-24**. Read `CLAUDE.md` first. Update this file at the end of every meaningful session.
 
 ## Current state
 - The dashboard, Workouts page and admin Edit page are **live** at https://alyamimohd.github.io/motus/ (repo `alyamiMohd/motus`, branch `main`, public). The last deploy succeeded.
@@ -20,9 +20,9 @@ Last updated: **2026-10-22**. Read `CLAUDE.md` first. Update this file at the en
 Re-checked every issue from today against code, tests and live state; see KNOWN_ISSUES for what can still recur (K1 cron unverified, K2/K3 phone upload and late sleep, K13 token expiry, K18 alert path unverified). A transient DNS failure on the dev laptop mid-Hevy-fetch was handled correctly (1 error reported, no data lost).
 
 ## Next priority
-1. **Confirm a scheduled run fires**: `gh run list --repo alyamiMohd/motus --event schedule` (now every 3 hours at :17 UTC). If none appears over a day, investigate Actions settings / consider a different trigger.
-   Also ask the user whether today's workout is finished and synced in the Hevy app (K17); the footer's "Hevy: last workout" shows what the site has.
-2. **Confirm the phone side**: does the Wake Up automation exist and upload? Does today's sleep show up after an afternoon export? (K2, K3).
+1. **Sunday 2026-10-25**: confirm the first live weekly append (a new row for 18–24 Oct in `weeks.json` / `WEEKLY_STATS.md`).
+   Ask the user whether the 22 Oct workout was ever synced in the Hevy app (K17).
+2. **Late sleep (K3)**: does today's sleep show up in the afternoon exports? Scheduled runs (K1) and the 06:00 phone upload (K2) were verified on 2026-10-24.
 3. Open user decisions (ask, don't assume): lock or leave the Standards panel (K12); align the overall rating scale with the per-workout scale (K6); weekly goal 4 vs 5 planned days (K14); whether to add other Health metrics (see FEATURES "ideas").
 4. The user needs to create the **admin token** (fine-grained, Actions: read/write, repo `motus` only) and try `site/edit.html` once (K8). Also check the 12–13 h sleep nights (K4).
 
