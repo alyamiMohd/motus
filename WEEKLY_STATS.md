@@ -6,7 +6,7 @@ A week appears here the first time the job runs after it ends.
 
 | Week | Sleep (h) | Steps | Calories | Weight (kg) | Workouts | Lift (min) | Volume (kg) |
 |---|---|---|---|---|---|---|---|
-| 18 Oct – 24 Oct 2026 | 7.5 | 7,802 | 1,352 | 64.2 | 4 | 286 | 16,321 |
+| 18 Oct – 24 Oct 2026 | 7.5 | 8,736 | 1,381 | 64.2 | 4 | 286 | 16,321 |
 | 11 Oct – 17 Oct 2026 | 7.8 | 8,622 | 1,337 | 65.0 | 4 | 249 | 24,064 |
 | 4 Oct – 10 Oct 2026 | 8.4 | 6,910 | 1,951 | 65.7 | 5 | 310 | 13,077 |
 | 27 Sep – 3 Oct 2026 | 9.1 | 6,563 | 1,745 | 66.2 | 3 | 220 | 13,784 |

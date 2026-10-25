@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-24T18:57:31+03:00",
+ "updated": "2026-10-25T09:10:10+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4491,17 +4491,28 @@
    "workout_titles": null
   },
   "2026-10-24": {
-   "steps": 237,
+   "steps": 6778,
    "sleep_hours": 5.98,
-   "calories": null,
+   "calories": 1557,
    "weight_kg": 63.1,
-   "active_kcal": 11,
+   "active_kcal": 221,
    "workout_count": 1,
    "workout_minutes": 80,
    "workout_volume_kg": 5233,
    "workout_titles": [
     "Upper - 10/10 VIBES"
    ]
+  },
+  "2026-10-25": {
+   "steps": 374,
+   "sleep_hours": 4.08,
+   "weight_kg": 64.0,
+   "active_kcal": 10,
+   "calories": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
   }
  }
 }
