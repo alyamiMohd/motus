@@ -30,6 +30,11 @@ Status: **planned · in progress · implemented · verified**. "Verified" means 
 | U12 | **Streaks section at the very end of the dashboard**: a flame tile (calorie-logging streak, with a 4-week calendar of logged days) and a dumbbell tile (Hevy lifetime workouts, with a 12-week mini chart; green weeks reached the workouts goal) | verified (35 Node tests, live data 55-day streak, 332 workouts; fits 390 and 320 px) | The streak is computed from our data, not MyFitnessPal's own number (K19). |
 | U10 | Footer shows what each source last delivered ("Hevy: last workout …· Health: last upload …· checked …") | verified | Lets a missing workout/upload be diagnosed from the page. |
 
+## Goal Visualized (demo)
+| # | Item | Status | Files | Acceptance criteria / notes |
+|---|---|---|---|---|
+| G1 | A page that shows the pacing toward **60 kg by 15 Dec 2026**: the planned trajectory (dot 1 = where the plan says you should be today), your actual progress (dot 2 = your 7-day average weight), the gap between them, and whether you are on track | verified (18 new Node tests; browser-checked on real data and on simulated ahead/behind/late-plan data; fits 390 and 320 px) | `site/goal.html`, `site/goal.json`, `goalPlan`/`goalStatus` in `site/shared.js` | Plan = straight line from 64.0 kg on 26 Oct (the 7-day average that day) to 60 kg on 15 Dec = -0.56 kg/week. Within 0.3 kg of the plan = on track; heavier by more = behind (amber); lighter by more = ahead. Also shows to go, days left, plan pace, your pace (this week's average minus last week's) and the date you would reach 60 kg at that pace. Reached from the Standards panel ("Goal visualized (demo)"). **Demo**: the goal is a fixed file, not editable in the UI. |
+
 ## Weekly history
 | # | Item | Status | Files | Acceptance criteria · notes |
 |---|---|---|---|---|

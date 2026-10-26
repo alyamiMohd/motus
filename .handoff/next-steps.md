@@ -16,6 +16,7 @@
 - [ ] Show last week's average on Sundays when steps/calories have nothing yet? Default: "no data".
 - [ ] Revisit privacy (data/handoff are public) if the owner changes their mind: options are Cloudflare Pages + Access (free login) or a second private repo for the handoff.
 - [ ] MyFitnessPal's own logging streak: if the owner wants the app's real number, they read it in the app and tell Claude; add it as a manual baseline (K19). Default: the streak computed from our data, counted from 1 Sep.
+- [ ] Goal demo: does the owner want it kept, changed (target/date/start weight in `site/goal.json`), or promoted into the nav? Default: stays a demo behind the Standards panel link.
 - [ ] Rotate the Hevy API key (it was pasted into a chat once) and renew the phone upload token before it expires (date unknown).
 
 ## Blocked

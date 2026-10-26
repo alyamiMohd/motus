@@ -85,3 +85,11 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 ### 9. Resumed in a third session; the public app split off (2026-10-26)
 **User:** `/handoff resume alyamimohd/motus`, then asked for a new repo `motusapp` without their own integrations, with dummy data and an integrations section (Hevy, MyFitnessPal, Strong, iOS Health…), for public use.
 **Claude did:** verified the first live Sunday rollover here (18–24 Oct row present, runs green; closed in `next-steps.md`). Built the public app in a separate repo, `alyamiMohd/motusapp` (browser-only, demo data, imports on a Connect page); its own `.handoff/` holds the details. Nothing else in this repo changed.
+
+## 2026-10-26 17:00 (UTC+03) | Session 1, continued | new demo feature
+**User asked:** "I want to test a new feature, add a new feature called Goal Visualized (Demo) where in this page it shows me the trajectory of how I should be paced in my goal, (getting to 60kg by 15 december), and make it a graph showing how much I should be losing as dot 1, and dot 2 is my actual current progress and close I'm pacing and whether I'm going as my actual plan."
+**Claude did:** anchored the plan on a stable number (the 7-day average weight, 63.96, stored as 64.0 kg on 26 Oct) and drew a straight line to 60 kg on 15 Dec (50 days, -0.56 kg/week). Built `site/goal.html` + `site/goal.json`: headline (On track / Ahead / Behind, amber when behind), a chart with the dashed plan, the last 14 days of weigh-ins, dot 1 (plan today, a ring) and dot 2 (7-day average, filled) joined by a gap connector, and a list (to go, plan pace, your pace, the date you would reach 60 kg at your pace). Pure functions `goalPlan`/`goalStatus` in `site/shared.js` with 18 tests (53 total). Linked from the Standards panel (a fifth nav item would overflow at 320 px).
+**Outcome:** on real data: On track (63.96 vs plan 64.0), pace -0.77 kg/week vs planned -0.56, 60 kg on 1 Dec = 14 days early. Ahead/behind/late-plan states checked with simulated data in the browser (nothing saved).
+**Errors & fixes:** the first chart labels collided with the dashed line (moved into a row above the dots); "today" and the end date overlapped near the right edge (hidden when too close).
+**User feedback / corrections:** none yet for this feature.
+

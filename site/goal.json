@@ -1,0 +1,7 @@
+{
+  "_note": "Goal Visualized (demo). The plan is a straight line from start to target. start_kg is the 7-day average weight on the start date (63.96 rounded to 64.0).",
+  "target_kg": 60,
+  "target_date": "2026-12-15",
+  "start_date": "2026-10-26",
+  "start_kg": 64.0
+}

@@ -29,6 +29,7 @@ history/*.json (one-off backfills)        overrides.json (manual corrections)
 | `check_status.py` | Reads `status.json`, emits `errors=N` so the workflow can fail loudly after deploying |
 | `common.py` | `.env` loader, fixed `TZ` (UTC+3) |
 | `serve.py` | Local preview server (port 8099) |
+| `site/goal.html` + `site/goal.json` | Goal Visualized (demo): plan vs actual weight chart; the goal (target, dates, start weight) lives in `goal.json` |
 | `site/index.html` | Dashboard · `site/workouts.html` Workouts page · `site/weeks.html` weekly history · `site/edit.html` admin edit page · `site/shared.js` nav, standards, helpers · `site/style.css` |
 | `data.json` | Daily records (generated, committed) · `workouts.json` per-exercise history (generated, committed) |
 | `overrides.json` | Manual corrections (admin-written via workflow) · `history/*.json` one-off backfills |
@@ -92,6 +93,7 @@ workout_minutes 0–1440, workout_volume_kg 0–500000; dates must be ≤ today 
   training day not yet done, ring = today); one-line **Last Week** summary (Sunday–Saturday averages; steps and weight also show change vs the week before); 7-day table (Sleep, Steps, Cal, Kg, Lift minutes)
   with `*` marking corrected values; four 30-day charts.
 - **Streaks section** (very end of the dashboard, below the charts): a flame tile with the calorie-logging streak and a 4-week calendar (`streakGrid`; green = calories recorded, ring = today, outlined = still to come), and a dumbbell tile with Hevy's lifetime workout count (`status.json` `hevy.total_workouts`) and a 12-week mini chart (`weeklyWorkouts`; green = reached the workouts goal). The streak (`loggingStreak` in `shared.js`) = consecutive days with calories in `data.json`; today does not break it until the day ends; the note says "counted from <date>" when the run reaches the first day we hold data for (the real streak may be longer), else "best N days". It is computed from our data; MyFitnessPal's own streak cannot be imported (K19).
+- **Goal** (`goal.html`, a demo reached from the Standards panel): headline (On track / Ahead of plan / Behind plan, amber when behind), a chart of the last 14 days of weigh-ins plus the dashed plan line to the target flag, **dot 1** (ring) = the planned weight today, **dot 2** (filled) = your 7-day average weight, a connector showing the gap, and a list: to go, plan pace, your pace, and the date you would hit the target at your current pace (days early/late). `goalStatus` rules: you = 7-day average ending today; gap = you minus plan; within 0.3 kg = on track; pace = this 7-day average minus the previous one; ETA only when pace is negative (losing). The goal is the fixed file `site/goal.json` (target 60 kg, 15 Dec 2026, start 64.0 kg on 26 Oct 2026).
 - **Workouts** (`workouts.html`): Last workout rating, Overall rating (last 4 weeks), workouts-per-week chart (12 weeks, green ≥ goal, white below, fainter = current week), exercise list sorted by most
   recently trained with est. 1RM, change and sparkline, per-workout ratings with This week / Last week toggle (tap a workout for per-exercise changes).
 - **Weeks** (`weeks.html`): a plain table of completed weeks, newest first (12 shown, "Show all N"): Sleep, Steps, Cal, Kg, Lifts; green when a standard is met (weight green when the average dropped by the goal vs the previous week); links to `WEEKLY_STATS.md` on GitHub.
@@ -131,7 +133,7 @@ Scheduled runs can be delayed/dropped by GitHub; mitigated by an every-3-hours o
 
 ## Testing status
 - `tests/test_pipeline.py`: 67 checks, all passing on 2026-10-22 (today's data arrives, history intact, no duplicates, no-op runs identical, edit/revert, correction survives sync, revert restores latest automatic value, 14 invalid/unauthorized requests rejected, corrupt overrides tolerated).
-- `tests/test_week_logic.mjs`: 35 checks for `weekAvg`/`weekStart`/`loggingStreak`/`streakGrid`/`weeklyWorkouts` (steps/calories stop at yesterday, sleep/weight include today, Sunday/Saturday edges, no leakage across weeks), all passing on 2026-10-22.
+- `tests/test_week_logic.mjs`: 53 checks for `weekAvg`/`weekStart`/`loggingStreak`/`streakGrid`/`weeklyWorkouts`/`goalPlan`/`goalStatus` (steps/calories stop at yesterday, sleep/weight include today, Sunday/Saturday edges, no leakage across weeks), all passing on 2026-10-22.
 - Live end-to-end on 2026-10-22: owner edit → normal sync → revert on a real date; invalid value rejected by the workflow; unauthenticated API calls rejected.
 - Frontend: verified manually in the browser pane at 390px/320px widths with the console checked; no automated UI tests. Real iPhone Safari rendering is **Unverified**.
 - **Unverified**: that a scheduled (cron) run has ever fired; the phone's Wake Up automation; the edit page driven by a real admin token from a browser (only a stubbed-fetch UI test and `gh workflow run` were done).

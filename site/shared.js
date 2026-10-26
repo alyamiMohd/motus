@@ -72,6 +72,48 @@ function weeklyWorkouts(days, todayISO = today, n = 12) {
   });
 }
 
+// ---- Goal visualized (demo): a straight-line plan from start weight/date to target weight/date -------------------------
+const daysBetween = (a, b) => Math.round((Date.parse(b + "T00:00:00Z") - Date.parse(a + "T00:00:00Z")) / 864e5);
+
+function avgOver(days, key, from, to) {              // mean of the days that have data, inclusive dates; null if none
+  const v = [];
+  for (let d = from; d <= to; d = add(d, 1)) { const x = (days[d] || {})[key]; if (x != null) v.push(x); }
+  return v.length ? v.reduce((a, b) => a + b) / v.length : null;
+}
+
+// Planned weight on a date: straight line from (start_date, start_kg) to (target_date, target_kg), flat outside it.
+function goalPlan(goal, dateISO) {
+  const span = daysBetween(goal.start_date, goal.target_date);
+  if (span <= 0) return goal.target_kg;
+  const t = Math.min(1, Math.max(0, daysBetween(goal.start_date, dateISO) / span));
+  return goal.start_kg + (goal.target_kg - goal.start_kg) * t;
+}
+
+// Where you are against the plan. "You" = the 7-day average weight ending today (one weigh-in is too noisy).
+// gap = you - plan (positive = heavier than planned = behind). Within +-tolerance kg counts as on track.
+// pace = this 7-day average minus the previous 7-day average (kg per week, negative = losing).
+// eta = the date you would reach the target if you kept losing at that pace.
+function goalStatus(days, goal, todayISO = today, tolerance = 0.3) {
+  const now = avgOver(days, "weight_kg", add(todayISO, -6), todayISO);
+  const prev = avgOver(days, "weight_kg", add(todayISO, -13), add(todayISO, -7));
+  const planToday = goalPlan(goal, todayISO);
+  const gap = now == null ? null : now - planToday;
+  const pace = now != null && prev != null ? now - prev : null;
+  const toGo = now == null ? null : now - goal.target_kg;
+  const daysLeft = Math.max(0, daysBetween(todayISO, goal.target_date));
+  let etaDate = null, etaVsTarget = null;
+  if (toGo != null && pace != null && pace < 0) {
+    if (toGo <= 0) { etaDate = todayISO; }
+    else etaDate = add(todayISO, Math.round(toGo / -pace * 7));
+    etaVsTarget = daysBetween(goal.target_date, etaDate);          // negative = early, positive = late
+  }
+  return {
+    now, prev, planToday, gap, toGo, daysLeft, pace, etaDate, etaVsTarget,
+    state: gap == null ? null : gap > tolerance ? "behind" : gap < -tolerance ? "ahead" : "on",
+    planPace: (goal.target_kg - goal.start_kg) / (Math.max(1, daysBetween(goal.start_date, goal.target_date)) / 7),
+  };
+}
+
 function loadJSON(path) {
   return fetch(path, { cache: "no-store" }).then(r => { if (!r.ok) throw 0; return r.json(); }).catch(() => null);
 }
@@ -96,6 +138,7 @@ function initNav(active, onChange) {
     <label>Weight loss kg per week <input id="s-weight" type="number" inputmode="decimal" min="0" step="0.1"></label>
     <label>Workouts per week <input id="s-workouts" type="number" inputmode="numeric" min="1" max="14" step="1"></label>
     ${adminToken() ? '<div class="row2" style="margin:0 0 8px"><a href="edit.html" style="text-decoration:underline">Edit data →</a></div>' : ""}
+    <div class="row2" style="margin:0 0 8px"><a href="goal.html" style="text-decoration:underline">Goal visualized (demo) \u2192</a></div>
     <div class="label2">Training days</div>
     <div class="chips" id="s-days"></div>
     <div class="row2"><small>Green when you reach it. Saved on this device.</small><button id="reset">Reset</button></div>

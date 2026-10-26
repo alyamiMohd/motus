@@ -4,7 +4,7 @@
 import { readFileSync } from "node:fs";
 
 const code = readFileSync(new URL("../site/shared.js", import.meta.url), "utf8");
-const { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts } = new Function(code + "\nreturn { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts };")();
+const { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts, daysBetween, goalPlan, goalStatus } = new Function(code + "\nreturn { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts, daysBetween, goalPlan, goalStatus };")();
 
 let passed = 0;
 const failed = [];
@@ -94,6 +94,41 @@ const wd = { "2026-10-12": { workout_count: 1 }, "2026-10-14": { workout_count: 
 const wk = weeklyWorkouts(wd, "2026-10-22", 4);
 check("weekly workouts: 4 weeks, oldest first, current (partial) week last", wk.length === 4 && wk.join() === "0,3,2,3", wk);
 check("default is 12 weeks and all-zero when there is no data", weeklyWorkouts({}, "2026-10-22").length === 12 && weeklyWorkouts({}, "2026-10-22").every(c => c === 0));
+
+// ---- goal visualized (demo): plan line, status against it, pace and projected date ------------------------------------
+console.log("goalPlan / goalStatus");
+const goal = { target_kg: 60, target_date: "2026-12-15", start_date: "2026-10-26", start_kg: 64 };
+const kgDays = (from, to, kg) => { const o = {}; for (let d = from; d <= to; d = add(d, 1)) o[d] = { weight_kg: kg }; return o; };
+
+check("daysBetween: 26 Oct -> 15 Dec is 50 days", daysBetween("2026-10-26", "2026-12-15") === 50);
+check("plan starts at the start weight and ends at the target", goalPlan(goal, "2026-10-26") === 64 && goalPlan(goal, "2026-12-15") === 60);
+check("plan is a straight line (day 25 of 50 = halfway = 62)", Math.abs(goalPlan(goal, "2026-11-20") - 62) < 1e-9);
+check("plan after day 1 is 64 - 4/50", near(goalPlan(goal, "2026-10-27"), 64 - 4 / 50));
+check("plan is flat before the start and after the target", goalPlan(goal, "2026-10-01") === 64 && goalPlan(goal, "2027-01-30") === 60);
+
+let gs = goalStatus({ ...kgDays("2026-10-13", "2026-10-19", 65), ...kgDays("2026-10-20", "2026-10-26", 64) }, goal, "2026-10-26");
+check("on track: you equal the plan, gap 0", gs.state === "on" && near(gs.gap, 0) && gs.now === 64 && gs.planToday === 64, gs);
+check("to go = 4 kg, 50 days left, plan pace -0.56 kg/week", near(gs.toGo, 4) && gs.daysLeft === 50 && near(gs.planPace, -4 / (50 / 7)), gs);
+check("pace = this week's average minus last week's (-1 kg/week)", near(gs.pace, -1), gs.pace);
+check("at that pace: 4 kg / 1 per week = 28 days -> 23 Nov, 22 days early", gs.etaDate === "2026-11-23" && gs.etaVsTarget === -22, gs);
+
+const behind = goalStatus(kgDays("2026-10-21", "2026-10-27", 64.5), goal, "2026-10-27");
+check("behind: heavier than the plan by more than 0.3 kg", behind.state === "behind" && behind.gap > 0.3, behind);
+const ahead = goalStatus(kgDays("2026-10-21", "2026-10-27", 63.0), goal, "2026-10-27");
+check("ahead: lighter than the plan by more than 0.3 kg", ahead.state === "ahead" && ahead.gap < -0.3, ahead);
+check("0.3 kg over the plan still counts as on track; just beyond it is behind",
+  goalStatus(kgDays("2026-10-20", "2026-10-26", 64.3), goal, "2026-10-26").state === "on" && goalStatus(kgDays("2026-10-20", "2026-10-26", 64.31), goal, "2026-10-26").state === "behind");
+
+const none = goalStatus({}, goal, "2026-10-26");
+check("no weights at all -> null everything, no state", none.now === null && none.gap === null && none.state === null && none.pace === null && none.etaDate === null);
+const oneWeek = goalStatus(kgDays("2026-10-20", "2026-10-26", 64), goal, "2026-10-26");
+check("only one week of data: status works, pace and ETA are null", oneWeek.state === "on" && oneWeek.pace === null && oneWeek.etaDate === null, oneWeek);
+const gaining = goalStatus({ ...kgDays("2026-10-13", "2026-10-19", 64), ...kgDays("2026-10-20", "2026-10-26", 65) }, goal, "2026-10-26");
+check("gaining: pace is positive and there is no ETA", gaining.pace > 0 && gaining.etaDate === null, gaining);
+const done = goalStatus({ ...kgDays("2026-10-13", "2026-10-19", 59.7), ...kgDays("2026-10-20", "2026-10-26", 59.5) }, goal, "2026-10-26");
+check("goal reached: to go is negative and the ETA is today", done.toGo < 0 && done.etaDate === "2026-10-26" && done.etaVsTarget < 0, done);
+check("days left never goes negative after the target date", goalStatus(kgDays("2026-12-10", "2026-12-20", 60), goal, "2026-12-20").daysLeft === 0);
+check("before the plan starts, the plan is the start weight", goalStatus(kgDays("2026-10-14", "2026-10-20", 64), goal, "2026-10-20").planToday === 64);
 
 console.log(`\n${passed} passed, ${failed.length} failed`);
 if (failed.length) { console.log("FAILED:", failed); process.exit(1); }

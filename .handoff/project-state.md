@@ -25,10 +25,10 @@ Workflow: schedule `17 */3 * * *` (UTC), pushes touching `inbox/ site/ history/ 
 | `overrides.py`, `edit.py` | validation and the CLI the workflow runs for a correction (owner-only, server-side) |
 | `check_status.py` | emits `errors=N` for the workflow |
 | `common.py`, `serve.py` | `.env` loader and `TZ`; local preview server on :8099 |
-| `site/index.html`, `workouts.html`, `weeks.html`, `edit.html`, `shared.js`, `style.css` | the UI; `shared.js` holds nav, standards, `weekStart`, `weekAvg`, `loggingStreak`, `dayMonth`, admin token helper |
+| `site/index.html`, `workouts.html`, `weeks.html`, `goal.html` (+ `goal.json`), `edit.html`, `shared.js`, `style.css` | the UI; `shared.js` holds nav, standards, `weekStart`, `weekAvg`, `loggingStreak`, `dayMonth`, admin token helper |
 | `data.json`, `workouts.json`, `weeks.json`, `WEEKLY_STATS.md` | generated and committed (never hand-edit) |
 | `overrides.json`, `history/*.json`, `inbox/` | corrections, backfills, raw phone uploads |
-| `tests/test_pipeline.py`, `tests/test_week_logic.mjs` | 67 + 35 checks |
+| `tests/test_pipeline.py`, `tests/test_week_logic.mjs` | 67 + 53 checks |
 | `CLAUDE.md`, `docs/*`, `.handoff/*` | instructions and project memory |
 
 ## Commands

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Motus · Goal</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .gtitle { font-size: 12px; color: var(--muted); margin: 0 0 14px; }
+  .ghead b { display: block; font-size: 34px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+  .ghead small { display: block; margin-top: 4px; }
+  .goalchart { margin: 22px 0 6px; }
+  .goalchart svg { height: auto; margin-top: 0; overflow: visible; }
+  .goalchart text { font-size: 10px; fill: var(--muted); font-family: inherit; }
+  .goalchart text.lbl { fill: var(--text); font-size: 11px; font-weight: 600; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+  .gkey { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); margin: 8px 0 28px; }
+  .gkey span { display: inline-flex; align-items: center; gap: 6px; }
+  .gkey i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; box-sizing: border-box; }
+  .gkey i.ring { border: 2px solid var(--text); }
+  .gkey i.dash { width: 16px; height: 0; border-radius: 0; border-top: 2px dashed var(--muted); }
+  .ok { color: var(--green); } .behind { color: var(--warn); }
+</style>
+</head>
+<body>
+<main>
+  <p class="gtitle">Goal Visualized (Demo)</p>
+  <div class="ghead" id="head"></div>
+  <div class="goalchart" id="chart"></div>
+  <div class="gkey" id="key"></div>
+  <ul class="parts" id="stats"></ul>
+  <p class="muted" id="note" style="font-size:12px;margin-top:28px"></p>
+</main>
+
+<script src="shared.js"></script>
+<script>
+let days = {}, goal = null;
+const fmtKg = v => v.toFixed(1);
+const signed = (v, d = 1) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(d);
+
+function chartSVG(g, st) {
+  const W = 320, H = 190, L = 10, R = 12, T = 26, B = 28;
+  const x0 = add(g.start_date, -14), x1 = g.target_date, span = Math.max(1, daysBetween(x0, x1));
+  const readings = [];
+  for (let d = x0; d <= today; d = add(d, 1)) { const v = (days[d] || {}).weight_kg; if (v != null) readings.push([d, v]); }
+  const vals = [g.target_kg, g.start_kg, st.planToday, ...readings.map(r => r[1])];
+  if (st.now != null) vals.push(st.now);
+  const lo = Math.min(...vals) - 0.7, hi = Math.max(...vals) + 0.7;
+  const X = d => L + daysBetween(x0, d) / span * (W - L - R);
+  const Y = w => T + (hi - w) / (hi - lo) * (H - T - B);
+  const color = st.state === "behind" ? "var(--warn)" : "var(--green)";
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weight against the plan to ${g.target_kg} kg">`;
+  // the target line and the plan (dashed)
+  s += `<line x1="${L}" y1="${Y(g.target_kg)}" x2="${W - R}" y2="${Y(g.target_kg)}" stroke="var(--line)" stroke-width="1"/>`;
+  s += `<text x="${L}" y="${Y(g.target_kg) - 5}">${g.target_kg} kg</text>`;
+  s += `<line x1="${X(g.start_date)}" y1="${Y(g.start_kg)}" x2="${X(g.target_date)}" y2="${Y(g.target_kg)}" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  // your weigh-ins
+  if (readings.length > 1) s += `<polyline fill="none" stroke="var(--text)" stroke-opacity=".45" stroke-width="1.2" stroke-linejoin="round" points="${readings.map(r => X(r[0]).toFixed(1) + "," + Y(r[1]).toFixed(1)).join(" ")}"/>`;
+  readings.forEach(r => { s += `<circle cx="${X(r[0]).toFixed(1)}" cy="${Y(r[1]).toFixed(1)}" r="1.8" fill="var(--text)" fill-opacity=".55"><title>${dayMonth(r[0])}: ${r[1]} kg</title></circle>`; });
+  // the target flag
+  s += `<circle cx="${X(g.target_date)}" cy="${Y(g.target_kg)}" r="4.5" fill="var(--bg)" stroke="var(--green)" stroke-width="2"/>`;
+  // today: dot 1 = where the plan says you should be, dot 2 = where you are (7-day average)
+  const tx = X(today < g.start_date ? g.start_date : today > g.target_date ? g.target_date : today);
+  const py = Y(st.planToday);
+  s += `<line x1="${tx}" y1="${T - 6}" x2="${tx}" y2="${H - B}" stroke="var(--line)" stroke-width="1"/>`;
+  if (st.now != null) {
+    const ay = Y(st.now);
+    s += `<line x1="${tx}" y1="${py}" x2="${tx}" y2="${ay}" stroke="${color}" stroke-width="3" stroke-linecap="round"/>`;
+    s += `<circle cx="${tx}" cy="${ay}" r="6" fill="${color}"/>`;
+  }
+  s += `<circle cx="${tx}" cy="${py}" r="5.5" fill="var(--bg)" stroke="var(--text)" stroke-width="2.5"/>`;
+  // the two numbers sit in a row above the hairline, clear of the plan line and the weigh-ins
+  const hy = T - 12, nearRight = tx > W - 84;
+  if (nearRight) {
+    s += `<text class="lbl" x="${tx - 8}" y="${hy - 12}" text-anchor="end">Plan ${fmtKg(st.planToday)}</text>`;
+    if (st.now != null) s += `<text class="lbl" x="${tx - 8}" y="${hy}" text-anchor="end" style="fill:${color}">You ${fmtKg(st.now)}</text>`;
+  } else {
+    s += `<text class="lbl" x="${tx - 8}" y="${hy}" text-anchor="end">Plan ${fmtKg(st.planToday)}</text>`;
+    if (st.now != null) s += `<text class="lbl" x="${tx + 8}" y="${hy}" style="fill:${color}">You ${fmtKg(st.now)}</text>`;
+  }
+  // dates along the bottom
+  s += `<text x="${X(g.start_date)}" y="${H - 8}" text-anchor="middle">${dayMonth(g.start_date)}</text>`;
+  s += `<text x="${W - R}" y="${H - 8}" text-anchor="end">${dayMonth(g.target_date)}</text>`;
+  if (today > g.start_date && today < g.target_date && tx - X(g.start_date) > 44 && (W - R) - tx > 50) s += `<text x="${tx}" y="${H - 8}" text-anchor="middle">today</text>`;
+  return s + "</svg>";
+}
+
+function render() {
+  if (!goal) return;
+  const st = goalStatus(days, goal), g = goal;
+  const head = document.getElementById("head");
+  if (st.now == null) {
+    head.innerHTML = '<b class="no" style="font-size:22px">no weight data yet</b>';
+  } else {
+    const word = st.state === "ahead" ? "Ahead of plan" : st.state === "behind" ? "Behind plan" : "On track";
+    const sub = st.state === "on" ? (Math.abs(st.gap) < 0.05 ? "right on the plan today" : `${Math.abs(st.gap).toFixed(1)} kg ${st.gap <= 0 ? "under" : "over"} the plan today`)
+      : `${Math.abs(st.gap).toFixed(1)} kg ${st.gap < 0 ? "below" : "above"} where the plan says you should be`;
+    head.innerHTML = `<b class="${st.state === "behind" ? "behind" : "ok"}">${word}</b><small>${sub}</small>`;
+  }
+  document.getElementById("chart").innerHTML = chartSVG(g, st);
+  document.getElementById("key").innerHTML =
+    '<span><i class="ring"></i>Plan today</span><span><i style="background:' + (st.state === "behind" ? "var(--warn)" : "var(--green)") + '"></i>You (7-day average)</span>' +
+    '<span><i class="dash"></i>Plan</span>';
+  const rows = [];
+  const li = (a, b, c) => `<li><span>${a}${c ? `<small>${c}</small>` : ""}</span><span>${b}</span></li>`;
+  if (st.toGo != null) rows.push(li("To go", st.toGo <= 0 ? "reached" : fmtKg(st.toGo) + " kg", st.daysLeft + " days until " + dayMonth(g.target_date)));
+  rows.push(li("Plan pace", signed(st.planPace, 2) + " kg / week", "a straight line from " + fmtKg(g.start_kg) + " kg on " + dayMonth(g.start_date)));
+  rows.push(li("Your pace", st.pace == null ? '<span class="no">no data</span>' : signed(st.pace, 2) + " kg / week", "this week's average vs last week's"));
+  if (st.etaDate) {
+    const early = st.etaVsTarget < 0 ? `${-st.etaVsTarget} days early` : st.etaVsTarget > 0 ? `${st.etaVsTarget} days late` : "right on time";
+    rows.push(li("At your pace", dayMonth(st.etaDate), "you reach " + g.target_kg + " kg, " + early));
+  } else if (st.pace != null && st.pace >= 0) {
+    rows.push(li("At your pace", '<span class="no">not losing</span>', "last week's average did not go down"));
+  }
+  document.getElementById("stats").innerHTML = rows.join("");
+  document.getElementById("note").textContent = "Demo. 'You' is your 7-day average weight, not a single weigh-in. Within 0.3 kg of the plan counts as on track.";
+}
+
+initNav("goal", render);
+Promise.all([loadJSON("data.json"), loadJSON("goal.json")]).then(([d, g]) => {
+  days = (d && d.days) || {};
+  goal = g;
+  if (!g) { document.getElementById("head").innerHTML = '<b class="no" style="font-size:22px">could not load goal.json</b>'; return; }
+  render();
+});
+</script>
+</body>
+</html>
