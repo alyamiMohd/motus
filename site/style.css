@@ -113,3 +113,5 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 td a { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
 .bar { gap: 8px; }
 @media (max-width: 360px) { .links { gap: 8px; } .links a, .links button { font-size: 13px; } }
+.streaks { margin-top: -10px; }
+.streaks small { line-height: 1.6; }

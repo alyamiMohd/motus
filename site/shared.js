@@ -36,6 +36,22 @@ function weekAvg(days, key, todayISO = today) {
   return v.length ? v.reduce((a, b) => a + b) / v.length : null;
 }
 
+// Calorie-logging streak: consecutive days with calories recorded. Today does not break the streak until the day ends
+// (if today is not logged yet the run is counted up to yesterday). best = the longest run in our data. capped = the current
+// run reaches the first day we have data for, so the real streak (e.g. inside MyFitnessPal) may be longer than we can see.
+function loggingStreak(days, todayISO = today) {
+  const logged = d => ((days[d] || {}).calories != null);
+  const dates = Object.keys(days).filter(logged).sort();
+  if (!dates.length) return { current: 0, best: 0, start: null, capped: false };
+  let best = 0, run = 0, prev = null;
+  for (const d of dates) { run = prev && add(prev, 1) === d ? run + 1 : 1; best = Math.max(best, run); prev = d; }
+  const end = logged(todayISO) ? todayISO : add(todayISO, -1);
+  let current = 0;
+  for (let d = end; logged(d); d = add(d, -1)) current++;
+  const start = current ? add(end, -(current - 1)) : null;
+  return { current, best, start, capped: current > 0 && start === dates[0] };
+}
+
 function loadJSON(path) {
   return fetch(path, { cache: "no-store" }).then(r => { if (!r.ok) throw 0; return r.json(); }).catch(() => null);
 }

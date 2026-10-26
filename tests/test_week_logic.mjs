@@ -4,7 +4,7 @@
 import { readFileSync } from "node:fs";
 
 const code = readFileSync(new URL("../site/shared.js", import.meta.url), "utf8");
-const { weekStart, add, weekAvg } = new Function(code + "\nreturn { weekStart, add, weekAvg };")();
+const { weekStart, add, weekAvg, loggingStreak } = new Function(code + "\nreturn { weekStart, add, weekAvg, loggingStreak };")();
 
 let passed = 0;
 const failed = [];
@@ -54,6 +54,30 @@ console.log("Saturday 24 Oct (last day of the week)");
 t = "2026-10-24";
 check("steps = Sunday..Friday (the 23rd's 12000 counts, Saturday does not exist yet)", near(weekAvg(days, "steps", t), (6000 + 10000 + 8000 + 400 + 12000) / 5));
 check("no data anywhere -> null", weekAvg({}, "steps", t) === null);
+
+// ---- calorie-logging streak -------------------------------------------------------------------------------------------
+const logDays = (from, to, kcal = 1500) => { const o = {}; for (let d = from; d <= to; d = add(d, 1)) o[d] = { calories: kcal }; return o; };
+
+console.log("loggingStreak");
+let st = loggingStreak(logDays("2026-10-01", "2026-10-22"), "2026-10-22");
+check("22 consecutive days ending today", st.current === 22 && st.best === 22, st);
+st = loggingStreak(logDays("2026-10-01", "2026-10-21"), "2026-10-22");
+check("today not logged yet does NOT break the streak (counted to yesterday)", st.current === 21, st);
+st = loggingStreak(logDays("2026-10-01", "2026-10-20"), "2026-10-22");
+check("yesterday and today both missing -> streak is 0", st.current === 0 && st.start === null, st);
+st = loggingStreak({ ...logDays("2026-10-01", "2026-10-10"), ...logDays("2026-10-12", "2026-10-22") }, "2026-10-22");
+check("a gap day ends the old run; current is the run after it", st.current === 11, st);
+check("best remembers the longest run in the data", loggingStreak({ ...logDays("2026-09-01", "2026-09-20"), ...logDays("2026-10-12", "2026-10-22") }, "2026-10-22").best === 20);
+st = loggingStreak({ ...logDays("2026-10-01", "2026-10-20"), "2026-10-21": { calories: null }, "2026-10-22": { calories: 1400 } }, "2026-10-22");
+check("a null day breaks the streak (only today counts: 1)", st.current === 1, st);
+st = loggingStreak({ ...logDays("2026-10-01", "2026-10-20"), "2026-10-21": { calories: 1000 }, "2026-10-22": { steps: 5000 } }, "2026-10-22");
+check("a day with other data but no calories is not logged; yesterday still counts", st.current === 21, st);
+st = loggingStreak(logDays("2026-09-01", "2026-10-25"), "2026-10-26");
+check("capped: the run reaches the first day we have data for", st.capped === true && st.start === "2026-09-01" && st.current === 55, st);
+st = loggingStreak({ ...logDays("2026-09-01", "2026-09-05"), ...logDays("2026-10-01", "2026-10-22") }, "2026-10-22");
+check("not capped when an earlier day exists before a gap", st.capped === false && st.current === 22, st);
+check("no data at all -> zeros", JSON.stringify(loggingStreak({}, "2026-10-22")) === JSON.stringify({ current: 0, best: 0, start: null, capped: false }));
+check("month boundary is handled (28 Sep -> 3 Oct = 6 days)", loggingStreak(logDays("2026-09-28", "2026-10-03"), "2026-10-03").current === 6);
 
 console.log(`\n${passed} passed, ${failed.length} failed`);
 if (failed.length) { console.log("FAILED:", failed); process.exit(1); }

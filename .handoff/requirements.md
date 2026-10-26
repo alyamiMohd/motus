@@ -50,5 +50,9 @@ Status: `open` · `in progress` · `done` · `changed` · `dropped`. Dates are 2
 | R-033 | Rename: "Change the name to Motus instead of Stotis, also change repo name from github" | | done | |
 | R-034 | Hevy access strictly read-only ("MAKE SURE its only read only") | Verified in code (single GET) | done | `fetch_hevy.py` |
 
+## Added 2026-10-26
+| R-035 | "add the average weight as well next to the total lost in the average dashboards" | The weight card shows the week's average weight under the change (the Last Week line already shows average and change) | done | `site/index.html` |
+| R-036 | "Import the streaks (from hevy add the total workouts done till now, and from myfitnesspal tell me how to get the total daily count streak)" | Hevy total from its API (332 at the time); logging streak computed from our calories data because MyFitnessPal's own streak cannot be imported; instructions for the app's number | done (limit: K19) | `loggingStreak` in `site/shared.js`, streaks line |
+
 ## Non-functional
 Phone-first and working on an iPhone (390 and 320 px tested in emulation); free hosting; no framework; reliable and detectable failures; data never overwritten or duplicated; weeks start Sunday; timezone Riyadh.

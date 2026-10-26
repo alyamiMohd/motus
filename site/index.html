@@ -27,7 +27,7 @@ const M = [
   { k: "calories", name: "Calories", f: v => Math.round(v).toLocaleString("en-US"), met: v => v <= goals.calories },
   { k: "weight_kg", name: "Weight", f: v => v.toFixed(1), met: () => false },
 ];
-let days = {};
+let days = {}, hevyTotal = null;   // hevyTotal: all workouts in Hevy, from status.json
 
 function avgRange(k, from, to) {               // mean of the days that have data, inclusive dates
   const v = [];
@@ -79,11 +79,20 @@ function lastWeekLine(ws, workouts) {         // last week's averages; steps and
   ].join(' <span class="sep">|</span> ') + "</small></div>";
 }
 
+function streaksLine() {                       // totals and streaks, one quiet line
+  const s = loggingStreak(days), parts = [];
+  if (hevyTotal != null) parts.push(hevyTotal.toLocaleString("en-US") + " workouts in Hevy");
+  parts.push(s.current
+    ? s.current + "-day calorie logging streak" + (s.capped ? " (counted from " + dayMonth(s.start) + ")" : s.best > s.current ? " (best " + s.best + ")" : "")
+    : "no calorie logging streak");
+  return `<div class="wide streaks"><small>${parts.join(' <span class="sep">|</span> ')}</small></div>`;
+}
+
 function summary() {
   const cell = (val, text, green, sub, cls) =>
     `<div class="${cls || ""}"><b class="${green ? "good" : ""}">${val == null ? NO : text}</b><small>${sub}</small></div>`;
   const ws = weekStart(today);                 // weeks start on Sunday
-  const sl = weekAvg(days, "sleep_hours"), st = weekAvg(days, "steps"), ca = weekAvg(days, "calories"), w = weightPerWeek();   // rules: see weekAvg in shared.js
+  const sl = weekAvg(days, "sleep_hours"), st = weekAvg(days, "steps"), ca = weekAvg(days, "calories"), w = weightPerWeek(), wavg = weekAvg(days, "weight_kg");   // rules: see weekAvg in shared.js
   const loss = w == null ? null : -w;
   const wText = w == null ? "" : (w > 0 ? "+" : w < 0 ? "−" : "") + Math.abs(w).toFixed(1) + " kg";
   const lastWeek = workoutsBetween(add(ws, -7), add(ws, -1));
@@ -94,8 +103,9 @@ function summary() {
     cell(st, st == null ? "" : Math.round(st).toLocaleString("en-US"), st != null && st >= goals.steps, "Steps") +
     cell(ca, ca == null ? "" : Math.round(ca).toLocaleString("en-US"), ca != null && ca <= goals.calories, "Calories") +
     cell(w, wText, loss != null && loss > 0 && loss >= goals.weight,
-         w == null ? "Weight per week" : "Weight per week, " + (w < 0 ? "lost" : w > 0 ? "gained" : "no change")) +
-    weekStrip(ws) + lastWeekLine(ws, lastWeek);
+         (w == null ? "Weight per week" : "Weight per week, " + (w < 0 ? "lost" : w > 0 ? "gained" : "no change")) +
+         (wavg == null ? "" : "<br>avg " + wavg.toFixed(1) + " kg")) +
+    weekStrip(ws) + lastWeekLine(ws, lastWeek) + streaksLine();
 }
 
 // small marker on a value that was manually corrected; the title shows the automatic original
@@ -189,6 +199,7 @@ Promise.all([loadJSON("data.json"), loadJSON("status.json")]).then(([data, statu
     data = { days: {} };
   }
   days = data.days || {};
+  hevyTotal = status && status.hevy && status.hevy.total_workouts != null ? status.hevy.total_workouts : null;
   render();
   showNotice(status);
   showFooter(data, status);
