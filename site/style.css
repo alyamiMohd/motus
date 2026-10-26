@@ -133,3 +133,13 @@ td a { text-decoration: underline; text-decoration-color: var(--line); text-unde
 .mini i { flex: 1; background: var(--text); opacity: .85; border-radius: 2px; }
 .mini i.on { background: var(--green); opacity: 1; }
 .mini i.now { opacity: .45; }
+
+/* five nav items: tighter type on phones; the links row scrolls inside itself rather than widening the page */
+.links { overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+.links::-webkit-scrollbar { display: none; }
+.links a, .links button { flex: none; }
+.bar { gap: 8px; }
+@media (max-width: 440px) { .links { gap: 11px; } .links a, .links button { font-size: 13px; } }
+@media (max-width: 380px) { .links { gap: 9px; } .bar b { font-size: 15px; } }
+@media (max-width: 350px) { .bar { gap: 5px; } .bar b { font-size: 14px; } .links { gap: 5px; } .links a, .links button { font-size: 12px; } }
+

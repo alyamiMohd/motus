@@ -36,7 +36,7 @@ Re-checked every issue from today against code, tests and live state; see KNOWN_
 - Not run / unverified: a real cron-triggered run; the phone's automation; the edit page with a real token; real iPhone Safari rendering; any frontend automated tests (none exist).
 
 ## Warnings
-- The Goal page is a demo with a fixed goal (`site/goal.json`: 60 kg by 15 Dec 2026, start 64.0 kg on 26 Oct). Ask before changing the goal or promoting the page into the nav.
+- The Goal page is a demo with a fixed goal (`site/goal.json`: 60 kg by 15 Dec 2026, start 64.0 kg on 26 Oct). It is in the top nav as "Goal". Ask before changing the goal or removing it.
 - If you add something to `site/shared.js` that a page uses, it is safe to ship together: the deploy stamps `?v=<commit>` on the asset links (C11). Do not remove or rename existing shared functions casually, an older cached HTML could still call them.
 - The repo and site are public; never commit `.env`, tokens or API keys. Do not paste secrets into docs.
 - The bot commits `data.json`/`workouts.json` daily: always `git pull --rebase` before committing; on conflicts in generated files re-run `python daily.py`.

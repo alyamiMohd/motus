@@ -93,3 +93,9 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Errors & fixes:** the first chart labels collided with the dashed line (moved into a row above the dots); "today" and the end date overlapped near the right edge (hidden when too close).
 **User feedback / corrections:** none yet for this feature.
 
+## 2026-10-26 17:25 (UTC+03) | Session 1, continued | Goal in the nav
+**User asked:** "make it accessible from the pages above".
+**Claude did:** added "Goal" to the top navigation between Weeks and Standards (five items) and removed the link from the Standards panel. Because five items overflowed phone widths before, the nav type and spacing tighten at <= 440/380/350 px, and the links row scrolls inside itself as a last resort so the page never widens. Measured on the page at 320, 360, 390 and 430 px: no inner scrolling and no page widening at 360 and up; at 320 the first version was 5 px short, so the narrowest tier was tightened further and re-measured (fits). Also stopped the right-hand values in the goal stats list from wrapping.
+**Outcome:** the Goal page is one tap from every page and highlights itself in the nav.
+**User feedback / corrections:** none yet for this change.
+

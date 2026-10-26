@@ -69,7 +69,7 @@ Late/missing sleep in the export (K3); suspected double-counted long sleeps (K4)
 
 ## Workarounds and why
 - Cron is off `:00` because GitHub delays/drops runs on the hour.
-- The Edit link lives in the Standards panel because a fifth nav item overflowed at 320 px.
+- The admin Edit link lives in the Standards panel. The nav has five items (Dashboard, Workouts, Weeks, Goal, Standards); type and spacing tighten at <= 440/380/350 px so they fit down to 320 px.
 - `localStorage` keys stay `stotis-*` after the rename so saved settings survive.
 - Weekly history is recomputed each run (not sealed) so late Saturday data and corrections reach old weeks.
 - Windows/bash: avoid backslash escapes in heredocs (a `\n` was turned into a real newline); use the Write/Edit tools or `chr(92)`; use `encoding="utf-8"` (emoji in workout titles).
