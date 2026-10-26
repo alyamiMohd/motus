@@ -165,7 +165,8 @@ function renderStreaks() {
 }
 
 function render() {
-  summary(); table(); renderStreaks();
+  summary(); table();
+  try { renderStreaks(); } catch (e) { console.error("streaks", e); }   // optional section: never block the charts
   document.getElementById("charts").replaceChildren(...M.map(chart));
 }
 

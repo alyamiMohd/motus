@@ -95,7 +95,11 @@ jobs:
           fi
 
       - name: Assemble site
-        run: cp data.json workouts.json overrides.json status.json weeks.json site/
+        run: |
+          cp data.json workouts.json overrides.json status.json weeks.json site/
+          # Tie every page to the exact CSS/JS of this deploy, so a browser's cached older shared.js can never meet a newer page.
+          V="${GITHUB_SHA::7}"
+          sed -i "s|href=\"style.css\"|href=\"style.css?v=${V}\"|; s|src=\"shared.js\"|src=\"shared.js?v=${V}\"|" site/*.html
 
       - uses: actions/configure-pages@v5
 

@@ -82,7 +82,7 @@ workout_minutes 0–1440, workout_volume_kg 0–500000; dates must be ≤ today 
 - Triggers: `schedule` `17 */3 * * *` (every 3 hours at :17 UTC, i.e. 03:17, 06:17, 09:17 ... Riyadh; off the busy `:00` mark); `push` touching `inbox/**`, `site/**`, `history/**`, `overrides.json`, `*.py`; `workflow_dispatch`
   (optionally with correction inputs: `action` none|set|revert, `date`, `metric`, `value`, `note`).
 - Jobs: `build` (checkout, Python 3.12, optional **Apply manual correction** via `edit.py`, `daily.py`, `check_status.py`, commit `data.json workouts.json overrides.json` with retry,
-  copy data files into `site/`, upload Pages artifact) → `deploy` (Pages) → `report` (fails the run when `status.errors` is non-empty, so GitHub notifies the owner; the site is still deployed).
+  copy data files into `site/`, **stamp the deploy's commit into each page's `style.css?v=` and `shared.js?v=` links** so a cached older script can never meet a newer page, upload Pages artifact) → `deploy` (Pages) → `report` (fails the run when `status.errors` is non-empty, so GitHub notifies the owner; the site is still deployed).
 - Corrections run in their own concurrency group (`edit-<run id>`) so a queued normal run cannot replace them; normal runs share group `daily`.
 - Permissions: `contents: write`, `pages: write`, `id-token: write`. Pages source is "GitHub Actions".
 
