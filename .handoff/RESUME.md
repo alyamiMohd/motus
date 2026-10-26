@@ -21,7 +21,8 @@
 - Repo and site are **public** by the owner's decision (see D-005). This handoff is public too.
 
 ## Next action
-Watch the **first live Sunday rollover (2026-10-25)**: confirm the week 18–24 Oct is appended to `weeks.json` / `WEEKLY_STATS.md` (today, 2026-10-24, the newest row is still 11–17 Oct, which is correct because the current week has not ended). Then work through `next-steps.md`.
+The first live Sunday rollover was **verified on 2026-10-26**: the week 18–24 Oct is in `weeks.json` / `WEEKLY_STATS.md`. Work through `next-steps.md`.
+**Note (2026-10-26):** a public version for anyone to use now lives in a separate repo, `alyamiMohd/motusapp` (https://alyamimohd.github.io/motusapp/), with its own `.handoff/`. This repo stays the owner's personal dashboard.
 
 ## Open questions waiting on the owner
 - Lock the Standards panel (visitors can change their own view only) or leave it? (asked, unanswered)

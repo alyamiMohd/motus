@@ -81,3 +81,7 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Claude did:** the workflow now stamps `?v=<commit>` into every page's `style.css` and `shared.js` links on deploy (the repo files stay unversioned; dry-run of the exact `sed` rewrote all four pages), and the streak section is wrapped in try/catch so it cannot block the charts. Documented as KNOWN_ISSUES C11 and decision D-026.
 **Outcome:** see the commit that follows this entry; verification of the live page after the deploy is recorded in the chat.
 
+
+### 9. Resumed in a third session; the public app split off (2026-10-26)
+**User:** `/handoff resume alyamimohd/motus`, then asked for a new repo `motusapp` without their own integrations, with dummy data and an integrations section (Hevy, MyFitnessPal, Strong, iOS Health…), for public use.
+**Claude did:** verified the first live Sunday rollover here (18–24 Oct row present, runs green; closed in `next-steps.md`). Built the public app in a separate repo, `alyamiMohd/motusapp` (browser-only, demo data, imports on a Connect page); its own `.handoff/` holds the details. Nothing else in this repo changed.

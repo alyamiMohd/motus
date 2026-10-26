@@ -1,7 +1,7 @@
 # Next steps (as of 2026-10-24)
 
 ## Prioritized
-- [ ] **Sunday 2026-10-25: verify the first live weekly rollover.** After the run following Saturday, `weeks.json` and `WEEKLY_STATS.md` must gain a row for 18–24 Oct (check `gh run list`, the repo file, and https://alyamimohd.github.io/motus/weeks.html). Covered by tests but never seen live. Also confirm that on that Sunday the dashboard shows "no data" for steps/calories (by design) and the Last Week line switches to 18–24 Oct.
+- [x] **Done 2026-10-26** (row for 18–24 Oct present; runs green). **Sunday 2026-10-25: verify the first live weekly rollover.** After the run following Saturday, `weeks.json` and `WEEKLY_STATS.md` must gain a row for 18–24 Oct (check `gh run list`, the repo file, and https://alyamimohd.github.io/motus/weeks.html). Covered by tests but never seen live. Also confirm that on that Sunday the dashboard shows "no data" for steps/calories (by design) and the Last Week line switches to 18–24 Oct.
 - [ ] **Late sleep (K3):** check whether today's sleep appears in the afternoon exports. If it only ever arrives late, consider moving or adding a phone automation in the afternoon (owner's phone, not code).
 - [ ] **Admin token (K8):** the owner creates a fine-grained token (Actions: read/write, repository `motus` only, short expiry) and tries `site/edit.html` once with a real browser; fix anything that breaks. Server side is already verified.
 - [ ] **Check the long sleep nights (K4):** 2026-09-24, 09-26, 10-16 (13.3 h), 10-20 (12.15 h). If Health shows ~7 h, find where the export double counts and correct via the edit page or the script.
