@@ -4,7 +4,7 @@
 import { readFileSync } from "node:fs";
 
 const code = readFileSync(new URL("../site/shared.js", import.meta.url), "utf8");
-const { weekStart, add, weekAvg, loggingStreak } = new Function(code + "\nreturn { weekStart, add, weekAvg, loggingStreak };")();
+const { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts } = new Function(code + "\nreturn { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts };")();
 
 let passed = 0;
 const failed = [];
@@ -78,6 +78,22 @@ st = loggingStreak({ ...logDays("2026-09-01", "2026-09-05"), ...logDays("2026-10
 check("not capped when an earlier day exists before a gap", st.capped === false && st.current === 22, st);
 check("no data at all -> zeros", JSON.stringify(loggingStreak({}, "2026-10-22")) === JSON.stringify({ current: 0, best: 0, start: null, capped: false }));
 check("month boundary is handled (28 Sep -> 3 Oct = 6 days)", loggingStreak(logDays("2026-09-28", "2026-10-03"), "2026-10-03").current === 6);
+
+// ---- streak calendar and weekly workouts (the end-of-page tiles) -----------------------------------------------------
+console.log("streakGrid / weeklyWorkouts");
+const gdays = { ...logDays("2026-10-01", "2026-10-22"), "2026-10-23": { steps: 1 } };    // Thu 22 Oct 2026 is "today"
+const grid = streakGrid(gdays, "2026-10-22");
+check("4 weeks = 28 cells, oldest first, starting on a Sunday", grid.length === 28 && grid[0].date === "2026-09-27" && weekStart(grid[0].date) === grid[0].date, grid[0]);
+check("the last cell is this week's Saturday", grid[27].date === "2026-10-24");
+check("exactly one cell is today", grid.filter(c => c.today).length === 1 && grid.find(c => c.today).date === "2026-10-22");
+check("days after today are flagged future (Fri, Sat)", grid.filter(c => c.future).map(c => c.date).join() === "2026-10-23,2026-10-24");
+check("logged follows calories only (a day with other data is not logged)", grid.find(c => c.date === "2026-10-23").logged === false && grid.find(c => c.date === "2026-10-22").logged === true && grid.find(c => c.date === "2026-09-30").logged === false);
+check("a Sunday 'today' still shows the whole current week", streakGrid({}, "2026-10-25")[27].date === "2026-10-31" && streakGrid({}, "2026-10-25")[21].date === "2026-10-25");
+
+const wd = { "2026-10-12": { workout_count: 1 }, "2026-10-14": { workout_count: 1 }, "2026-10-19": { workout_count: 1 }, "2026-10-20": { workout_count: 2 }, "2026-10-04": { workout_count: 3 }, "2026-10-21": { workout_count: null } };
+const wk = weeklyWorkouts(wd, "2026-10-22", 4);
+check("weekly workouts: 4 weeks, oldest first, current (partial) week last", wk.length === 4 && wk.join() === "0,3,2,3", wk);
+check("default is 12 weeks and all-zero when there is no data", weeklyWorkouts({}, "2026-10-22").length === 12 && weeklyWorkouts({}, "2026-10-22").every(c => c === 0));
 
 console.log(`\n${passed} passed, ${failed.length} failed`);
 if (failed.length) { console.log("FAILED:", failed); process.exit(1); }

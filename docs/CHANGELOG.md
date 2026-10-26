@@ -3,7 +3,8 @@
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
 ## 2026-10-26
-- **Streaks and weight average**: the weight card now shows the week's average weight under the change; a streaks line under "Last Week" shows Hevy's total workouts and a calorie-logging streak (`loggingStreak` in `site/shared.js`, 11 new tests, 27 total in `tests/test_week_logic.mjs`) (this commit).
+- Streaks moved to a tile section at the very end of the dashboard (flame + 4-week calendar, dumbbell + 12-week chart); the average weight was removed from the weight card again at the owner's request; `streakGrid` and `weeklyWorkouts` added with 8 more tests (35 total) (this commit).
+- **Streaks and weight average** (first version, superseded above): the weight card now shows the week's average weight under the change; a streaks line under "Last Week" shows Hevy's total workouts and a calorie-logging streak (`loggingStreak` in `site/shared.js`, 11 new tests, 27 total in `tests/test_week_logic.mjs`) (this commit).
 
 ## 2026-10-24
 - Resumed on a new session. Verified and closed K1 (scheduled runs fire) and K2 (the phone uploads at 06:00 on its own); closed K17 (the owner had confirmed there was no workout on 22 Oct); docs only.

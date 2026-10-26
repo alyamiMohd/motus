@@ -18,7 +18,7 @@ Status: **planned · in progress · implemented · verified**. "Verified" means 
 | # | Item | Status | Acceptance · notes |
 |---|---|---|---|
 | U1 | Week-to-date averages (weeks start Sunday), resetting each Sunday; heading "Weekly avg (Since Sun, <Sunday date, e.g. 18 Oct>)" (it does not mention that steps/calories stop at yesterday; the rule is documented here and in DECISIONS). **Steps and calories: Sunday → yesterday** (today is a partial day); **sleep and weight: Sunday → today** | verified | Rule lives in `weekAvg` (`site/shared.js`), 16 unit tests; matches an independent calculation. On a Sunday steps/calories show "no data" (nothing complete yet). |
-| U2 | Weight card: this week's average (Sunday → today) minus last week's average (kg lost/gained), **with the week's average weight on a second line** | verified | Green when loss ≥ goal. Needs readings in both weeks, else "no data". |
+| U2 | Weight card: this week's average (Sunday → today) minus last week's average (kg lost/gained) (the average weight is deliberately not shown on this card; it was added and removed on 2026-10-26 at the owner's request) | verified | Green when loss ≥ goal. Needs readings in both weeks, else "no data". |
 | U3 | Week strip Sun→Sat: green = trained, gray = planned training day, ring = today | verified (emulated phone) | Fits at 390/320 px. Real iPhone unverified. |
 | U4 | One-line **Last Week:** Sunday–Saturday averages; steps and weight show change vs week before; values dark green when standard met; pipe separators | verified | Calories, sleep, workouts show no comparison (user request). |
 | U5 | Daily table (7 days) with Lift minutes; "no data" for missing | verified | `*` marks corrected values (original in tooltip). |
@@ -27,7 +27,7 @@ Status: **planned · in progress · implemented · verified**. "Verified" means 
 | U8 | Staleness/error banner | implemented | See D7. |
 | U9 | Minimalist look, black/white + green, works on phones | verified (emulated) | |
 | U11 | **Weeks page**: simple table of every completed Sunday-Saturday week (sleep, steps, calories, weight, lifts), newest first, green when a standard is met | verified (emulated phone) | Fits at 390/320 px; links to `WEEKLY_STATS.md`. |
-| U12 | **Streaks line**: Hevy total workouts + calorie-logging streak (computed from our data; "counted from <date>" when capped by the start of our data) | verified (27 tests + live data: 332 workouts, 55-day streak) | MyFitnessPal's own streak is not importable (K19). |
+| U12 | **Streaks section at the very end of the dashboard**: a flame tile (calorie-logging streak, with a 4-week calendar of logged days) and a dumbbell tile (Hevy lifetime workouts, with a 12-week mini chart; green weeks reached the workouts goal) | verified (35 Node tests, live data 55-day streak, 332 workouts; fits 390 and 320 px) | The streak is computed from our data, not MyFitnessPal's own number (K19). |
 | U10 | Footer shows what each source last delivered ("Hevy: last workout …· Health: last upload …· checked …") | verified | Lets a missing workout/upload be diagnosed from the page. |
 
 ## Weekly history

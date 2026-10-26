@@ -52,6 +52,26 @@ function loggingStreak(days, todayISO = today) {
   return { current, best, start, capped: current > 0 && start === dates[0] };
 }
 
+// The last `weeks` Sunday-Saturday weeks as a calendar (weeks*7 cells, oldest first): which days have calories recorded.
+function streakGrid(days, todayISO = today, weeks = 4) {
+  const start = add(weekStart(todayISO), -7 * (weeks - 1)), cells = [];
+  for (let i = 0; i < weeks * 7; i++) {
+    const d = add(start, i);
+    cells.push({ date: d, logged: ((days[d] || {}).calories != null), today: d === todayISO, future: d > todayISO });
+  }
+  return cells;
+}
+
+// Workouts per Sunday-Saturday week for the last n weeks, oldest first (the current week is partial).
+function weeklyWorkouts(days, todayISO = today, n = 12) {
+  const first = add(weekStart(todayISO), -7 * (n - 1));
+  return Array.from({ length: n }, (_, i) => {
+    let c = 0;
+    for (let k = 0; k < 7; k++) c += (days[add(first, 7 * i + k)] || {}).workout_count || 0;
+    return c;
+  });
+}
+
 function loadJSON(path) {
   return fetch(path, { cache: "no-store" }).then(r => { if (!r.ok) throw 0; return r.json(); }).catch(() => null);
 }

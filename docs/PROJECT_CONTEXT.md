@@ -35,7 +35,7 @@ history/*.json (one-off backfills)        overrides.json (manual corrections)
 | `inbox/` | Raw uploads from the phone (public) |
 | `weekly.py` | Builds the weekly history from `data.json`; writes `weeks.json` and `WEEKLY_STATS.md` |
 | `weeks.json` / `WEEKLY_STATS.md` | Generated weekly stats: one row per completed Sunday-Saturday week (JSON for the site, a Markdown table to read on GitHub). Never edit by hand |
-| `tests/test_week_logic.mjs` | Node tests for the week-to-date averaging rule and the calorie-logging streak (27 checks) |
+| `tests/test_week_logic.mjs` | Node tests for the week-to-date averaging rule and the calorie-logging streak (35 checks) |
 | `tests/test_pipeline.py` | Synthetic pipeline tests (67 checks; Hevy client stubbed, retry logic with a faked `requests.get`, weekly stats) |
 | `.github/workflows/daily.yml` | The only workflow |
 
@@ -88,10 +88,10 @@ workout_minutes 0–1440, workout_volume_kg 0–500000; dates must be ≤ today 
 
 ## Frontend
 - **Dashboard** (`index.html`): notice banner (from `status.json`: no upload by 11:00 Riyadh, last run > 36 h ago, source errors); "Weekly avg (Since Sun, <Sunday date>)" cards for sleep, steps, calories
-  (week-to-date: **steps and calories Sunday → yesterday**, **sleep and weight Sunday → today**, via `weekAvg` in `shared.js`) plus "Weight per week" (this week's average weight minus last week's average, shown as kg lost/gained, with the week's average weight on a second line); week strip Sunday→Saturday (green = trained, gray = planned
+  (week-to-date: **steps and calories Sunday → yesterday**, **sleep and weight Sunday → today**, via `weekAvg` in `shared.js`) plus "Weight per week" (this week's average weight minus last week's average, shown as kg lost/gained); week strip Sunday→Saturday (green = trained, gray = planned
   training day not yet done, ring = today); one-line **Last Week** summary (Sunday–Saturday averages; steps and weight also show change vs the week before); 7-day table (Sleep, Steps, Cal, Kg, Lift minutes)
   with `*` marking corrected values; four 30-day charts.
-- **Streaks line** (dashboard, under Last Week): "<N> workouts in Hevy" (Hevy's own total from `status.json` `hevy.total_workouts`) | "<N>-day calorie logging streak". The streak (`loggingStreak` in `shared.js`) = consecutive days with calories recorded in `data.json`; today does not break it until the day ends; "(counted from 1 Sep)" appears when the run reaches the first day we hold data for (the real streak may be longer), otherwise "(best N)" when the best run is longer. It is computed from our data, not read from MyFitnessPal (its own streak cannot be imported, see K19).
+- **Streaks section** (very end of the dashboard, below the charts): a flame tile with the calorie-logging streak and a 4-week calendar (`streakGrid`; green = calories recorded, ring = today, outlined = still to come), and a dumbbell tile with Hevy's lifetime workout count (`status.json` `hevy.total_workouts`) and a 12-week mini chart (`weeklyWorkouts`; green = reached the workouts goal). The streak (`loggingStreak` in `shared.js`) = consecutive days with calories in `data.json`; today does not break it until the day ends; the note says "counted from <date>" when the run reaches the first day we hold data for (the real streak may be longer), else "best N days". It is computed from our data; MyFitnessPal's own streak cannot be imported (K19).
 - **Workouts** (`workouts.html`): Last workout rating, Overall rating (last 4 weeks), workouts-per-week chart (12 weeks, green ≥ goal, white below, fainter = current week), exercise list sorted by most
   recently trained with est. 1RM, change and sparkline, per-workout ratings with This week / Last week toggle (tap a workout for per-exercise changes).
 - **Weeks** (`weeks.html`): a plain table of completed weeks, newest first (12 shown, "Show all N"): Sleep, Steps, Cal, Kg, Lifts; green when a standard is met (weight green when the average dropped by the goal vs the previous week); links to `WEEKLY_STATS.md` on GitHub.
@@ -131,7 +131,7 @@ Scheduled runs can be delayed/dropped by GitHub; mitigated by an every-3-hours o
 
 ## Testing status
 - `tests/test_pipeline.py`: 67 checks, all passing on 2026-10-22 (today's data arrives, history intact, no duplicates, no-op runs identical, edit/revert, correction survives sync, revert restores latest automatic value, 14 invalid/unauthorized requests rejected, corrupt overrides tolerated).
-- `tests/test_week_logic.mjs`: 27 checks for `weekAvg`/`weekStart`/`loggingStreak` (steps/calories stop at yesterday, sleep/weight include today, Sunday/Saturday edges, no leakage across weeks), all passing on 2026-10-22.
+- `tests/test_week_logic.mjs`: 35 checks for `weekAvg`/`weekStart`/`loggingStreak`/`streakGrid`/`weeklyWorkouts` (steps/calories stop at yesterday, sleep/weight include today, Sunday/Saturday edges, no leakage across weeks), all passing on 2026-10-22.
 - Live end-to-end on 2026-10-22: owner edit → normal sync → revert on a real date; invalid value rejected by the workflow; unauthenticated API calls rejected.
 - Frontend: verified manually in the browser pane at 390px/320px widths with the console checked; no automated UI tests. Real iPhone Safari rendering is **Unverified**.
 - **Unverified**: that a scheduled (cron) run has ever fired; the phone's Wake Up automation; the edit page driven by a real admin token from a browser (only a stubbed-fetch UI test and `gh workflow run` were done).

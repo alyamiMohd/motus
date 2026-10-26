@@ -69,3 +69,9 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Errors & fixes:** "kg" wrapped alone onto a third line in the weight card, fixed by putting the average on its own line.
 **User feedback / corrections:** none yet in this entry. Open: MyFitnessPal's own streak number (K19).
 
+## 2026-10-26 15:45 (UTC+03) | Session 1, continued | after the weight-average/streaks entry
+**User asked:** "make the streaks all the way to the end, and don't add the average weight I just said just remove it and make it like it was before only how much lost. For the streaks make it in the end, and add it in a fancy way. not like this."
+**Claude did:** removed the average weight from the weight card (back to "Weight per week, lost"); removed the one-line streaks from under Last Week; built a streaks section at the very end of the dashboard: a flame tile (logging streak with a 4-week calendar of logged days, "counted from 1 Sep") and a dumbbell tile (Hevy lifetime workouts with a 12-week mini chart, green weeks reached the goal); added `streakGrid` and `weeklyWorkouts` with 8 more tests (35 total); checked at 390 and 320 px.
+**Outcome:** verified in the browser with real data (55-day streak, 332 workouts, 22 logged days in the calendar, 9 green weeks).
+**Errors & fixes:** one long shell command failed on quoting before anything was applied; the doc edits were redone from a script file. The "average weight" request and its removal happened within the same day.
+**User feedback / corrections:** quoted above (the average weight was not wanted; the streaks line was "not fancy" and belongs at the end).

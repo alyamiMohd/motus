@@ -16,6 +16,7 @@
     <tbody id="rows"></tbody>
   </table>
   <div id="charts"></div>
+  <div class="streaks" id="streaks"></div>
   <p class="muted" id="updated" style="font-size:12px"></p>
 </main>
 
@@ -79,20 +80,11 @@ function lastWeekLine(ws, workouts) {         // last week's averages; steps and
   ].join(' <span class="sep">|</span> ') + "</small></div>";
 }
 
-function streaksLine() {                       // totals and streaks, one quiet line
-  const s = loggingStreak(days), parts = [];
-  if (hevyTotal != null) parts.push(hevyTotal.toLocaleString("en-US") + " workouts in Hevy");
-  parts.push(s.current
-    ? s.current + "-day calorie logging streak" + (s.capped ? " (counted from " + dayMonth(s.start) + ")" : s.best > s.current ? " (best " + s.best + ")" : "")
-    : "no calorie logging streak");
-  return `<div class="wide streaks"><small>${parts.join(' <span class="sep">|</span> ')}</small></div>`;
-}
-
 function summary() {
   const cell = (val, text, green, sub, cls) =>
     `<div class="${cls || ""}"><b class="${green ? "good" : ""}">${val == null ? NO : text}</b><small>${sub}</small></div>`;
   const ws = weekStart(today);                 // weeks start on Sunday
-  const sl = weekAvg(days, "sleep_hours"), st = weekAvg(days, "steps"), ca = weekAvg(days, "calories"), w = weightPerWeek(), wavg = weekAvg(days, "weight_kg");   // rules: see weekAvg in shared.js
+  const sl = weekAvg(days, "sleep_hours"), st = weekAvg(days, "steps"), ca = weekAvg(days, "calories"), w = weightPerWeek();   // rules: see weekAvg in shared.js
   const loss = w == null ? null : -w;
   const wText = w == null ? "" : (w > 0 ? "+" : w < 0 ? "−" : "") + Math.abs(w).toFixed(1) + " kg";
   const lastWeek = workoutsBetween(add(ws, -7), add(ws, -1));
@@ -103,9 +95,8 @@ function summary() {
     cell(st, st == null ? "" : Math.round(st).toLocaleString("en-US"), st != null && st >= goals.steps, "Steps") +
     cell(ca, ca == null ? "" : Math.round(ca).toLocaleString("en-US"), ca != null && ca <= goals.calories, "Calories") +
     cell(w, wText, loss != null && loss > 0 && loss >= goals.weight,
-         (w == null ? "Weight per week" : "Weight per week, " + (w < 0 ? "lost" : w > 0 ? "gained" : "no change")) +
-         (wavg == null ? "" : "<br>avg " + wavg.toFixed(1) + " kg")) +
-    weekStrip(ws) + lastWeekLine(ws, lastWeek) + streaksLine();
+         w == null ? "Weight per week" : "Weight per week, " + (w < 0 ? "lost" : w > 0 ? "gained" : "no change")) +
+    weekStrip(ws) + lastWeekLine(ws, lastWeek);
 }
 
 // small marker on a value that was manually corrected; the title shows the automatic original
@@ -153,8 +144,28 @@ function chart(m) {
   return div;
 }
 
+// Streaks, at the very end of the page: calorie-logging streak with a 4-week calendar, and Hevy's lifetime workouts
+// with a mini weekly chart (green = weeks that reached the workouts goal).
+const ICON_FLAME = '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2c.7 3.4-1.3 5-2.9 6.9C7.4 10.8 6 12.7 6 15.2a6 6 0 0 0 12 0c0-2.3-1.1-4.2-2.4-5.6-.3 1.3-1.1 2.2-2.2 2.6.6-3.1-.1-7.7-1.4-10.2z"/></svg>';
+const ICON_BELL = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>';
+function renderStreaks() {
+  const s = loggingStreak(days), box = document.getElementById("streaks");
+  const cal = streakGrid(days).map(c =>
+    `<i class="${[c.logged ? "on" : "", c.today ? "today" : "", c.future ? "future" : ""].join(" ")}" title="${dayMonth(c.date)}"></i>`).join("");
+  const note = s.current ? (s.capped ? "counted from " + dayMonth(s.start) : s.best > s.current ? "best " + s.best + " days" : "your best so far") : "log today to start one";
+  let html = `<div class="tile"><div class="tl"><div class="big"><span class="icon">${ICON_FLAME}</span><b>${s.current}</b></div>` +
+             `<span class="what">day logging streak</span><small>${note}</small></div><div class="cal" aria-hidden="true">${cal}</div></div>`;
+  if (hevyTotal != null) {
+    const wk = weeklyWorkouts(days, today, 12), hi = Math.max(goals.workouts, ...wk, 1);
+    const bars = wk.map((c, i) => `<i class="${c >= goals.workouts ? "on" : ""}${i === wk.length - 1 ? " now" : ""}" style="height:${Math.max(4, c / hi * 100)}%" title="${c}"></i>`).join("");
+    html += `<div class="tile"><div class="tl"><div class="big"><span class="icon">${ICON_BELL}</span><b>${hevyTotal.toLocaleString("en-US")}</b></div>` +
+            `<span class="what">workouts in Hevy</span><small>last 12 weeks</small></div><div class="mini" aria-hidden="true">${bars}</div></div>`;
+  }
+  box.innerHTML = html;
+}
+
 function render() {
-  summary(); table();
+  summary(); table(); renderStreaks();
   document.getElementById("charts").replaceChildren(...M.map(chart));
 }
 

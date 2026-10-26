@@ -113,5 +113,23 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 td a { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
 .bar { gap: 8px; }
 @media (max-width: 360px) { .links { gap: 8px; } .links a, .links button { font-size: 13px; } }
-.streaks { margin-top: -10px; }
-.streaks small { line-height: 1.6; }
+
+/* streaks (end of the dashboard) */
+.streaks { display: grid; gap: 10px; margin: 8px 0 28px; }
+.tile { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px;
+        border: 1px solid var(--line); border-radius: 14px; }
+.tile .tl { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tile .big { display: flex; align-items: center; gap: 8px; }
+.tile .big b { font-size: 40px; font-weight: 600; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+.tile .icon { color: var(--green); display: inline-flex; }
+.tile .what { font-size: 14px; }
+.tile small { color: var(--muted); font-size: 12px; }
+.cal { display: grid; grid-template-columns: repeat(7, 11px); gap: 4px; flex: none; }
+.cal i { width: 11px; height: 11px; border-radius: 3px; background: var(--gray); }
+.cal i.on { background: var(--green); }
+.cal i.future { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.cal i.today { box-shadow: 0 0 0 1.5px var(--muted); }
+.mini { display: flex; align-items: flex-end; gap: 3px; width: 104px; height: 40px; flex: none; }
+.mini i { flex: 1; background: var(--text); opacity: .85; border-radius: 2px; }
+.mini i.on { background: var(--green); opacity: 1; }
+.mini i.now { opacity: .45; }

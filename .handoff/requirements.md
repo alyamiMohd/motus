@@ -51,8 +51,9 @@ Status: `open` · `in progress` · `done` · `changed` · `dropped`. Dates are 2
 | R-034 | Hevy access strictly read-only ("MAKE SURE its only read only") | Verified in code (single GET) | done | `fetch_hevy.py` |
 
 ## Added 2026-10-26
-| R-035 | "add the average weight as well next to the total lost in the average dashboards" | The weight card shows the week's average weight under the change (the Last Week line already shows average and change) | done | `site/index.html` |
+| R-035 | "add the average weight as well next to the total lost in the average dashboards" | Added to the weight card, then **removed** the same day: "don't add the average weight I just said just remove it and make it like it was before only how much lost" | **changed** (the card shows only how much was lost) | `site/index.html` |
 | R-036 | "Import the streaks (from hevy add the total workouts done till now, and from myfitnesspal tell me how to get the total daily count streak)" | Hevy total from its API (332 at the time); logging streak computed from our calories data because MyFitnessPal's own streak cannot be imported; instructions for the app's number | done (limit: K19) | `loggingStreak` in `site/shared.js`, streaks line |
+| R-037 | "make the streaks all the way to the end ... add it in a fancy way. not like this." | Streaks as two tiles at the very end of the dashboard: flame + 4-week calendar, dumbbell + 12-week mini chart | done | `renderStreaks()` in `site/index.html`, `streakGrid`/`weeklyWorkouts` in `shared.js` |
 
 ## Non-functional
 Phone-first and working on an iPhone (390 and 320 px tested in emulation); free hosting; no framework; reliable and detectable failures; data never overwritten or duplicated; weeks start Sunday; timezone Riyadh.
