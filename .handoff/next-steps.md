@@ -1,4 +1,4 @@
-# Next steps (as of 2026-10-24)
+# Next steps (as of 2026-10-27)
 
 ## Prioritized
 - [x] **Done 2026-10-26** (row for 18–24 Oct present; runs green). **Sunday 2026-10-25: verify the first live weekly rollover.** After the run following Saturday, `weeks.json` and `WEEKLY_STATS.md` must gain a row for 18–24 Oct (check `gh run list`, the repo file, and https://alyamimohd.github.io/motus/weeks.html). Covered by tests but never seen live. Also confirm that on that Sunday the dashboard shows "no data" for steps/calories (by design) and the Last Week line switches to 18–24 Oct.
@@ -16,7 +16,7 @@
 - [ ] Show last week's average on Sundays when steps/calories have nothing yet? Default: "no data".
 - [ ] Revisit privacy (data/handoff are public) if the owner changes their mind: options are Cloudflare Pages + Access (free login) or a second private repo for the handoff.
 - [ ] MyFitnessPal streak baseline: confirm that 568 counted through 26 Oct (not 27 Oct) when it was read; if the app's number differs or resets, edit `site/streaks.json` (K19).
-- [ ] Goal demo: does the owner want it kept, changed (target/date/start weight in `site/goal.json`), or promoted into the nav? Default: stays a demo behind the Standards panel link.
+- [ ] Goal demo: pace is now a fitted line through at most 7 weigh-ins (noisy when one reading is odd); the flag label "Worth it" can be swapped for another word. Does the owner want it kept, changed (target/date/start weight in `site/goal.json`), or promoted into the nav? Default: stays a demo behind the Standards panel link.
 - [ ] Rotate the Hevy API key (it was pasted into a chat once) and renew the phone upload token before it expires (date unknown).
 
 ## Blocked
