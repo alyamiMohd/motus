@@ -7,12 +7,14 @@
 <title>Motus · Goal</title>
 <link rel="stylesheet" href="style.css">
 <style>
+  :root { --gold: #e6b84a; --gold-deep: #c8932a; }
   .gtitle { font-size: 12px; color: var(--muted); margin: 0 0 14px; }
   .ghead b { display: block; font-size: 34px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
   .ghead small { display: block; margin-top: 4px; }
   .goalchart { margin: 22px 0 6px; }
   .goalchart svg { height: auto; margin-top: 0; overflow: visible; }
   .goalchart text { font-size: 10px; fill: var(--muted); font-family: inherit; }
+  .goalchart text.goldt { fill: var(--gold); }
   .goalchart text.lbl { fill: var(--text); font-size: 11px; font-weight: 600; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
   .gkey { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); margin: 8px 0 28px; }
   .gkey span { display: inline-flex; align-items: center; gap: 6px; }
@@ -21,6 +23,8 @@
   .gkey i.dash { width: 16px; height: 0; border-radius: 0; border-top: 2px dashed var(--muted); }
   .gwin { font-size: 13px; line-height: 1.5; margin: 0 0 4px; padding-top: 4px; }
   .gwin small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .gkey i.gold { background: var(--gold); box-shadow: 0 0 6px 1px rgba(230,184,74,.6); }
+  .ghead b.gold { color: var(--gold); }
   .gkey i.band { border-radius: 2px; width: 14px; height: 10px; background: var(--gray); }
   .ok { color: var(--green); } .behind { color: var(--warn); }
   .parts li > span:last-child { white-space: nowrap; }
@@ -53,20 +57,28 @@ function chartSVG(g, st) {
   const lo = Math.min(...vals) - 0.7, hi = Math.max(...vals) + 0.7;
   const X = d => L + daysBetween(x0, d) / span * (W - L - R);
   const Y = w => T + (hi - w) / (hi - lo) * (H - T - B);
-  const color = st.state === "behind" ? "var(--warn)" : "var(--green)";
+  const color = st.toGo != null && st.toGo <= 0 ? "var(--gold)" : st.state === "behind" ? "var(--warn)" : "var(--green)";
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weight against the plan to ${g.target_kg} kg">`;
   // the days the numbers come from: the 7-day window ending today; it moves forward one day, at both ends, every day
   const cur = Math.max(L, X(st.nowFrom) - 3), curEnd = Math.min(W - R, X(st.nowTo) + 3);
   if (curEnd > cur) s += `<rect x="${cur.toFixed(1)}" y="${T - 6}" width="${(curEnd - cur).toFixed(1)}" height="${H - B - T + 6}" rx="3" fill="var(--gray)" fill-opacity=".6"/>`;
+  // the golden end: gold builds toward the target date, brightest at the flag; the target line turns gold with it
+  const gx = W - R - 96, ty = Y(g.target_kg);
+  s += `<defs><linearGradient id="goldfade" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="var(--gold)" stop-opacity="0"/><stop offset="1" stop-color="var(--gold)" stop-opacity=".34"/></linearGradient>` +
+    `<linearGradient id="goldline" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="var(--line)"/><stop offset="1" stop-color="var(--gold)"/></linearGradient>` +
+    `<radialGradient id="goldglow"><stop offset="0" stop-color="var(--gold)" stop-opacity=".75"/><stop offset="1" stop-color="var(--gold)" stop-opacity="0"/></radialGradient></defs>`;
+  s += `<rect x="${gx}" y="${T - 6}" width="${W - R - gx + 3}" height="${H - B - T + 6}" rx="3" fill="url(#goldfade)"/>`;
   // the target line and the plan (dashed)
-  s += `<line x1="${L}" y1="${Y(g.target_kg)}" x2="${W - R}" y2="${Y(g.target_kg)}" stroke="var(--line)" stroke-width="1"/>`;
-  s += `<text x="${L}" y="${Y(g.target_kg) - 5}">${g.target_kg} kg</text>`;
+  s += `<line x1="${L}" y1="${ty}" x2="${W - R}" y2="${ty}" stroke="url(#goldline)" stroke-width="1.5"/>`;
+  s += `<text class="goldt" x="${L}" y="${ty - 5}">${g.target_kg} kg</text>`;
   s += `<line x1="${X(g.start_date)}" y1="${Y(g.start_kg)}" x2="${X(g.target_date)}" y2="${Y(g.target_kg)}" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>`;
   // your weigh-ins
   if (readings.length > 1) s += `<polyline fill="none" stroke="var(--text)" stroke-opacity=".45" stroke-width="1.2" stroke-linejoin="round" points="${readings.map(r => X(r[0]).toFixed(1) + "," + Y(r[1]).toFixed(1)).join(" ")}"/>`;
   readings.forEach(r => { s += `<circle cx="${X(r[0]).toFixed(1)}" cy="${Y(r[1]).toFixed(1)}" r="1.8" fill="var(--text)" fill-opacity=".55"><title>${dayMonth(r[0])}: ${r[1]} kg</title></circle>`; });
   // the target flag
-  s += `<circle cx="${X(g.target_date)}" cy="${Y(g.target_kg)}" r="4.5" fill="var(--bg)" stroke="var(--green)" stroke-width="2"/>`;
+  s += `<circle cx="${X(g.target_date)}" cy="${ty}" r="26" fill="url(#goldglow)"/>`;
+  s += `<circle cx="${X(g.target_date)}" cy="${ty}" r="6" fill="var(--gold)" stroke="var(--gold-deep)" stroke-width="1.5"/>`;
+  s += `<text class="goldt" x="${W - R}" y="${ty - 12}" text-anchor="end" style="font-weight:600">Goal</text>`;
   // today: dot 1 = where the plan says you should be, dot 2 = where you are (7-day average)
   const tx = X(today < g.start_date ? g.start_date : today > g.target_date ? g.target_date : today);
   const py = Y(st.planToday);
@@ -103,12 +115,13 @@ function render() {
     const word = st.state === "ahead" ? "Ahead of plan" : st.state === "behind" ? "Behind plan" : "On track";
     const sub = st.state === "on" ? (Math.abs(st.gap) < 0.05 ? "right on the plan today" : `${Math.abs(st.gap).toFixed(1)} kg ${st.gap <= 0 ? "under" : "over"} the plan today`)
       : `${Math.abs(st.gap).toFixed(1)} kg ${st.gap < 0 ? "below" : "above"} where the plan says you should be`;
-    head.innerHTML = `<b class="${st.state === "behind" ? "behind" : "ok"}">${word}</b><small>${sub}</small>`;
+    head.innerHTML = st.toGo <= 0 ? `<b class="gold">Goal reached</b><small>your 7-day average is ${fmtKg(st.now)} kg</small>`
+      : `<b class="${st.state === "behind" ? "behind" : "ok"}">${word}</b><small>${sub}</small>`;
   }
   document.getElementById("chart").innerHTML = chartSVG(g, st);
   document.getElementById("key").innerHTML =
-    '<span><i class="ring"></i>Plan today</span><span><i style="background:' + (st.state === "behind" ? "var(--warn)" : "var(--green)") + '"></i>You (7-day average)</span>' +
-    '<span><i class="dash"></i>Plan</span><span><i class="band"></i>Days used</span>';
+    '<span><i class="ring"></i>Plan today</span><span><i style="background:' + (st.toGo != null && st.toGo <= 0 ? "var(--gold)" : st.state === "behind" ? "var(--warn)" : "var(--green)") + '"></i>You (7-day average)</span>' +
+    '<span><i class="dash"></i>Plan</span><span><i class="gold"></i>Goal</span><span><i class="band"></i>Days used</span>';
   document.getElementById("win").innerHTML = st.now == null ? "" :
     `Based on your weigh-ins from <b>${dayRange(st.nowFrom, st.nowTo)}</b>` +
     "<small>The window moves forward one day, at both ends, every day.</small>";

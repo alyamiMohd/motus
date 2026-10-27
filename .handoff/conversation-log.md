@@ -120,3 +120,9 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Errors & fixes:** one test failed because of my own expectation (two weigh-ins averaging 63.5 against a plan of 64 is "ahead", not "on track"); the expectation was corrected, not the code.
 **User feedback / corrections:** the comparison pace was meaningless to the owner (recorded as R-042 / D-031).
 
+## 2026-10-27 11:00 (UTC+03) | Session 1, continued | Goal page: golden end
+**User asked:** "In the goal, make the end of the graph golden, to make it motivating to get my dot 'my progress' to the end of the graph where its golden".
+**Claude did:** added a gold glow over the last ~100 px of the chart toward the target date, a gold target line, flag and "Goal" label, a gold key entry; when the 7-day average reaches the target the dot and headline turn gold ("Goal reached").
+**Outcome:** checked in the browser on desktop and at 390 px. No tests needed (drawing only); 75 + 67 checks still pass.
+**Errors & fixes:** none. **User feedback / corrections:** none yet.
+
