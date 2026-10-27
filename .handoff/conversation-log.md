@@ -113,3 +113,10 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Errors & fixes:** none.
 **User feedback / corrections:** none yet for this change.
 
+## 2026-10-27 10:30 (UTC+03) | Session 1, continued | Goal page: one window, a pace that says what it is
+**User asked:** "Your pace / 21-27 Oct vs 14-20 Oct - This doesn't mean a thing, You said your pace, which pace then, The thing that would make sense is that you add the 21-27 pace only, no comparisons, so that I can track".
+**Claude did:** replaced the compared pace (this 7-day average minus the previous one) with `weightTrend`: the least-squares slope of the weigh-ins inside the one rolling window ending today, in kg/week (3+ weigh-ins needed). The row now reads "Your pace -0.60 kg / week: how fast your weight moved across 21-27 Oct (7 weigh-ins)"; "At your pace" says "keep the 21-27 Oct pace and you reach 60 kg"; the previous-week band, its text, and `prev`/`prevFrom`/`prevTo` are removed; the window line reads "Based on your weigh-ins from 21-27 Oct" and still moves one day at both ends daily. Tests rewritten for one window (75 Node checks).
+**Outcome:** verified in the browser on real data (pace -0.60 instead of the old -0.81, ETA 11 Dec). The number differs from before because it measures something different, which is the point.
+**Errors & fixes:** one test failed because of my own expectation (two weigh-ins averaging 63.5 against a plan of 64 is "ahead", not "on track"); the expectation was corrected, not the code.
+**User feedback / corrections:** the comparison pace was meaningless to the owner (recorded as R-042 / D-031).
+
