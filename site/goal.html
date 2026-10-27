@@ -75,7 +75,7 @@ function chartSVG(g, st) {
   readings.forEach(r => { s += `<circle cx="${X(r[0]).toFixed(1)}" cy="${Y(r[1]).toFixed(1)}" r="1.8" fill="var(--text)" fill-opacity=".55"><title>${dayMonth(r[0])}: ${r[1]} kg</title></circle>`; });
   // the target flag
   s += `<circle cx="${fx}" cy="${ty}" r="6" fill="var(--gold)" stroke="var(--gold-deep)" stroke-width="1.5"/>`;
-  s += `<text class="goldt" x="${W - R}" y="${ty + 21}" text-anchor="end" style="font-weight:600">${g.target_kg} kg goal</text>`;
+  s += `<text class="goldt" x="${W - R}" y="${ty + 21}" text-anchor="end" style="font-weight:600">Worth it</text>`;
   // today: dot 1 = where the plan says you should be, dot 2 = where you are (7-day average)
   const tx = X(today < g.start_date ? g.start_date : today > g.target_date ? g.target_date : today);
   const py = Y(st.planToday);

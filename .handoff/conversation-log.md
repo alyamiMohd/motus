@@ -131,3 +131,7 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Claude did:** replaced the gold block with a soft radial glow around the flag only; put "Plan" and "You" labels right beside their own dots (heavier on top, matching colours), moved the 60 kg label to sit under the flag as "60 kg goal"; chart top margin raised so labels never clip.
 **Outcome:** checked at desktop and 390 px.
 
+## 2026-10-27 12:00 (UTC+03) | Session 1, continued | Goal flag label
+**User asked:** "I already know my goal is 60, so change it from "60 kg goal" To aesthetics, or a motivating word".
+**Claude did:** the label under the gold flag now reads "Worth it" (easy to swap: one string in `chartSVG`, `site/goal.html`).
+
