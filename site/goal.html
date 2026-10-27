@@ -48,7 +48,7 @@ const fmtKg = v => v.toFixed(1);
 const signed = (v, d = 1) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(d);
 
 function chartSVG(g, st) {
-  const W = 320, H = 190, L = 10, R = 12, T = 26, B = 28;
+  const W = 320, H = 190, L = 10, R = 12, T = 38, B = 28;
   const x0 = add(g.start_date, -14), x1 = g.target_date, span = Math.max(1, daysBetween(x0, x1));
   const readings = [];
   for (let d = x0; d <= today; d = add(d, 1)) { const v = (days[d] || {}).weight_kg; if (v != null) readings.push([d, v]); }
@@ -62,23 +62,20 @@ function chartSVG(g, st) {
   // the days the numbers come from: the 7-day window ending today; it moves forward one day, at both ends, every day
   const cur = Math.max(L, X(st.nowFrom) - 3), curEnd = Math.min(W - R, X(st.nowTo) + 3);
   if (curEnd > cur) s += `<rect x="${cur.toFixed(1)}" y="${T - 6}" width="${(curEnd - cur).toFixed(1)}" height="${H - B - T + 6}" rx="3" fill="var(--gray)" fill-opacity=".6"/>`;
-  // the golden end: gold builds toward the target date, brightest at the flag; the target line turns gold with it
-  const gx = W - R - 96, ty = Y(g.target_kg);
-  s += `<defs><linearGradient id="goldfade" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="var(--gold)" stop-opacity="0"/><stop offset="1" stop-color="var(--gold)" stop-opacity=".34"/></linearGradient>` +
-    `<linearGradient id="goldline" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="var(--line)"/><stop offset="1" stop-color="var(--gold)"/></linearGradient>` +
-    `<radialGradient id="goldglow"><stop offset="0" stop-color="var(--gold)" stop-opacity=".75"/><stop offset="1" stop-color="var(--gold)" stop-opacity="0"/></radialGradient></defs>`;
-  s += `<rect x="${gx}" y="${T - 6}" width="${W - R - gx + 3}" height="${H - B - T + 6}" rx="3" fill="url(#goldfade)"/>`;
+  // the golden end: a soft glow around the target flag only, fading to nothing; the target line warms toward it
+  const ty = Y(g.target_kg), fx = X(g.target_date);
+  s += `<defs><radialGradient id="goldglow"><stop offset="0" stop-color="var(--gold)" stop-opacity=".6"/><stop offset=".4" stop-color="var(--gold)" stop-opacity=".22"/><stop offset="1" stop-color="var(--gold)" stop-opacity="0"/></radialGradient>` +
+    `<linearGradient id="goldline" x1="0" x2="1" y1="0" y2="0"><stop offset=".55" stop-color="var(--line)"/><stop offset="1" stop-color="var(--gold)"/></linearGradient></defs>`;
+  s += `<ellipse cx="${fx}" cy="${ty}" rx="74" ry="54" fill="url(#goldglow)"/>`;
   // the target line and the plan (dashed)
   s += `<line x1="${L}" y1="${ty}" x2="${W - R}" y2="${ty}" stroke="url(#goldline)" stroke-width="1.5"/>`;
-  s += `<text class="goldt" x="${L}" y="${ty - 5}">${g.target_kg} kg</text>`;
   s += `<line x1="${X(g.start_date)}" y1="${Y(g.start_kg)}" x2="${X(g.target_date)}" y2="${Y(g.target_kg)}" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>`;
   // your weigh-ins
   if (readings.length > 1) s += `<polyline fill="none" stroke="var(--text)" stroke-opacity=".45" stroke-width="1.2" stroke-linejoin="round" points="${readings.map(r => X(r[0]).toFixed(1) + "," + Y(r[1]).toFixed(1)).join(" ")}"/>`;
   readings.forEach(r => { s += `<circle cx="${X(r[0]).toFixed(1)}" cy="${Y(r[1]).toFixed(1)}" r="1.8" fill="var(--text)" fill-opacity=".55"><title>${dayMonth(r[0])}: ${r[1]} kg</title></circle>`; });
   // the target flag
-  s += `<circle cx="${X(g.target_date)}" cy="${ty}" r="26" fill="url(#goldglow)"/>`;
-  s += `<circle cx="${X(g.target_date)}" cy="${ty}" r="6" fill="var(--gold)" stroke="var(--gold-deep)" stroke-width="1.5"/>`;
-  s += `<text class="goldt" x="${W - R}" y="${ty - 12}" text-anchor="end" style="font-weight:600">Goal</text>`;
+  s += `<circle cx="${fx}" cy="${ty}" r="6" fill="var(--gold)" stroke="var(--gold-deep)" stroke-width="1.5"/>`;
+  s += `<text class="goldt" x="${W - R}" y="${ty + 21}" text-anchor="end" style="font-weight:600">${g.target_kg} kg goal</text>`;
   // today: dot 1 = where the plan says you should be, dot 2 = where you are (7-day average)
   const tx = X(today < g.start_date ? g.start_date : today > g.target_date ? g.target_date : today);
   const py = Y(st.planToday);
@@ -89,15 +86,15 @@ function chartSVG(g, st) {
     s += `<circle cx="${tx}" cy="${ay}" r="6" fill="${color}"/>`;
   }
   s += `<circle cx="${tx}" cy="${py}" r="5.5" fill="var(--bg)" stroke="var(--text)" stroke-width="2.5"/>`;
-  // the two numbers sit in a row above the hairline, clear of the plan line and the weigh-ins
-  const hy = T - 12, nearRight = tx > W - 84;
-  if (nearRight) {
-    s += `<text class="lbl" x="${tx - 8}" y="${hy - 12}" text-anchor="end">Plan ${fmtKg(st.planToday)}</text>`;
-    if (st.now != null) s += `<text class="lbl" x="${tx - 8}" y="${hy}" text-anchor="end" style="fill:${color}">You ${fmtKg(st.now)}</text>`;
-  } else {
-    s += `<text class="lbl" x="${tx - 8}" y="${hy}" text-anchor="end">Plan ${fmtKg(st.planToday)}</text>`;
-    if (st.now != null) s += `<text class="lbl" x="${tx + 8}" y="${hy}" style="fill:${color}">You ${fmtKg(st.now)}</text>`;
-  }
+  // each number sits beside its own dot (same colour), the heavier one on top; the plan line runs down-right, so right of the dots is clear
+  const labs = [["Plan " + fmtKg(st.planToday), py, "var(--text)"]];
+  if (st.now != null) labs.push(["You " + fmtKg(st.now), Y(st.now), color]);
+  labs.sort((a, b) => a[1] - b[1]);
+  const topY = labs[0][1], nearRight = tx > W - 84;
+  labs.forEach((l, i) => {
+    const y = topY - 4 - (labs.length - 1 - i) * 14;
+    s += `<text class="lbl" x="${tx + (nearRight ? -11 : 11)}" y="${y}" text-anchor="${nearRight ? "end" : "start"}" style="fill:${l[2]}">${l[0]}</text>`;
+  });
   // dates along the bottom
   s += `<text x="${X(g.start_date)}" y="${H - 8}" text-anchor="middle">${dayMonth(g.start_date)}</text>`;
   s += `<text x="${W - R}" y="${H - 8}" text-anchor="end">${dayMonth(g.target_date)}</text>`;

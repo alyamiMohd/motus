@@ -126,3 +126,8 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Outcome:** checked in the browser on desktop and at 390 px. No tests needed (drawing only); 75 + 67 checks still pass.
 **Errors & fixes:** none. **User feedback / corrections:** none yet.
 
+## 2026-10-27 11:30 (UTC+03) | Session 1, continued | Goal chart: glow and numbers
+**User asked:** (with a screenshot) "Make the golden hue and transparency closer to the dot, not golden to full right side. Also this isn't clean ui in terms of the numbers, I see plan 63.9, you 63.8, 60kg, like its placed randomly, make each number placed in the right spot."
+**Claude did:** replaced the gold block with a soft radial glow around the flag only; put "Plan" and "You" labels right beside their own dots (heavier on top, matching colours), moved the 60 kg label to sit under the flag as "60 kg goal"; chart top margin raised so labels never clip.
+**Outcome:** checked at desktop and 390 px.
+

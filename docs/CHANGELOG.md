@@ -3,6 +3,7 @@
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
 ## 2026-10-27
+- **Goal chart tidied**: the gold is now a soft glow close around the target flag only (the full-height block to the right edge is gone); every number sits next to what it labels ("Plan 63.9" and "You 63.8" beside their dots, heavier on top, in the dots' colours; "60 kg goal" under the flag; the stray left "60 kg" is gone) (this commit).
 - **Goal page: the end of the graph is golden**, to make reaching it motivating: gold glow toward the target date, gold target line, flag and "Goal" label, a gold key entry; your dot and the headline turn gold ("Goal reached") once the 7-day average is at or below the target (this commit).
 - **Goal page: "Your pace" is one window, no comparison**: the trend (kg/week) of the weigh-ins inside the 7-day window ending today (21-27 Oct), labelled "how fast your weight moved across 21-27 Oct (7 weigh-ins)"; the previous-week window, its chart band and the "vs" text are gone; `weightTrend` in `site/shared.js`; tests updated (75 Node checks) (this commit).
 - **Goal page shows its data window**: "Based on the last 7 days: 21-27 Oct (compared with 14-20 Oct)", both windows shaded on the chart, dates on every row, rolling one day forward at both ends every day; `dayRange` and window fields in `goalStatus`; 9 new tests (73 total) (this commit).
