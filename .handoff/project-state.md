@@ -28,7 +28,7 @@ Workflow: schedule `17 */3 * * *` (UTC), pushes touching `inbox/ site/ history/ 
 | `site/index.html`, `workouts.html`, `weeks.html`, `goal.html` (+ `goal.json`), `edit.html`, `shared.js`, `style.css` | the UI; `shared.js` holds nav, standards, `weekStart`, `weekAvg`, `loggingStreak`, `dayMonth`, admin token helper |
 | `data.json`, `workouts.json`, `weeks.json`, `WEEKLY_STATS.md` | generated and committed (never hand-edit) |
 | `overrides.json`, `history/*.json`, `inbox/` | corrections, backfills, raw phone uploads |
-| `tests/test_pipeline.py`, `tests/test_week_logic.mjs` | 67 + 64 checks |
+| `tests/test_pipeline.py`, `tests/test_week_logic.mjs` | 67 + 73 checks |
 | `CLAUDE.md`, `docs/*`, `.handoff/*` | instructions and project memory |
 
 ## Commands

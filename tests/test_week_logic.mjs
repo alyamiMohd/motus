@@ -4,7 +4,7 @@
 import { readFileSync } from "node:fs";
 
 const code = readFileSync(new URL("../site/shared.js", import.meta.url), "utf8");
-const { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts, daysBetween, goalPlan, goalStatus } = new Function(code + "\nreturn { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts, daysBetween, goalPlan, goalStatus };")();
+const { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts, daysBetween, goalPlan, goalStatus, dayRange } = new Function(code + "\nreturn { weekStart, add, weekAvg, loggingStreak, streakGrid, weeklyWorkouts, daysBetween, goalPlan, goalStatus, dayRange };")();
 
 let passed = 0;
 const failed = [];
@@ -153,6 +153,24 @@ check("a gap in our own data before the app's day is ignored: the app's number i
 bs = loggingStreak(logDays("2026-09-01", "2026-10-26"), "2026-10-27", null);
 check("without a baseline nothing changes (55-ish day own run, capped)", bs.fromApp === false && bs.current === 56 && bs.capped === true, bs);
 check("best is never below the app's number", loggingStreak(logDays("2026-09-01", "2026-10-26"), "2026-10-27", base568).best >= 568);
+
+// ---- the Goal page's windows: rolling 7 days that move one day at both ends every day --------------------------------
+console.log("goal windows (rolling, shift +1 daily)");
+const w27 = goalStatus(kgDays("2026-10-14", "2026-10-27", 64), goal, "2026-10-27");
+check("today 27 Oct: now = 21-27 Oct, before = 14-20 Oct", w27.nowFrom === "2026-10-21" && w27.nowTo === "2026-10-27" && w27.prevFrom === "2026-10-14" && w27.prevTo === "2026-10-20", w27);
+const w28 = goalStatus(kgDays("2026-10-14", "2026-10-28", 64), goal, "2026-10-28");
+check("a day later: BOTH ends of BOTH windows move forward one day", w28.nowFrom === "2026-10-22" && w28.nowTo === "2026-10-28" && w28.prevFrom === "2026-10-15" && w28.prevTo === "2026-10-21", w28);
+check("each window is exactly 7 days", daysBetween(w27.nowFrom, w27.nowTo) === 6 && daysBetween(w27.prevFrom, w27.prevTo) === 6 && add(w27.prevTo, 1) === w27.nowFrom);
+check("dayRange within a month: 21-27 Oct", dayRange("2026-10-21", "2026-10-27") === "21\u201327 Oct", dayRange("2026-10-21", "2026-10-27"));
+check("dayRange across months: 28 Oct-3 Nov", dayRange("2026-10-28", "2026-11-03") === "28 Oct\u20133 Nov", dayRange("2026-10-28", "2026-11-03"));
+
+const shiftData = { ...kgDays("2026-10-14", "2026-10-20", 65), ...kgDays("2026-10-21", "2026-10-28", 64) };
+const p27 = goalStatus(shiftData, goal, "2026-10-27"), p28 = goalStatus(shiftData, goal, "2026-10-28");
+check("pace on the 27th uses 21-27 vs 14-20: 64 - 65 = -1", near(p27.pace, -1), p27.pace);
+check("pace on the 28th uses 22-28 vs 15-21 (one 64 slid into the old week): 64 - 64.857 = -0.857", near(p28.pace, 64 - (6 * 65 + 64) / 7), p28.pace);
+const spike = { ...kgDays("2026-10-14", "2026-10-28", 64), "2026-10-21": { weight_kg: 70 } };
+check("a spike on the 21st is inside the window on the 27th (avg 64.857)...", near(goalStatus(spike, goal, "2026-10-27").now, (70 + 6 * 64) / 7));
+check("...and drops out on the 28th (avg back to 64)", near(goalStatus(spike, goal, "2026-10-28").now, 64));
 
 console.log(`\n${passed} passed, ${failed.length} failed`);
 if (failed.length) { console.log("FAILED:", failed); process.exit(1); }

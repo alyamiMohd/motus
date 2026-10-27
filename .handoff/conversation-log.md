@@ -106,3 +106,10 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Errors & fixes:** two tests failed on first run because of my own expectations (the return shape gained a `fromApp` flag; and a gap in our own data before the app's day must not override the app's number); both expectations were corrected, not the code.
 **User feedback / corrections:** none yet for this change.
 
+## 2026-10-27 09:45 (UTC+03) | Session 1, continued | Goal page: show the data window
+**User asked:** "In Goals (I want you to add over the data to go plan place and your pace etc. The week where it was derived from, so for example, from 22, to 27 or something like this. And make it change, shift +1 for both beginning and end, so that it updates literally daily and user can see his progress".
+**Claude did:** the Goal numbers were already computed from rolling 7-day windows, but the page called them "this week's / last week's". Now `goalStatus` returns the window bounds; the page shows "Based on the last 7 days: 21-27 Oct (compared with 14-20 Oct)" above the numbers plus "The window moves forward one day, at both ends, every day", names the dates on the To go and Your pace rows, shades both windows on the chart (current darker, previous lighter) with a "Days used" key entry, and a `dayRange` helper formats ranges (21-27 Oct, 28 Oct-3 Nov). 9 new tests (73 total) prove the shift (both ends of both windows +1 per day; the pace changes when a day slides into the old window; a spike leaves the average exactly when it leaves the window).
+**Outcome:** verified in the browser on real data (21-27 Oct vs 14-20 Oct, pace -0.81 kg/week, 29 Nov, 16 days early). Clarified for the owner: a window is 7 days inclusive (21-27 when today is the 27th), not 6 (22-27).
+**Errors & fixes:** none.
+**User feedback / corrections:** none yet for this change.
+

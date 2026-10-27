@@ -3,6 +3,7 @@
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
 ## 2026-10-27
+- **Goal page shows its data window**: "Based on the last 7 days: 21-27 Oct (compared with 14-20 Oct)", both windows shaded on the chart, dates on every row, rolling one day forward at both ends every day; `dayRange` and window fields in `goalStatus`; 9 new tests (73 total) (this commit).
 - **MyFitnessPal streak baseline**: the streak tile shows the owner's 568 days (through 26 Oct) plus one per further logged day, "since 7 Apr 2025 · MyFitnessPal"; `site/streaks.json`, `loggingStreak(days, today, baseline)`, 11 new tests (64 total) (this commit).
 
 ## 2026-10-26

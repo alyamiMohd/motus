@@ -90,6 +90,9 @@ function avgOver(days, key, from, to) {              // mean of the days that ha
   return v.length ? v.reduce((a, b) => a + b) / v.length : null;
 }
 
+// "21\u201327 Oct" (same month) or "28 Oct\u20133 Nov" (across months).
+const dayRange = (a, b) => (a.slice(5, 7) === b.slice(5, 7) ? String(+a.slice(8)) : dayMonth(a)) + "\u2013" + dayMonth(b);
+
 // Planned weight on a date: straight line from (start_date, start_kg) to (target_date, target_kg), flat outside it.
 function goalPlan(goal, dateISO) {
   const span = daysBetween(goal.start_date, goal.target_date);
@@ -103,8 +106,11 @@ function goalPlan(goal, dateISO) {
 // pace = this 7-day average minus the previous 7-day average (kg per week, negative = losing).
 // eta = the date you would reach the target if you kept losing at that pace.
 function goalStatus(days, goal, todayISO = today, tolerance = 0.3) {
-  const now = avgOver(days, "weight_kg", add(todayISO, -6), todayISO);
-  const prev = avgOver(days, "weight_kg", add(todayISO, -13), add(todayISO, -7));
+  // Two rolling 7-day windows that both move forward one day every day: "now" = the 7 days ending today,
+  // "prev" = the 7 days before that. Everything below (you, pace, to go, ETA) is derived from these two windows.
+  const nowFrom = add(todayISO, -6), nowTo = todayISO, prevFrom = add(todayISO, -13), prevTo = add(todayISO, -7);
+  const now = avgOver(days, "weight_kg", nowFrom, nowTo);
+  const prev = avgOver(days, "weight_kg", prevFrom, prevTo);
   const planToday = goalPlan(goal, todayISO);
   const gap = now == null ? null : now - planToday;
   const pace = now != null && prev != null ? now - prev : null;
@@ -117,7 +123,7 @@ function goalStatus(days, goal, todayISO = today, tolerance = 0.3) {
     etaVsTarget = daysBetween(goal.target_date, etaDate);          // negative = early, positive = late
   }
   return {
-    now, prev, planToday, gap, toGo, daysLeft, pace, etaDate, etaVsTarget,
+    now, prev, nowFrom, nowTo, prevFrom, prevTo, planToday, gap, toGo, daysLeft, pace, etaDate, etaVsTarget,
     state: gap == null ? null : gap > tolerance ? "behind" : gap < -tolerance ? "ahead" : "on",
     planPace: (goal.target_kg - goal.start_kg) / (Math.max(1, daysBetween(goal.start_date, goal.target_date)) / 7),
   };

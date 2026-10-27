@@ -19,6 +19,9 @@
   .gkey i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; box-sizing: border-box; }
   .gkey i.ring { border: 2px solid var(--text); }
   .gkey i.dash { width: 16px; height: 0; border-radius: 0; border-top: 2px dashed var(--muted); }
+  .gwin { font-size: 13px; line-height: 1.5; margin: 0 0 4px; padding-top: 4px; }
+  .gwin small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .gkey i.band { border-radius: 2px; width: 14px; height: 10px; background: var(--gray); }
   .ok { color: var(--green); } .behind { color: var(--warn); }
   .parts li > span:last-child { white-space: nowrap; }
 </style>
@@ -29,6 +32,7 @@
   <div class="ghead" id="head"></div>
   <div class="goalchart" id="chart"></div>
   <div class="gkey" id="key"></div>
+  <div class="gwin" id="win"></div>
   <ul class="parts" id="stats"></ul>
   <p class="muted" id="note" style="font-size:12px;margin-top:28px"></p>
 </main>
@@ -51,6 +55,11 @@ function chartSVG(g, st) {
   const Y = w => T + (hi - w) / (hi - lo) * (H - T - B);
   const color = st.state === "behind" ? "var(--warn)" : "var(--green)";
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weight against the plan to ${g.target_kg} kg">`;
+  // the days the numbers come from: this 7-day window (darker) and the one before it (lighter); both move forward daily
+  const bx = (a, b) => { const xa = Math.max(L, X(a) - 3), xb = Math.min(W - R, X(b) + 3); return xb > xa ? [xa, xb - xa] : null; };
+  const cur = bx(st.nowFrom, st.nowTo), prv = bx(st.prevFrom, st.prevTo);
+  if (prv) s += `<rect x="${prv[0].toFixed(1)}" y="${T - 6}" width="${prv[1].toFixed(1)}" height="${H - B - T + 6}" rx="3" fill="var(--gray)" fill-opacity=".22"/>`;
+  if (cur) s += `<rect x="${cur[0].toFixed(1)}" y="${T - 6}" width="${cur[1].toFixed(1)}" height="${H - B - T + 6}" rx="3" fill="var(--gray)" fill-opacity=".6"/>`;
   // the target line and the plan (dashed)
   s += `<line x1="${L}" y1="${Y(g.target_kg)}" x2="${W - R}" y2="${Y(g.target_kg)}" stroke="var(--line)" stroke-width="1"/>`;
   s += `<text x="${L}" y="${Y(g.target_kg) - 5}">${g.target_kg} kg</text>`;
@@ -101,12 +110,16 @@ function render() {
   document.getElementById("chart").innerHTML = chartSVG(g, st);
   document.getElementById("key").innerHTML =
     '<span><i class="ring"></i>Plan today</span><span><i style="background:' + (st.state === "behind" ? "var(--warn)" : "var(--green)") + '"></i>You (7-day average)</span>' +
-    '<span><i class="dash"></i>Plan</span>';
+    '<span><i class="dash"></i>Plan</span><span><i class="band"></i>Days used</span>';
+  document.getElementById("win").innerHTML = st.now == null ? "" :
+    `Based on the last 7 days: <b>${dayRange(st.nowFrom, st.nowTo)}</b>` +
+    (st.prev == null ? "" : ` (compared with ${dayRange(st.prevFrom, st.prevTo)})`) +
+    "<small>The window moves forward one day, at both ends, every day.</small>";
   const rows = [];
   const li = (a, b, c) => `<li><span>${a}${c ? `<small>${c}</small>` : ""}</span><span>${b}</span></li>`;
-  if (st.toGo != null) rows.push(li("To go", st.toGo <= 0 ? "reached" : fmtKg(st.toGo) + " kg", st.daysLeft + " days until " + dayMonth(g.target_date)));
+  if (st.toGo != null) rows.push(li("To go", st.toGo <= 0 ? "reached" : fmtKg(st.toGo) + " kg", "from your " + dayRange(st.nowFrom, st.nowTo) + " average \u00b7 " + st.daysLeft + " days until " + dayMonth(g.target_date)));
   rows.push(li("Plan pace", signed(st.planPace, 2) + " kg / week", "a straight line from " + fmtKg(g.start_kg) + " kg on " + dayMonth(g.start_date)));
-  rows.push(li("Your pace", st.pace == null ? '<span class="no">no data</span>' : signed(st.pace, 2) + " kg / week", "this week's average vs last week's"));
+  rows.push(li("Your pace", st.pace == null ? '<span class="no">no data</span>' : signed(st.pace, 2) + " kg / week", dayRange(st.nowFrom, st.nowTo) + " vs " + dayRange(st.prevFrom, st.prevTo)));
   if (st.etaDate) {
     const early = st.etaVsTarget < 0 ? `${-st.etaVsTarget} days early` : st.etaVsTarget > 0 ? `${st.etaVsTarget} days late` : "right on time";
     rows.push(li("At your pace", dayMonth(st.etaDate), "you reach " + g.target_kg + " kg, " + early));
@@ -114,7 +127,7 @@ function render() {
     rows.push(li("At your pace", '<span class="no">not losing</span>', "last week's average did not go down"));
   }
   document.getElementById("stats").innerHTML = rows.join("");
-  document.getElementById("note").textContent = "Demo. 'You' is your 7-day average weight, not a single weigh-in. Within 0.3 kg of the plan counts as on track.";
+  document.getElementById("note").textContent = "Demo. 'You' is your 7-day average weight (the shaded days), not a single weigh-in. Within 0.3 kg of the plan counts as on track.";
 }
 
 initNav("goal", render);
