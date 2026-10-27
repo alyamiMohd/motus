@@ -17,7 +17,7 @@ Last updated: **2026-10-24**. Read `CLAUDE.md` first. Update this file at the en
 5. Averages rule changed at the user's request: steps/calories Sunday → yesterday, sleep/weight Sunday → today; weight card now average-based (K5, K7 closed). Rule is `weekAvg` in `site/shared.js` with `tests/test_week_logic.mjs`.
 
 ## Added 2026-10-26
-Streaks section at the very end of the dashboard (flame tile: calorie-logging streak + 4-week calendar; dumbbell tile: Hevy lifetime workouts + 12-week chart). The weight card is back to showing only how much was lost (the average weight was added then removed at the owner's request). MyFitnessPal's own streak cannot be imported (K19): ask the owner to read it in the app if they want the real number as a baseline. `node tests/test_week_logic.mjs` -> 35 passed.
+Streaks section at the very end of the dashboard (flame tile: calorie-logging streak + 4-week calendar; dumbbell tile: Hevy lifetime workouts + 12-week chart). The weight card is back to showing only how much was lost (the average weight was added then removed at the owner's request). The flame tile shows the owner's MyFitnessPal streak (568 days through 2026-10-26, a manual baseline in `site/streaks.json`, K19); update that file if the app's number changes. `node tests/test_week_logic.mjs` -> 64 passed.
 
 ## Audit (2026-10-22, end of day)
 Re-checked every issue from today against code, tests and live state; see KNOWN_ISSUES for what can still recur (K1 cron unverified, K2/K3 phone upload and late sleep, K13 token expiry, K18 alert path unverified). A transient DNS failure on the dev laptop mid-Hevy-fetch was handled correctly (1 error reported, no data lost).

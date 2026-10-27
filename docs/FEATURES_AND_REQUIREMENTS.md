@@ -27,7 +27,7 @@ Status: **planned · in progress · implemented · verified**. "Verified" means 
 | U8 | Staleness/error banner | implemented | See D7. |
 | U9 | Minimalist look, black/white + green, works on phones | verified (emulated) | |
 | U11 | **Weeks page**: simple table of every completed Sunday-Saturday week (sleep, steps, calories, weight, lifts), newest first, green when a standard is met | verified (emulated phone) | Fits at 390/320 px; links to `WEEKLY_STATS.md`. |
-| U12 | **Streaks section at the very end of the dashboard**: a flame tile (calorie-logging streak, with a 4-week calendar of logged days) and a dumbbell tile (Hevy lifetime workouts, with a 12-week mini chart; green weeks reached the workouts goal) | verified (35 Node tests, live data 55-day streak, 332 workouts; fits 390 and 320 px) | The streak is computed from our data, not MyFitnessPal's own number (K19). |
+| U12 | **Streaks section at the very end of the dashboard**: a flame tile with the **MyFitnessPal logging streak** (568 days counted through 26 Oct 2026, read from the app by the owner, plus one per further logged day; "since 7 Apr 2025 · MyFitnessPal") and a 4-week calendar of logged days, and a dumbbell tile (Hevy lifetime workouts, with a 12-week mini chart; green weeks reached the workouts goal) | verified (64 Node tests incl. 11 for the baseline; live data: 568 and 333) | The 568 is a manual baseline in `site/streaks.json` (K19). Without the file the tile shows our own computed streak. |
 | U10 | Footer shows what each source last delivered ("Hevy: last workout …· Health: last upload …· checked …") | verified | Lets a missing workout/upload be diagnosed from the page. |
 
 ## Goal Visualized (demo)

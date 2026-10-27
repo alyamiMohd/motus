@@ -99,3 +99,10 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Outcome:** the Goal page is one tap from every page and highlights itself in the nav.
 **User feedback / corrections:** none yet for this change.
 
+## 2026-10-27 09:00 (UTC+03) | Session 1, continued | MyFitnessPal streak
+**User asked:** "make the myfitnesspal 568 days, Try again" (after being told the app's streak could only be read by hand; the owner read 568 days in the app).
+**Claude did:** stored the number as a baseline in `site/streaks.json` (568 days counted through 2026-10-26, our latest logged day, since today had no calories yet) and changed `loggingStreak` to accept it: while our unbroken run covers the baseline day the streak is 568 plus one per further logged day (start 7 Apr 2025); if a day is missed it falls back to our own count. The flame tile now reads "568 | day logging streak | since 7 Apr 2025 · MyFitnessPal". 11 new tests (64 total).
+**Outcome:** verified in the browser on real data (568; Hevy tile 333 workouts). Assumption flagged to the owner: the app's number counted through 26 Oct (off by one if it already included 27 Oct).
+**Errors & fixes:** two tests failed on first run because of my own expectations (the return shape gained a `fromApp` flag; and a gap in our own data before the app's day must not override the app's number); both expectations were corrected, not the code.
+**User feedback / corrections:** none yet for this change.
+

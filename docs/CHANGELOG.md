@@ -2,6 +2,9 @@
 
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
+## 2026-10-27
+- **MyFitnessPal streak baseline**: the streak tile shows the owner's 568 days (through 26 Oct) plus one per further logged day, "since 7 Apr 2025 · MyFitnessPal"; `site/streaks.json`, `loggingStreak(days, today, baseline)`, 11 new tests (64 total) (this commit).
+
 ## 2026-10-26
 - **Goal in the top nav** (five items), panel link removed; responsive nav type and spacing for 320-440 px; the goal stats values no longer wrap (this commit).
 - **Goal Visualized (demo)**: new `site/goal.html` + `site/goal.json` (60 kg by 15 Dec 2026): plan line, dot 1 (plan today), dot 2 (7-day average), gap, pace and projected date; `goalPlan`/`goalStatus`/`daysBetween`/`avgOver` in `site/shared.js`; 18 new tests (53 total); linked from the Standards panel (this commit).

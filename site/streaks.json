@@ -1,0 +1,4 @@
+{
+  "_note": "MyFitnessPal's own logging streak, read from the app by the owner (we cannot read it automatically). It counts through the day in 'through'. The dashboard adds one for every further day with calories logged in our data, and drops back to our own count if a day is missed.",
+  "mfp_logging_streak": { "days": 568, "through": "2026-10-26", "read_on": "2026-10-27" }
+}

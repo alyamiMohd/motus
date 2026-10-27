@@ -76,7 +76,7 @@ st = loggingStreak(logDays("2026-09-01", "2026-10-25"), "2026-10-26");
 check("capped: the run reaches the first day we have data for", st.capped === true && st.start === "2026-09-01" && st.current === 55, st);
 st = loggingStreak({ ...logDays("2026-09-01", "2026-09-05"), ...logDays("2026-10-01", "2026-10-22") }, "2026-10-22");
 check("not capped when an earlier day exists before a gap", st.capped === false && st.current === 22, st);
-check("no data at all -> zeros", JSON.stringify(loggingStreak({}, "2026-10-22")) === JSON.stringify({ current: 0, best: 0, start: null, capped: false }));
+check("no data at all -> zeros", JSON.stringify(loggingStreak({}, "2026-10-22")) === JSON.stringify({ current: 0, best: 0, start: null, capped: false, fromApp: false }));
 check("month boundary is handled (28 Sep -> 3 Oct = 6 days)", loggingStreak(logDays("2026-09-28", "2026-10-03"), "2026-10-03").current === 6);
 
 // ---- streak calendar and weekly workouts (the end-of-page tiles) -----------------------------------------------------
@@ -129,6 +129,30 @@ const done = goalStatus({ ...kgDays("2026-10-13", "2026-10-19", 59.7), ...kgDays
 check("goal reached: to go is negative and the ETA is today", done.toGo < 0 && done.etaDate === "2026-10-26" && done.etaVsTarget < 0, done);
 check("days left never goes negative after the target date", goalStatus(kgDays("2026-12-10", "2026-12-20", 60), goal, "2026-12-20").daysLeft === 0);
 check("before the plan starts, the plan is the start weight", goalStatus(kgDays("2026-10-14", "2026-10-20", 64), goal, "2026-10-20").planToday === 64);
+
+// ---- the owner's MyFitnessPal streak used as a baseline ---------------------------------------------------------------
+console.log("loggingStreak with the MyFitnessPal baseline");
+const base568 = { days: 568, through: "2026-10-26" };
+let bs = loggingStreak(logDays("2026-09-01", "2026-10-26"), "2026-10-27", base568);
+check("568 days through 26 Oct, today (27th) not logged yet -> 568, from the app", bs.current === 568 && bs.fromApp === true, bs);
+check("it started 567 days before the through day (7 Apr 2025)", bs.start === "2025-04-07", bs.start);
+bs = loggingStreak(logDays("2026-09-01", "2026-10-27"), "2026-10-27", base568);
+check("today logged -> 569", bs.current === 569 && bs.fromApp === true, bs);
+bs = loggingStreak(logDays("2026-09-01", "2026-10-30"), "2026-10-30", base568);
+check("four more days logged -> 572", bs.current === 572, bs);
+bs = loggingStreak({ ...logDays("2026-09-01", "2026-10-26"), ...logDays("2026-10-28", "2026-10-29") }, "2026-10-29", base568);
+check("a missed day after the app's number: only our own new run counts (2), no baseline", bs.current === 2 && bs.fromApp === false && bs.start === "2026-10-28", bs);
+bs = loggingStreak(logDays("2026-09-01", "2026-10-26"), "2026-10-29", base568);
+check("two days missed in a row -> the streak is 0 (baseline does not revive it)", bs.current === 0 && bs.fromApp === false, bs);
+bs = loggingStreak(logDays("2026-09-01", "2026-10-26"), "2026-10-27", { days: 568, through: "2026-08-15" });
+check("a baseline that ends before our data starts does not apply (our own 56-day run)", bs.fromApp === false && bs.current === 56, bs);
+bs = loggingStreak(logDays("2026-09-01", "2026-10-26"), "2026-10-27", { days: 30, through: "2026-10-26" });
+check("a small baseline replaces our count with the app's (30), since the app is the truth", bs.current === 30 && bs.fromApp === true, bs);
+bs = loggingStreak({ ...logDays("2026-09-01", "2026-09-20"), ...logDays("2026-09-22", "2026-10-26") }, "2026-10-27", base568);
+check("a gap in our own data before the app's day is ignored: the app's number is trusted (568)", bs.fromApp === true && bs.current === 568, bs);
+bs = loggingStreak(logDays("2026-09-01", "2026-10-26"), "2026-10-27", null);
+check("without a baseline nothing changes (55-ish day own run, capped)", bs.fromApp === false && bs.current === 56 && bs.capped === true, bs);
+check("best is never below the app's number", loggingStreak(logDays("2026-09-01", "2026-10-26"), "2026-10-27", base568).best >= 568);
 
 console.log(`\n${passed} passed, ${failed.length} failed`);
 if (failed.length) { console.log("FAILED:", failed); process.exit(1); }
