@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-28T07:46:39+03:00",
+ "updated": "2026-10-28T12:41:35+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4539,6 +4539,17 @@
    "workout_titles": [
     "Push"
    ]
+  },
+  "2026-10-28": {
+   "steps": 268,
+   "weight_kg": 64.0,
+   "sleep_hours": null,
+   "calories": null,
+   "active_kcal": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
   }
  }
 }
