@@ -101,44 +101,27 @@ function goalPlan(goal, dateISO) {
   return goal.start_kg + (goal.target_kg - goal.start_kg) * t;
 }
 
-// Pace = how fast your weight moved across ONE window of days: the slope of a straight line fitted through the
-// weigh-ins in it (least squares on the actual days), in kg per week; negative = losing. Needs at least 3 weigh-ins.
-// `se` is how much that figure is blurred by ordinary day-to-day swings (standard error of the slope, kg per week): when the
-// pace is smaller than `se` the data cannot say whether you are going up or down.
-function weightTrend(days, from, to) {
-  const pts = [];
-  for (let d = from; d <= to; d = add(d, 1)) { const v = (days[d] || {}).weight_kg; if (v != null) pts.push([daysBetween(from, d), v]); }
-  if (pts.length < 3) return { perWeek: null, se: null, n: pts.length };
-  const n = pts.length, mx = pts.reduce((a, p) => a + p[0], 0) / n, my = pts.reduce((a, p) => a + p[1], 0) / n;
-  let sxy = 0, sxx = 0;
-  for (const [x, y] of pts) { sxy += (x - mx) * (y - my); sxx += (x - mx) ** 2; }
-  if (sxx === 0) return { perWeek: null, se: null, n };
-  const b = sxy / sxx; let rss = 0;
-  for (const [x, y] of pts) rss += (y - my - b * (x - mx)) ** 2;
-  return { perWeek: b * 7, se: Math.sqrt(rss / (n - 2) / sxx) * 7, n };
-}
-
-// Where you are against the plan, from ONE rolling window: the 7 days ending today (it moves forward one day, at
-// both ends, every day). "You" = the average weight in that window (one weigh-in is too noisy). gap = you - plan
-// (positive = heavier than planned = behind); within +-tolerance kg counts as on track.
-// pace = the trend of the weigh-ins inside the same window (kg per week); eta = the date you would reach the
-// target if you kept that pace (only when the pace is clearly downward, i.e. bigger than its `se`).
+// Where you are against the plan, from two rolling 7-day windows that BOTH move forward one day every day:
+// "now" = the 7 days ending today, "prev" = the 7 days before that. "You" = the average weight in "now" (one weigh-in
+// is too noisy). gap = you - plan (positive = heavier than planned = behind); within +-tolerance kg = on track.
+// pace = (average of now) - (average of prev), kg per week: how much your average moved since the week before.
+// eta = the date you would reach the target if that weekly change kept repeating.
 function goalStatus(days, goal, todayISO = today, tolerance = 0.3) {
-  const nowFrom = add(todayISO, -6), nowTo = todayISO;
+  const nowFrom = add(todayISO, -6), nowTo = todayISO, prevFrom = add(todayISO, -13), prevTo = add(todayISO, -7);
   const now = avgOver(days, "weight_kg", nowFrom, nowTo);
+  const prev = avgOver(days, "weight_kg", prevFrom, prevTo);
   const planToday = goalPlan(goal, todayISO);
   const gap = now == null ? null : now - planToday;
-  const trend = weightTrend(days, nowFrom, nowTo), pace = trend.perWeek, paceSe = trend.se;
-  const unclear = pace != null && Math.abs(pace) < paceSe;           // swings are bigger than the trend: no clear direction
+  const pace = now != null && prev != null ? now - prev : null;
   const toGo = now == null ? null : now - goal.target_kg;
   const daysLeft = Math.max(0, daysBetween(todayISO, goal.target_date));
   let etaDate = null, etaVsTarget = null;
-  if (toGo != null && pace != null && pace < 0 && !unclear) {
+  if (toGo != null && pace != null && pace < 0) {
     etaDate = toGo <= 0 ? todayISO : add(todayISO, Math.round(toGo / -pace * 7));
     etaVsTarget = daysBetween(goal.target_date, etaDate);          // negative = early, positive = late
   }
   return {
-    now, nowFrom, nowTo, weighIns: trend.n, planToday, gap, toGo, daysLeft, pace, paceSe, unclear, etaDate, etaVsTarget,
+    now, prev, nowFrom, nowTo, prevFrom, prevTo, planToday, gap, toGo, daysLeft, pace, etaDate, etaVsTarget,
     state: gap == null ? null : gap > tolerance ? "behind" : gap < -tolerance ? "ahead" : "on",
     planPace: (goal.target_kg - goal.start_kg) / (Math.max(1, daysBetween(goal.start_date, goal.target_date)) / 7),
   };

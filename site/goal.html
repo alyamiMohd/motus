@@ -45,6 +45,7 @@
 <script>
 let days = {}, goal = null;
 const fmtKg = v => v.toFixed(1);
+const fmtKg2 = v => v.toFixed(2);
 const signed = (v, d = 1) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(d);
 
 function chartSVG(g, st) {
@@ -59,9 +60,11 @@ function chartSVG(g, st) {
   const Y = w => T + (hi - w) / (hi - lo) * (H - T - B);
   const color = st.toGo != null && st.toGo <= 0 ? "var(--gold)" : st.state === "behind" ? "var(--warn)" : "var(--green)";
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weight against the plan to ${g.target_kg} kg">`;
-  // the days the numbers come from: the 7-day window ending today; it moves forward one day, at both ends, every day
-  const cur = Math.max(L, X(st.nowFrom) - 3), curEnd = Math.min(W - R, X(st.nowTo) + 3);
-  if (curEnd > cur) s += `<rect x="${cur.toFixed(1)}" y="${T - 6}" width="${(curEnd - cur).toFixed(1)}" height="${H - B - T + 6}" rx="3" fill="var(--gray)" fill-opacity=".6"/>`;
+  // the days the numbers come from: this 7-day window (darker) and the one before it (lighter); both move forward daily
+  const bx = (a, b) => { const xa = Math.max(L, X(a) - 3), xb = Math.min(W - R, X(b) + 3); return xb > xa ? [xa, xb - xa] : null; };
+  const cur = bx(st.nowFrom, st.nowTo), prv = bx(st.prevFrom, st.prevTo);
+  if (prv) s += `<rect x="${prv[0].toFixed(1)}" y="${T - 6}" width="${prv[1].toFixed(1)}" height="${H - B - T + 6}" rx="3" fill="var(--gray)" fill-opacity=".22"/>`;
+  if (cur) s += `<rect x="${cur[0].toFixed(1)}" y="${T - 6}" width="${cur[1].toFixed(1)}" height="${H - B - T + 6}" rx="3" fill="var(--gray)" fill-opacity=".6"/>`;
   // the golden end: a soft glow around the target flag only, fading to nothing; the target line warms toward it
   const ty = Y(g.target_kg), fx = X(g.target_date);
   s += `<defs><radialGradient id="goldglow"><stop offset="0" stop-color="var(--gold)" stop-opacity=".6"/><stop offset=".4" stop-color="var(--gold)" stop-opacity=".22"/><stop offset="1" stop-color="var(--gold)" stop-opacity="0"/></radialGradient>` +
@@ -120,26 +123,24 @@ function render() {
     '<span><i class="ring"></i>Plan today</span><span><i style="background:' + (st.toGo != null && st.toGo <= 0 ? "var(--gold)" : st.state === "behind" ? "var(--warn)" : "var(--green)") + '"></i>You (7-day average)</span>' +
     '<span><i class="dash"></i>Plan</span><span><i class="gold"></i>Goal</span><span><i class="band"></i>Days used</span>';
   document.getElementById("win").innerHTML = st.now == null ? "" :
-    `Based on your weigh-ins from <b>${dayRange(st.nowFrom, st.nowTo)}</b>` +
-    "<small>The window moves forward one day, at both ends, every day.</small>";
+    `Your 7-day average, <b>${dayRange(st.nowFrom, st.nowTo)}</b>` +
+    (st.prev == null ? "" : `, against the week before, <b>${dayRange(st.prevFrom, st.prevTo)}</b>`) +
+    "<small>Both weeks move forward one day, at both ends, every day.</small>";
   const rows = [];
   const li = (a, b, c) => `<li><span>${a}${c ? `<small>${c}</small>` : ""}</span><span>${b}</span></li>`;
   if (st.toGo != null) rows.push(li("To go", st.toGo <= 0 ? "reached" : fmtKg(st.toGo) + " kg", "from your " + dayRange(st.nowFrom, st.nowTo) + " average \u00b7 " + st.daysLeft + " days until " + dayMonth(g.target_date)));
   rows.push(li("Plan pace", signed(st.planPace, 2) + " kg / week", "a straight line from " + fmtKg(g.start_kg) + " kg on " + dayMonth(g.start_date)));
-  rows.push(li("Your pace", st.pace == null ? '<span class="no">not enough weigh-ins</span>' : st.unclear ? '<span class="no">no clear trend</span>' : signed(st.pace, 2) + " kg / week",
-    st.pace == null ? "needs at least 3 weigh-ins in " + dayRange(st.nowFrom, st.nowTo)
-      : st.unclear ? "the line through " + dayRange(st.nowFrom, st.nowTo) + " says " + signed(st.pace, 2) + " kg / week, but your day-to-day swings (about ±" + st.paceSe.toFixed(1) + ") are bigger than that, so it can't tell up from down"
-      : "how fast your weight moved across " + dayRange(st.nowFrom, st.nowTo) + " (" + st.weighIns + " weigh-ins, ±" + st.paceSe.toFixed(1) + ")"));
+  rows.push(li("Your pace", st.pace == null ? '<span class="no">need the week before</span>' : signed(st.pace, 2) + " kg / week",
+    st.pace == null ? "no weigh-ins in " + dayRange(st.prevFrom, st.prevTo) + " to compare with"
+      : dayRange(st.nowFrom, st.nowTo) + " average " + fmtKg2(st.now) + " kg, " + dayRange(st.prevFrom, st.prevTo) + " average " + fmtKg2(st.prev) + " kg"));
   if (st.etaDate) {
     const early = st.etaVsTarget < 0 ? `${-st.etaVsTarget} days early` : st.etaVsTarget > 0 ? `${st.etaVsTarget} days late` : "right on time";
-    rows.push(li("At your pace", dayMonth(st.etaDate), "keep the " + dayRange(st.nowFrom, st.nowTo) + " pace and you reach " + g.target_kg + " kg, " + early));
-  } else if (st.unclear) {
-    rows.push(li("At your pace", '<span class="no">no clear trend</span>', "a date appears once the " + dayRange(st.nowFrom, st.nowTo) + " trend clearly points down"));
+    rows.push(li("At your pace", dayMonth(st.etaDate), "if your average keeps falling by this much every week you reach " + g.target_kg + " kg, " + early));
   } else if (st.pace != null && st.pace >= 0) {
-    rows.push(li("At your pace", '<span class="no">not losing</span>', "your weight did not go down across " + dayRange(st.nowFrom, st.nowTo)));
+    rows.push(li("At your pace", '<span class="no">not losing</span>', "your average did not go down compared with " + dayRange(st.prevFrom, st.prevTo)));
   }
   document.getElementById("stats").innerHTML = rows.join("");
-  document.getElementById("note").textContent = "Demo. 'You' is your 7-day average weight (the shaded days), not a single weigh-in. Within 0.3 kg of the plan counts as on track.";
+  document.getElementById("note").textContent = "Demo. 'You' is your 7-day average weight (the shaded days), not a single weigh-in; 'Your pace' is how far that average moved since the week before. Within 0.3 kg of the plan counts as on track.";
 }
 
 initNav("goal", render);

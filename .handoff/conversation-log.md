@@ -144,3 +144,9 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **Claude did:** found the cause in the data (22-28 Oct: 63.9, 63.5, 63.1, 64.0, 64.1, 63.6, 64.0): the dip to 63.1 sits early in the window and the readings after it are higher, so the fitted line tilts up (+0.375 kg/week), but its standard error is +-0.46. `weightTrend` now returns `se`; when |pace| < se the page shows "no clear trend" with the explanation and no ETA; clear trends show the number with its +-. 4 new tests (79 Node checks).
 **Outcome:** verified in the browser on the real data.
 
+## 2026-10-28 (UTC+03) | Session 1, continued | Goal pace back to the average difference
+**User asked:** "did my average weight last 7 days, gain more 0.38 over average week before it? or what" then "Yes use this, the average weight difference only to pace your goal trajectory, Where it keeps updating every day to check the week before, and current week differences".
+**Claude did:** answered with the numbers (22-28 Oct average 63.74 vs 15-21 Oct 64.63 = -0.89 kg, so no gain; the +0.38 was a fitted line through 7 daily readings). Then made that the pace: `goalStatus` is again now minus prev, but the row prints both averages, the header names both weeks, the chart shades both, both move one day at both ends daily; ETA 27 Nov. Removed `weightTrend`/`se`/"no clear trend". Tests rewritten (76 Node checks), including one on the owner's real readings.
+**Outcome:** verified in the browser on real data.
+**User feedback / corrections:** the earlier objection was to the unlabelled comparison, not to the average difference; D-031/D-033 are superseded by D-034.
+

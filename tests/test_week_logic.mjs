@@ -108,10 +108,10 @@ check("plan is a straight line (day 25 of 50 = halfway = 62)", Math.abs(goalPlan
 check("plan after day 1 is 64 - 4/50", near(goalPlan(goal, "2026-10-27"), 64 - 4 / 50));
 check("plan is flat before the start and after the target", goalPlan(goal, "2026-10-01") === 64 && goalPlan(goal, "2027-01-30") === 60);
 
-let gs = goalStatus(kgLine("2026-10-20", "2026-10-26", 64, -1), goal, "2026-10-26");
+let gs = goalStatus({ ...kgDays("2026-10-13", "2026-10-19", 65), ...kgDays("2026-10-20", "2026-10-26", 64) }, goal, "2026-10-26");
 check("on track: you equal the plan, gap 0", gs.state === "on" && near(gs.gap, 0) && gs.now === 64 && gs.planToday === 64, gs);
 check("to go = 4 kg, 50 days left, plan pace -0.56 kg/week", near(gs.toGo, 4) && gs.daysLeft === 50 && near(gs.planPace, -4 / (50 / 7)), gs);
-check("pace = the trend inside the window alone (a line falling 1 kg/week -> -1)", near(gs.pace, -1) && gs.weighIns === 7, gs.pace);
+check("pace = this 7-day average minus the week before (64 - 65 = -1 kg/week)", near(gs.pace, -1) && gs.prev === 65, gs.pace);
 check("at that pace: 4 kg / 1 per week = 28 days -> 23 Nov, 22 days early", gs.etaDate === "2026-11-23" && gs.etaVsTarget === -22, gs);
 
 const behind = goalStatus(kgDays("2026-10-21", "2026-10-27", 64.5), goal, "2026-10-27");
@@ -123,20 +123,16 @@ check("0.3 kg over the plan still counts as on track; just beyond it is behind",
 
 const none = goalStatus({}, goal, "2026-10-26");
 check("no weights at all -> null everything, no state", none.now === null && none.gap === null && none.state === null && none.pace === null && none.etaDate === null);
-const flat = goalStatus(kgDays("2026-10-20", "2026-10-26", 64), goal, "2026-10-26");
-check("a flat week: status works, pace is 0 and there is no ETA", flat.state === "on" && near(flat.pace, 0) && flat.etaDate === null, flat);
-const two = goalStatus({ "2026-10-25": { weight_kg: 64 }, "2026-10-26": { weight_kg: 63 } }, goal, "2026-10-26");
-check("fewer than 3 weigh-ins in the window: status works (63.5 vs plan 64 = ahead), pace and ETA are null", two.state === "ahead" && two.pace === null && two.etaDate === null && two.weighIns === 2, two);
-check("pace ignores anything before the window (a wild week earlier changes nothing)",
-  near(goalStatus({ ...kgDays("2026-10-01", "2026-10-19", 80), ...kgLine("2026-10-20", "2026-10-26", 64, -1) }, goal, "2026-10-26").pace, -1));
-check("pace uses the real days: weigh-ins on 20, 23 and 26 Oct falling 1 kg per 3 days -> -2.33 kg/week",
-  near(goalStatus({ "2026-10-20": { weight_kg: 65 }, "2026-10-23": { weight_kg: 64 }, "2026-10-26": { weight_kg: 63 } }, goal, "2026-10-26").pace, -7 / 3));
-const gaining = goalStatus(kgLine("2026-10-20", "2026-10-26", 65, 1), goal, "2026-10-26");
+const oneWeek = goalStatus(kgDays("2026-10-20", "2026-10-26", 64), goal, "2026-10-26");
+check("only one week of data: status works, pace and ETA are null", oneWeek.state === "on" && oneWeek.pace === null && oneWeek.etaDate === null, oneWeek);
+const gaining = goalStatus({ ...kgDays("2026-10-13", "2026-10-19", 64), ...kgDays("2026-10-20", "2026-10-26", 65) }, goal, "2026-10-26");
 check("gaining: pace is positive and there is no ETA", gaining.pace > 0 && gaining.etaDate === null, gaining);
-const done = goalStatus(kgLine("2026-10-20", "2026-10-26", 59.5, -0.5), goal, "2026-10-26");
+const done = goalStatus({ ...kgDays("2026-10-13", "2026-10-19", 59.7), ...kgDays("2026-10-20", "2026-10-26", 59.5) }, goal, "2026-10-26");
 check("goal reached: to go is negative and the ETA is today", done.toGo < 0 && done.etaDate === "2026-10-26" && done.etaVsTarget < 0, done);
 check("days left never goes negative after the target date", goalStatus(kgDays("2026-12-10", "2026-12-20", 60), goal, "2026-12-20").daysLeft === 0);
 check("before the plan starts, the plan is the start weight", goalStatus(kgDays("2026-10-14", "2026-10-20", 64), goal, "2026-10-20").planToday === 64);
+check("a missing day is skipped: both averages use the days that exist",
+  near(goalStatus({ "2026-10-13": { weight_kg: 65 }, "2026-10-14": { weight_kg: 67 }, "2026-10-20": { weight_kg: 64 }, "2026-10-26": { weight_kg: 62 } }, goal, "2026-10-26").pace, 63 - 66));
 
 // ---- the owner's MyFitnessPal streak used as a baseline ---------------------------------------------------------------
 console.log("loggingStreak with the MyFitnessPal baseline");
@@ -163,31 +159,28 @@ check("without a baseline nothing changes (55-ish day own run, capped)", bs.from
 check("best is never below the app's number", loggingStreak(logDays("2026-09-01", "2026-10-26"), "2026-10-27", base568).best >= 568);
 
 // ---- the Goal page's windows: rolling 7 days that move one day at both ends every day --------------------------------
-console.log("goal window (rolling, shift +1 daily)");
+console.log("goal windows (rolling, shift +1 daily)");
 const w27 = goalStatus(kgDays("2026-10-14", "2026-10-27", 64), goal, "2026-10-27");
-check("today 27 Oct: the window is 21-27 Oct", w27.nowFrom === "2026-10-21" && w27.nowTo === "2026-10-27", w27);
+check("today 27 Oct: now = 21-27 Oct, the week before = 14-20 Oct", w27.nowFrom === "2026-10-21" && w27.nowTo === "2026-10-27" && w27.prevFrom === "2026-10-14" && w27.prevTo === "2026-10-20", w27);
 const w28 = goalStatus(kgDays("2026-10-14", "2026-10-28", 64), goal, "2026-10-28");
-check("a day later: BOTH ends of the window move forward one day (22-28 Oct)", w28.nowFrom === "2026-10-22" && w28.nowTo === "2026-10-28", w28);
-check("the window is exactly 7 days", daysBetween(w27.nowFrom, w27.nowTo) === 6);
-check("there is no previous-week comparison left in the result", !("prev" in w27) && !("prevFrom" in w27) && !("prevTo" in w27), Object.keys(w27));
-check("dayRange within a month: 21-27 Oct", dayRange("2026-10-21", "2026-10-27") === "21\u201327 Oct", dayRange("2026-10-21", "2026-10-27"));
-check("dayRange across months: 28 Oct-3 Nov", dayRange("2026-10-28", "2026-11-03") === "28 Oct\u20133 Nov", dayRange("2026-10-28", "2026-11-03"));
+check("a day later: BOTH ends of BOTH windows move forward one day", w28.nowFrom === "2026-10-22" && w28.nowTo === "2026-10-28" && w28.prevFrom === "2026-10-15" && w28.prevTo === "2026-10-21", w28);
+check("each window is exactly 7 days, back to back", daysBetween(w27.nowFrom, w27.nowTo) === 6 && daysBetween(w27.prevFrom, w27.prevTo) === 6 && add(w27.prevTo, 1) === w27.nowFrom);
+check("dayRange within a month: 21-27 Oct", dayRange("2026-10-21", "2026-10-27") === "21" + String.fromCharCode(8211) + "27 Oct", dayRange("2026-10-21", "2026-10-27"));
+check("dayRange across months: 28 Oct-3 Nov", dayRange("2026-10-28", "2026-11-03") === "28 Oct" + String.fromCharCode(8211) + "3 Nov", dayRange("2026-10-28", "2026-11-03"));
 
+const shiftData = { ...kgDays("2026-10-14", "2026-10-20", 65), ...kgDays("2026-10-21", "2026-10-28", 64) };
+const p27 = goalStatus(shiftData, goal, "2026-10-27"), p28 = goalStatus(shiftData, goal, "2026-10-28");
+check("pace on the 27th = 21-27 average minus 14-20 average: 64 - 65 = -1", near(p27.pace, -1), p27.pace);
+check("pace on the 28th = 22-28 minus 15-21 (one 64 slid into the old week): 64 - 64.857 = -0.857", near(p28.pace, 64 - (6 * 65 + 64) / 7), p28.pace);
 const spike = { ...kgDays("2026-10-14", "2026-10-28", 64), "2026-10-21": { weight_kg: 70 } };
-check("a spike on the 21st is inside the window on the 27th: average 64.857, pace -4.5 kg/week",
-  near(goalStatus(spike, goal, "2026-10-27").now, (70 + 6 * 64) / 7) && near(goalStatus(spike, goal, "2026-10-27").pace, -4.5), goalStatus(spike, goal, "2026-10-27"));
-check("...and drops out on the 28th: average back to 64, pace 0", near(goalStatus(spike, goal, "2026-10-28").now, 64) && near(goalStatus(spike, goal, "2026-10-28").pace, 0));
+check("a spike on the 21st is inside the window on the 27th (avg 64.857)...", near(goalStatus(spike, goal, "2026-10-27").now, (70 + 6 * 64) / 7));
+check("...and drops out on the 28th (avg back to 64)", near(goalStatus(spike, goal, "2026-10-28").now, 64));
 
-console.log("goal pace: noise vs trend");
-const real = { "2026-10-22": 63.9, "2026-10-23": 63.5, "2026-10-24": 63.1, "2026-10-25": 64.0, "2026-10-26": 64.1, "2026-10-27": 63.6, "2026-10-28": 64.0 };
-const realDays = Object.fromEntries(Object.entries(real).map(([d, w]) => [d, { weight_kg: w }]));
-const rs = goalStatus(realDays, goal, "2026-10-28");
-check("28 Oct weigh-ins (dip to 63.1 on the 24th, back to ~64): the fitted line says +0.38 kg/week", Math.abs(rs.pace - 0.375) < 0.01, rs.pace);
-check("...but its noise (+-0.46) is bigger than that, so it is marked unclear and gives no ETA", rs.unclear === true && rs.paceSe > Math.abs(rs.pace) && rs.etaDate === null, rs);
-check("a perfectly straight week has no noise: clear trend, ETA given", goalStatus(kgLine("2026-10-22", "2026-10-28", 64, -1), goal, "2026-10-28").unclear === false && goalStatus(kgLine("2026-10-22", "2026-10-28", 64, -1), goal, "2026-10-28").etaDate !== null);
-const noisyDown = {}; [65.5, 64.6, 64.9, 63.9, 64.2, 63.2, 63.1].forEach((w, i) => { noisyDown[add("2026-10-22", i)] = { weight_kg: w }; });
-const nd = goalStatus(noisyDown, goal, "2026-10-28");
-check("a real drop with ordinary swings (65.5 -> 63.1) is clearly downward and keeps its ETA", nd.pace < -2 && nd.unclear === false && nd.etaDate !== null, nd);
+console.log("goal pace on the owner's real weigh-ins");
+const realW = { "2026-10-15": 64.4, "2026-10-16": 64.7, "2026-10-17": 64.5, "2026-10-18": 65.2, "2026-10-19": 64.5, "2026-10-20": 64.4, "2026-10-21": 64.7, "2026-10-22": 63.9, "2026-10-23": 63.5, "2026-10-24": 63.1, "2026-10-25": 64.0, "2026-10-26": 64.1, "2026-10-27": 63.6, "2026-10-28": 64.0 };
+const rs = goalStatus(Object.fromEntries(Object.entries(realW).map(([d, w]) => [d, { weight_kg: w }])), goal, "2026-10-28");
+check("28 Oct: 22-28 Oct average 63.74 vs 15-21 Oct average 64.63 -> pace -0.89 kg/week (not +0.38)", Math.abs(rs.now - 63.743) < 0.001 && Math.abs(rs.prev - 64.629) < 0.001 && Math.abs(rs.pace + 0.886) < 0.001, rs);
+check("...and the ETA follows from it: 3.74 kg at 0.89 kg/week = 30 days -> 27 Nov", rs.etaDate === "2026-11-27", rs.etaDate);
 
 console.log(`\n${passed} passed, ${failed.length} failed`);
 if (failed.length) { console.log("FAILED:", failed); process.exit(1); }

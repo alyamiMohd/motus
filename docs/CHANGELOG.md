@@ -3,6 +3,7 @@
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
 ## 2026-10-28
+- **Goal pace = average difference, clearly labelled**: "Your pace" is again this 7-day average minus the previous 7-day average (22-28 Oct 63.74 vs 15-21 Oct 64.63 = -0.89 kg/week), with both averages printed on the row, both weeks named in the header and shaded on the chart, and the ETA derived from it (27 Nov); the fitted-line pace (`weightTrend`, "no clear trend") is removed because it said +0.38 on a flat week; 76 Node checks (this commit).
 - **Goal pace honest about noise**: "Your pace" showed +0.38 kg/week from 22-28 Oct although the 7-day average was flat; the fitted line was tilted by an early dip (63.1 on the 24th) and later 64.0 readings, and its own noise (+-0.46) was bigger. The row now shows "no clear trend" (with the explanation) and no ETA whenever |pace| < its standard error; clear trends show the number with its +-. `weightTrend` returns `se`; 4 new tests (79 Node checks) (this commit).
 
 ## 2026-10-27
