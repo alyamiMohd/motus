@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-28T15:31:16+03:00",
+ "updated": "2026-10-28T23:16:30+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4546,10 +4546,12 @@
    "sleep_hours": null,
    "calories": null,
    "active_kcal": null,
-   "workout_count": null,
-   "workout_minutes": null,
-   "workout_volume_kg": null,
-   "workout_titles": null
+   "workout_count": 1,
+   "workout_minutes": 88,
+   "workout_volume_kg": 2093,
+   "workout_titles": [
+    "Pull"
+   ]
   }
  }
 }
