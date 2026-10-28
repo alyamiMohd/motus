@@ -2,6 +2,9 @@
 
 Newest first. Dates are 2026. Hashes are short commit IDs on `main` (daily bot commits named "Update data" are omitted).
 
+## 2026-10-28
+- **Goal pace honest about noise**: "Your pace" showed +0.38 kg/week from 22-28 Oct although the 7-day average was flat; the fitted line was tilted by an early dip (63.1 on the 24th) and later 64.0 readings, and its own noise (+-0.46) was bigger. The row now shows "no clear trend" (with the explanation) and no ETA whenever |pace| < its standard error; clear trends show the number with its +-. `weightTrend` returns `se`; 4 new tests (79 Node checks) (this commit).
+
 ## 2026-10-27
 - **Goal chart tidied**: the gold is now a soft glow close around the target flag only (the full-height block to the right edge is gone); every number sits next to what it labels ("Plan 63.9" and "You 63.8" beside their dots, heavier on top, in the dots' colours; "60 kg goal" under the flag; the stray left "60 kg" is gone) (this commit).
 - **Goal page: the end of the graph is golden**, to make reaching it motivating: gold glow toward the target date, gold target line, flag and "Goal" label, a gold key entry; your dot and the headline turn gold ("Goal reached") once the 7-day average is at or below the target (this commit).

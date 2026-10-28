@@ -126,11 +126,15 @@ function render() {
   const li = (a, b, c) => `<li><span>${a}${c ? `<small>${c}</small>` : ""}</span><span>${b}</span></li>`;
   if (st.toGo != null) rows.push(li("To go", st.toGo <= 0 ? "reached" : fmtKg(st.toGo) + " kg", "from your " + dayRange(st.nowFrom, st.nowTo) + " average \u00b7 " + st.daysLeft + " days until " + dayMonth(g.target_date)));
   rows.push(li("Plan pace", signed(st.planPace, 2) + " kg / week", "a straight line from " + fmtKg(g.start_kg) + " kg on " + dayMonth(g.start_date)));
-  rows.push(li("Your pace", st.pace == null ? '<span class="no">not enough weigh-ins</span>' : signed(st.pace, 2) + " kg / week",
-    st.pace == null ? "needs at least 3 weigh-ins in " + dayRange(st.nowFrom, st.nowTo) : "how fast your weight moved across " + dayRange(st.nowFrom, st.nowTo) + " (" + st.weighIns + " weigh-ins)"));
+  rows.push(li("Your pace", st.pace == null ? '<span class="no">not enough weigh-ins</span>' : st.unclear ? '<span class="no">no clear trend</span>' : signed(st.pace, 2) + " kg / week",
+    st.pace == null ? "needs at least 3 weigh-ins in " + dayRange(st.nowFrom, st.nowTo)
+      : st.unclear ? "the line through " + dayRange(st.nowFrom, st.nowTo) + " says " + signed(st.pace, 2) + " kg / week, but your day-to-day swings (about ±" + st.paceSe.toFixed(1) + ") are bigger than that, so it can't tell up from down"
+      : "how fast your weight moved across " + dayRange(st.nowFrom, st.nowTo) + " (" + st.weighIns + " weigh-ins, ±" + st.paceSe.toFixed(1) + ")"));
   if (st.etaDate) {
     const early = st.etaVsTarget < 0 ? `${-st.etaVsTarget} days early` : st.etaVsTarget > 0 ? `${st.etaVsTarget} days late` : "right on time";
     rows.push(li("At your pace", dayMonth(st.etaDate), "keep the " + dayRange(st.nowFrom, st.nowTo) + " pace and you reach " + g.target_kg + " kg, " + early));
+  } else if (st.unclear) {
+    rows.push(li("At your pace", '<span class="no">no clear trend</span>', "a date appears once the " + dayRange(st.nowFrom, st.nowTo) + " trend clearly points down"));
   } else if (st.pace != null && st.pace >= 0) {
     rows.push(li("At your pace", '<span class="no">not losing</span>', "your weight did not go down across " + dayRange(st.nowFrom, st.nowTo)));
   }

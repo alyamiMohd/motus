@@ -178,5 +178,16 @@ check("a spike on the 21st is inside the window on the 27th: average 64.857, pac
   near(goalStatus(spike, goal, "2026-10-27").now, (70 + 6 * 64) / 7) && near(goalStatus(spike, goal, "2026-10-27").pace, -4.5), goalStatus(spike, goal, "2026-10-27"));
 check("...and drops out on the 28th: average back to 64, pace 0", near(goalStatus(spike, goal, "2026-10-28").now, 64) && near(goalStatus(spike, goal, "2026-10-28").pace, 0));
 
+console.log("goal pace: noise vs trend");
+const real = { "2026-10-22": 63.9, "2026-10-23": 63.5, "2026-10-24": 63.1, "2026-10-25": 64.0, "2026-10-26": 64.1, "2026-10-27": 63.6, "2026-10-28": 64.0 };
+const realDays = Object.fromEntries(Object.entries(real).map(([d, w]) => [d, { weight_kg: w }]));
+const rs = goalStatus(realDays, goal, "2026-10-28");
+check("28 Oct weigh-ins (dip to 63.1 on the 24th, back to ~64): the fitted line says +0.38 kg/week", Math.abs(rs.pace - 0.375) < 0.01, rs.pace);
+check("...but its noise (+-0.46) is bigger than that, so it is marked unclear and gives no ETA", rs.unclear === true && rs.paceSe > Math.abs(rs.pace) && rs.etaDate === null, rs);
+check("a perfectly straight week has no noise: clear trend, ETA given", goalStatus(kgLine("2026-10-22", "2026-10-28", 64, -1), goal, "2026-10-28").unclear === false && goalStatus(kgLine("2026-10-22", "2026-10-28", 64, -1), goal, "2026-10-28").etaDate !== null);
+const noisyDown = {}; [65.5, 64.6, 64.9, 63.9, 64.2, 63.2, 63.1].forEach((w, i) => { noisyDown[add("2026-10-22", i)] = { weight_kg: w }; });
+const nd = goalStatus(noisyDown, goal, "2026-10-28");
+check("a real drop with ordinary swings (65.5 -> 63.1) is clearly downward and keeps its ETA", nd.pace < -2 && nd.unclear === false && nd.etaDate !== null, nd);
+
 console.log(`\n${passed} passed, ${failed.length} failed`);
 if (failed.length) { console.log("FAILED:", failed); process.exit(1); }

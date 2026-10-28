@@ -139,3 +139,8 @@ Date moved to 2026-10-24 during the save. Re-checked live state: 9 scheduled run
 **User asked:** `/handoff` (save).
 **Claude did:** refreshed `RESUME.md` (last updated, code state `09e4dbb`, Goal page description, last thing in progress) and `next-steps.md`; the log already holds every change of this stretch (R-042, R-043, D-031, D-032).
 
+## 2026-10-28 (UTC+03) | Session 1, continued | Goal pace: why +0.38
+**User asked:** "For the goal, its currently showing in 'Your pace' as +0.38kg or something, as i'm not losing weight and progressing etc, fix this, or tell me why its saying this, even tho I'm not gaining weight or something".
+**Claude did:** found the cause in the data (22-28 Oct: 63.9, 63.5, 63.1, 64.0, 64.1, 63.6, 64.0): the dip to 63.1 sits early in the window and the readings after it are higher, so the fitted line tilts up (+0.375 kg/week), but its standard error is +-0.46. `weightTrend` now returns `se`; when |pace| < se the page shows "no clear trend" with the explanation and no ETA; clear trends show the number with its +-. 4 new tests (79 Node checks).
+**Outcome:** verified in the browser on the real data.
+
