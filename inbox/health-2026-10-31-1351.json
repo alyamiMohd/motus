@@ -1,0 +1,125 @@
+{
+  "activeCalories" : [
+
+  ],
+  "basalCalories" : [
+
+  ],
+  "bmi" : [
+
+  ],
+  "bodyFat" : [
+
+  ],
+  "dietaryCarbohydrates" : [
+
+  ],
+  "dietaryEnergy" : [
+    {
+      "date" : "2026-10-30",
+      "unit" : "kcal",
+      "value" : 1321.7200317382812
+    }
+  ],
+  "dietaryFatTotal" : [
+
+  ],
+  "dietaryProtein" : [
+
+  ],
+  "exerciseMinutes" : [
+
+  ],
+  "exportInfo" : {
+    "appVersion" : "1.7.0",
+    "buildNumber" : "5",
+    "dataTypes" : [
+      "stepCount",
+      "walkingDistance",
+      "activeCalories",
+      "basalCalories",
+      "exerciseMinutes",
+      "flightsClimbed",
+      "restingHeartRate",
+      "walkingHeartRate",
+      "heartRateVariability",
+      "oxygenSaturation",
+      "respiratoryRate",
+      "weight",
+      "bmi",
+      "bodyFat",
+      "leanBodyMass",
+      "dietaryEnergy",
+      "dietaryProtein",
+      "dietaryCarbohydrates",
+      "dietaryFatTotal",
+      "sleepTime",
+      "vo2Max",
+      "wristTemperature"
+    ],
+    "endDate" : "2026-10-31",
+    "exportDate" : "2026-10-31T10:51:38Z",
+    "measurementSystem" : "metric",
+    "startDate" : "2026-10-30"
+  },
+  "flightsClimbed" : [
+    {
+      "date" : "2026-10-30",
+      "unit" : "count",
+      "value" : 2
+    }
+  ],
+  "heartRateVariability" : [
+
+  ],
+  "leanBodyMass" : [
+
+  ],
+  "oxygenSaturation" : [
+
+  ],
+  "respiratoryRate" : [
+
+  ],
+  "restingHeartRate" : [
+
+  ],
+  "sleepTime" : [
+
+  ],
+  "stepCount" : [
+    {
+      "date" : "2026-10-30",
+      "unit" : "count",
+      "value" : 5858
+    }
+  ],
+  "vo2Max" : [
+
+  ],
+  "walkingDistance" : [
+    {
+      "date" : "2026-10-30",
+      "unit" : "m",
+      "value" : 3873.8056183294393
+    }
+  ],
+  "walkingHeartRate" : [
+
+  ],
+  "weight" : [
+    {
+      "date" : "2026-10-30",
+      "unit" : "kg",
+      "value" : 62.799862242245943
+    },
+    {
+      "date" : "2026-10-31",
+      "unit" : "kg",
+      "value" : 62.900109921186981
+    }
+  ],
+  "wristTemperature" : [
+
+  ]
+}
