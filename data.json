@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-07T22:26:16+03:00",
+ "updated": "2026-11-08T12:39:48+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4663,17 +4663,28 @@
    ]
   },
   "2026-11-07": {
-   "steps": 8,
-   "sleep_hours": null,
-   "calories": null,
+   "steps": 6366,
+   "sleep_hours": 9.23,
+   "calories": 1271,
    "weight_kg": 62.5,
-   "active_kcal": null,
+   "active_kcal": 213,
    "workout_count": 1,
    "workout_minutes": 20,
    "workout_volume_kg": 1245,
    "workout_titles": [
     "⛔️Pull"
    ]
+  },
+  "2026-11-08": {
+   "steps": 6586,
+   "sleep_hours": 6.18,
+   "calories": 1026,
+   "weight_kg": 63.3,
+   "active_kcal": 22,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
   }
  }
 }
