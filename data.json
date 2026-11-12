@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-11T00:18:15+03:00",
+ "updated": "2026-11-12T06:00:12+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4709,6 +4709,28 @@
    "workout_titles": [
     "Upper (Jeff Nipples) ❌"
    ]
+  },
+  "2026-11-11": {
+   "steps": 4436,
+   "calories": 1507,
+   "weight_kg": 64.4,
+   "sleep_hours": null,
+   "active_kcal": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
+  },
+  "2026-11-12": {
+   "steps": 676,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
   }
  }
 }
