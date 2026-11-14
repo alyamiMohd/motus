@@ -1376,6 +1376,23 @@
     "calories": 7,
     "weight_kg": 7
    }
+  },
+  {
+   "start": "2026-11-08",
+   "end": "2026-11-14",
+   "sleep_hours": 6.18,
+   "steps": 6879,
+   "calories": 2805,
+   "weight_kg": 63.98,
+   "workouts": 2,
+   "workout_minutes": 152,
+   "workout_volume_kg": 9563,
+   "days_with_data": {
+    "sleep_hours": 1,
+    "steps": 7,
+    "calories": 6,
+    "weight_kg": 4
+   }
   }
  ]
 }
