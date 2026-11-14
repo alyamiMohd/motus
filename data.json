@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-13T22:35:46+03:00",
+ "updated": "2026-11-14T21:49:31+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4733,7 +4733,7 @@
    "workout_titles": null
   },
   "2026-11-13": {
-   "steps": 11415,
+   "steps": 12383,
    "active_kcal": 42,
    "workout_count": 1,
    "workout_minutes": 50,
@@ -4742,8 +4742,19 @@
     "Upper - 5k binge"
    ],
    "sleep_hours": null,
-   "calories": 3140,
+   "calories": 3320,
    "weight_kg": null
+  },
+  "2026-11-14": {
+   "steps": 1419,
+   "calories": 1940,
+   "sleep_hours": null,
+   "weight_kg": null,
+   "active_kcal": null,
+   "workout_count": null,
+   "workout_minutes": null,
+   "workout_volume_kg": null,
+   "workout_titles": null
   }
  }
 }
