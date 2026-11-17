@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16T22:37:04+03:00",
+ "updated": "2026-11-17T20:14:30+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4769,16 +4769,29 @@
   },
   "2026-11-16": {
    "weight_kg": 64.2,
-   "steps": null,
-   "sleep_hours": null,
-   "calories": null,
-   "active_kcal": null,
+   "steps": 6163,
+   "sleep_hours": 10.53,
+   "calories": 1279,
+   "active_kcal": 149,
    "workout_count": 1,
    "workout_minutes": 68,
    "workout_volume_kg": 3642,
    "workout_titles": [
     "Push - ⭐️☄️FIXED WORKOUTS START"
    ]
+  },
+  "2026-11-17": {
+   "steps": 8624,
+   "calories": 1384,
+   "weight_kg": 63.9,
+   "workout_count": 1,
+   "workout_minutes": 68,
+   "workout_volume_kg": 3780,
+   "workout_titles": [
+    "Pull - ❌"
+   ],
+   "sleep_hours": null,
+   "active_kcal": null
   }
  }
 }
