@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-18T23:31:32+03:00",
+ "updated": "2026-11-18T23:41:22+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4794,8 +4794,8 @@
    "active_kcal": null
   },
   "2026-11-18": {
-   "steps": 1771,
-   "calories": 989,
+   "steps": 4125,
+   "calories": 1268,
    "weight_kg": 63.5,
    "sleep_hours": null,
    "active_kcal": null,
