@@ -1,8 +1,9 @@
 # Folder layout (read first)
 All code, config and data live in **`01 Files/`** (the app is one unit there). **Run every command from there**: `cd "01 Files" && <command>`, or `npm --prefix "01 Files" <script>`. Paths in this file and in README.md are relative to `01 Files/` unless they name a folder below.
-- `00 Notes/`: `.handoff/`
+- **`LLM-Tracker/`** (root, **source of truth**): `TASKS.md`, `DECISIONS.md` (replaces `docs/DECISIONS.md` and `.handoff/decisions.md`, merged 2026-11-24), `LOG.md`
+- `00 Notes/`: `.handoff/` (only a copy for GitHub pushes)
 - `07 Logs/`: dated audits and logs
-- `04 System Design/`: the former `docs/`
+- `04 System Design/`: the former `docs/` (wherever this file says `docs/DECISIONS.md`, use `LLM-Tracker/DECISIONS.md`)
 - `02 Outputs/`, `03 Skills/`, `05 Inspirations/`, `06 Attachments/`: as named
 - Stays at the root: `CLAUDE.md`, `README.md`, `.claude/`, `.github/` (GitHub only reads workflows here; jobs set `working-directory: "01 Files"`), `.gitignore` (a copy in `01 Files/` keeps folder-relative rules working), `.gitattributes`, `.git`.
 
@@ -18,7 +19,7 @@ Live site: https://alyamimohd.github.io/motus/ · Repo: https://github.com/alyam
 ## Read before changing anything
 1. This file, then `docs/SESSION_HANDOFF.md` (current state and next priority).
 2. As relevant: `docs/PROJECT_CONTEXT.md` (architecture, data model, pipeline), `docs/FEATURES_AND_REQUIREMENTS.md`,
-   `docs/DECISIONS.md` (do not silently reverse these), `docs/KNOWN_ISSUES.md`, `docs/CHANGELOG.md`.
+   `LLM-Tracker/DECISIONS.md` (do not silently reverse these), `docs/KNOWN_ISSUES.md`, `docs/CHANGELOG.md`.
 
 ## Recovering in a fresh session / new computer
 1. Open the repo in Claude Code. If it isn't cloned yet: `git clone https://github.com/alyamiMohd/motus.git && cd motus`.
@@ -80,8 +81,7 @@ If the push fails, keep local changes, report the exact error, and say how to fi
   own `.claude/launch.json` only works when the session is opened in this folder.
 - `GITHUB_TOKEN` pushes (from the workflow) do not trigger other workflows; the single workflow does everything in one run.
 
-## Session handoff
-This project carries its full conversation context in `.handoff/` (requirements in the owner's words, decisions, preferences, state, next steps, chat history).
-Before doing anything, read `.handoff/RESUME.md` and follow it.
-After any change you push, update `.handoff/` following `.handoff/skills/github-session-handoff/SKILL.md`.
+## Tracker and handoff
+**Source of truth: `LLM-Tracker/`** (`TASKS.md`, `DECISIONS.md`, `LOG.md`). Read TASKS.md at the start; update all three after each batch.
+`00 Notes/.handoff/` is **only a copy for GitHub pushes**, never the main source. Before a handoff push, copy `LLM-Tracker/DECISIONS.md` → `.handoff/decisions.md`, `TASKS.md` → `next-steps.md`, `LOG.md` → `conversation-log.md`, then follow `.handoff/skills/github-session-handoff/SKILL.md`.
 Resume prompt for a new chat on any device: "Read the GitHub repo `alyamiMohd/motus`. Start with `.handoff/RESUME.md` and follow its instructions, then let's proceed exactly where we left off."

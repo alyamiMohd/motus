@@ -6,6 +6,6 @@ charts and a workout-rating page. The repo and site are **public**; secrets live
 
 **Start here:** [`CLAUDE.md`](CLAUDE.md) (instructions, setup, workflow) and [`docs/SESSION_HANDOFF.md`](docs/SESSION_HANDOFF.md) (current state).
 More: [`docs/PROJECT_CONTEXT.md`](docs/PROJECT_CONTEXT.md), [`docs/FEATURES_AND_REQUIREMENTS.md`](docs/FEATURES_AND_REQUIREMENTS.md),
-[`docs/DECISIONS.md`](docs/DECISIONS.md), [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md), [`docs/CHANGELOG.md`](docs/CHANGELOG.md).
+[`LLM-Tracker/DECISIONS.md`](LLM-Tracker/DECISIONS.md), [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md), [`docs/CHANGELOG.md`](docs/CHANGELOG.md).
 
 Quick start: `pip install -r requirements.txt`, copy `.env.example` to `.env` (set `HEVY_API_KEY`), `python daily.py`, `python serve.py`, `python tests/test_pipeline.py`.
