@@ -1,0 +1,37 @@
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*service-account*.json
+credentials*.json
+client_secret*.json
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# local scratch
+scratch/
+*.csv
+
+# copied into site/ at deploy time
+site/data.json
+site/workouts.json
+
+# generated per run, never committed
+status.json
+site/status.json
+site/overrides.json
+
+# local tooling / OS
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.claude/settings.local.json
+.env.local
+site/weeks.json

@@ -4,7 +4,9 @@
     {
       "name": "motus-site",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["serve.py"],
+      "runtimeArgs": [
+        "01 Files/serve.py"
+      ],
       "port": 8099
     }
   ]

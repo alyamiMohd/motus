@@ -6,7 +6,7 @@ on:
     # upload that syncs late is picked up within hours. Runs are idempotent and commit nothing when unchanged.
     - cron: "17 */3 * * *"     # 03:17, 06:17, 09:17 ... Riyadh (00:17, 03:17 ... UTC)
   push:
-    paths: ["inbox/**", "site/**", "history/**", "overrides.json", "*.py"]   # new export, site, correction or script change
+    paths: ["01 Files/inbox/**", "01 Files/site/**", "01 Files/history/**", "01 Files/overrides.json", "01 Files/*.py"]   # new export, site, correction or script change
   workflow_dispatch:
     inputs:
       action:
@@ -44,6 +44,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "01 Files"
     outputs:
       errors: ${{ steps.status.outputs.errors }}
     steps:
@@ -105,7 +108,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: "01 Files/site"
 
   deploy:
     needs: build

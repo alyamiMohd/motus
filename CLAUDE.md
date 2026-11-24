@@ -1,3 +1,10 @@
+# Folder layout (read first)
+All code, config and data live in **`01 Files/`** (the app is one unit there). **Run every command from there**: `cd "01 Files" && <command>`, or `npm --prefix "01 Files" <script>`. Paths in this file and in README.md are relative to `01 Files/` unless they name a folder below.
+- `00 Notes/`: `.handoff/`
+- `04 System Design/`: the former `docs/`
+- `02 Outputs/`, `03 Skills/`, `05 Inspirations/`, `06 Attachments/`: as named
+- Stays at the root: `CLAUDE.md`, `README.md`, `.claude/`, `.github/` (GitHub only reads workflows here; jobs set `working-directory: "01 Files"`), `.gitignore` (a copy in `01 Files/` keeps folder-relative rules working), `.gitattributes`, `.git`.
+
 # Motus — instructions for Claude
 
 Motus is a personal fitness dashboard for one user (GitHub: `alyamiMohd`). A daily GitHub Actions job merges
