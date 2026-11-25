@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-25T02:53:43+03:00",
+ "updated": "2026-11-25T22:15:49+03:00",
  "days": {
   "2025-04-21": {
    "workout_count": 1,
@@ -4860,6 +4860,19 @@
    "workout_volume_kg": 2567,
    "workout_titles": [
     "Push"
+   ],
+   "steps": null,
+   "sleep_hours": null,
+   "calories": null,
+   "weight_kg": null,
+   "active_kcal": null
+  },
+  "2026-11-25": {
+   "workout_count": 1,
+   "workout_minutes": 54,
+   "workout_volume_kg": 3448,
+   "workout_titles": [
+    "Pull ❌"
    ],
    "steps": null,
    "sleep_hours": null,
